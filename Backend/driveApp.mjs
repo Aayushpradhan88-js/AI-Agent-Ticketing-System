@@ -1,13 +1,26 @@
+"strict mode";
 import dotenv from "dotenv";
-dotenv.config();
-import express from "express";
-const app = express();
 import cors from "cors";
-app.use(cors());
-import mongodb from "./db/userDB.mjs";
+import express from "express";
 
+import mongodb from "./db/userDB.mjs";
+import userModel from "./models/user.model.mjs"
+import router from "./routes/user.route.mjs";
+import userFiles from "./models/files.model.mjs";
+
+const app = express();
+dotenv.config();
+app.use(cors());
+userModel();
+userFiles();
+// router();
 mongodb();
+
+//middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Routes
+app.use("/api", router);
 
 export default app;

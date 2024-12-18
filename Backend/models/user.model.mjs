@@ -1,25 +1,33 @@
-import mongoose, { mongo } from "mongoose";
+"strict mode";
 
-const userFields = mongoose.Schema({
-    fullName: {
-        firstName: {
-            type: String,
-            required: true
-        },
-        lastName: {
-            type: String,
-        }
-    },
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
+const userFields = new mongoose.Schema({
     email: {
         type: String,
-        required: true,
+        required: [true, "Email is required"],
         unique: true,
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "Password is required"],
     }
 })
 
-export default userFields;
+userFields.pre("save", async function (next) {
+    if(this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+    next();
+})
 
+userFields.method("comparePassword", async function (password) {
+    if (!password || !this.password) {
+        throw new Error("Password is required");
+    }
+    return await bcrypt.compare(password, this.password);
+})
+
+const userModel = mongoose.model("User", userFields);
+export default userModel;
