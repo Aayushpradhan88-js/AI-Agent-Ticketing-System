@@ -5,8 +5,9 @@ import express from "express";
 
 import mongodb from "./db/userDB.mjs";
 import userModel from "./models/user.model.mjs"
-import router from "./routes/user.route.mjs";
+import router from "./routes/userApi.route.mjs"
 import userFiles from "./models/files.model.mjs";
+// import
 
 const app = express();
 dotenv.config();
