@@ -22,6 +22,7 @@ const upload = multer({ storage: storage })
 router.post('/register', async (req, res) => {
     const { email, password } = req.body;
     const existingUser = await userModel.find({ email });
+    
     if (!existingUser) {
         return res.status(400).json({ message: "Email already exist" });
     }

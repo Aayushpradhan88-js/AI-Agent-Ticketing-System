@@ -1,9 +1,16 @@
+import dotenv from "dotenv";
 import http from "http";
+import cors from "cors";
 import app from "./driveApp.mjs";
-const PORT= process.env.PORT || 5000;
+
+dotenv.config();
+cors();
+
+const port = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 
-server.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
+server.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
 });
+
