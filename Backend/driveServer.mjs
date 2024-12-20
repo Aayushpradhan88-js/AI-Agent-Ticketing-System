@@ -6,7 +6,7 @@ import app from "./driveApp.mjs";
 dotenv.config();
 cors();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
 

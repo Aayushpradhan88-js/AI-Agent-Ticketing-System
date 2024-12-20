@@ -20,6 +20,7 @@ const upload = multer({ storage: storage })
 //Routes
 //User Registration Logic
 router.post('/register', async (req, res) => {
+
     const { email, password } = req.body;
     const existingUser = await userModel.find({ email });
     
@@ -27,25 +28,31 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: "Email already exist" });
     }
 
-    const newUser = new User({ email, password });
+    const newUser = new userModel({ email, password });
     await newUser.save();
     res.status(201).json({
         message: "User registered successfully"
     })
 })
 
-
+//User logging code
 router.post('/login', async (req, res) => {
     const { email, password } = req.body; // Destructuring the html data
     const user = await userModel.findOne({ email });
 
-    if(!user || (await user.comparepassword(password))){ //It check the user email or password is valid or not
+    if(!user || (await userModel.comparepassword(password))){ //It check the user email or password is valid or not
         return res.status(401).json({message: "Invalid data"}); //401-unauthorized user
     }
 
     //If the user is valid then below code will run which is to response the token for user.
-    const token = jwt.sign({_id: user.id}, process.env.JWT_SIGN, {expiresIn: '1h'})
+    const token = jwt.sign({_id: userModel.id}, process.env.JWT_SIGN, {expiresIn: '1h'})
     //expiresIn: '1h' -- The token will expire with in 1hour from the user device
     res.status(200).json({message: "User is logged in", token});
 })
+
+
+
+//
+
+
 export default router
