@@ -50,7 +50,16 @@ router.post('/login', async (req, res) => {
     res.status(200).json({message: "User is logged in", token});
 })
 
+router.post('/upload', upload.singleFile('file'), async(req, res) => {
+    const { userID, fileName, filePath } = req.body;
+    const newFile = new userFiles ({
+        userID,
+        fileName: req.file.originalname,
+        filePath: req.file.path
+    })
 
+    await newFile.save();
+})
 
 //
 
