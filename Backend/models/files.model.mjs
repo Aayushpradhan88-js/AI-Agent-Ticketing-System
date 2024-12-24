@@ -1,33 +1,30 @@
 import mongoose from "mongoose";
 
-
 const fileSchema = new mongoose.Schema({
-    userId:{
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'User',
+        ref: 'User',
         require: true
     },
-    fileName:{
+    fileName: {
         type: String,
         required: true
     },
-    filePath:{
+    filePath: {
         type: String,
         required: true
     },
-    UploadAt:{
+    UploadAt: {
         type: Date,
         default: Date.now
     },
-    sharedWith:[
-    {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
-    }]
+    sharedWith: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }]
 })
 
 const userFiles = mongoose.model('File', fileSchema);
 
 export default userFiles;
-
-
