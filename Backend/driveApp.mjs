@@ -7,7 +7,6 @@ import userSchema from "./models/user.model.mjs";
 import userFilesSchema from "./models/files.model.mjs";
 import router from "./routes/userApi.route.mjs";
 
-
 const app = express();
 dotenv.config();
 app.use(cors());
@@ -17,14 +16,9 @@ router;
 mongoDb();
 
 // set up middlewares
+app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// set up routes
-// app.get("/profile", (req, res, next) => {
-//     console.log("Middleware hit");  
-// });
-
 app.use("/user", router);
 
 export default app;

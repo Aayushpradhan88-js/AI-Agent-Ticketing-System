@@ -19,15 +19,19 @@ const upload = multer({ storage: storage })
 
 //Routes
 //User Registration Logic
+router.get('/register', (req,res)=>{
+    res.render('register');
+})
+
 router.post('/register', async (req, res) => {
-    const { email, password } = req.body;
+    const {userName, email, password } = req.body;
     const existingUser = await userModel.find({ email });
 
     if (!existingUser) {
         return res.status(400).json({ message: "Email already exist" });
     }
 
-    const newUser = new userModel({ email, password });
+    const newUser = new userModel({userName, email, password });
     await newUser.save();
     res.status(201).json({
         message: "User registered successfully"
@@ -36,7 +40,7 @@ router.post('/register', async (req, res) => {
 
 //User logging code
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body; // Destructuring the html data
+    const {email, password } = req.body; // Destructuring the html data
     const user = await userModel.findOne({ email });
 
     if (!user || (await userModel.comparepassword(password))) { //It check the user email or password is valid or not
@@ -61,7 +65,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     res.status(200).json({ message: "File uploaded successfully", fileName: newFile });
 })
 
-
-
+//List user files
+router.get('/files/:userId', async (req, res) => {  
+    const files = await File.find({ userId: req.params.userId });  
+    res.status(200).json(files);  
+});  
 
 export default router;
