@@ -3,72 +3,81 @@ import multer from 'multer'
 import userModel from '../models/user.model.mjs'
 import userFiles from '../models/files.model.mjs'
 import jwt from 'jsonwebtoken';
+import validato, { validationResult } from 'express-validator';
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`)
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, `${Date.now()}-${file.originalname}`)
+//     }
+// })
 
-const upload = multer({ storage: storage })
+// const upload = multer({ storage: storage })
 
 //Routes
 //User Registration Logic
-router.get('/register', (req,res)=>{
+router.post('/register', (req, res) => {
     res.render('register');
 })
 
-router.post('/register', async (req, res) => {
-    const {userName, email, password } = req.body;
-    const existingUser = await userModel.find({ email });
+router.post('/register', (req, res) => {
+    console.log("register");
+    res.send('Request successful');
+    // const { userName, email, password } = req.body;
 
-    if (!existingUser) {
-        return res.status(400).json({ message: "Email already exist" });
-    }
+    // userName.trim(), email.trim(), password.trim(), (req, res) => {
+    //     const error = validationResult(req);
+    //     req.send(error);
+    // }
 
-    const newUser = new userModel({userName, email, password });
-    await newUser.save();
-    res.status(201).json({
-        message: "User registered successfully"
-    })
+    // const existingUser = await userModel.find({ email });
+
+    // if (!existingUser) {
+    //     return res.status(400).json({ message: "Email already exist" });
+    // }
+
+    // const newUser = new userModel({ userName, email, password });
+    // await newUser.save();
+    // res.status(201).json({
+    //     message: "User registered successfully"
+    // })
 })
 
 //User logging code
-router.post('/login', async (req, res) => {
-    const {email, password } = req.body; // Destructuring the html data
-    const user = await userModel.findOne({ email });
+// router.post('/login', async (req, res) => {
+//     const { email, password } = req.body; // Destructuring the html data
+//     const user = await userModel.findOne({ email });
 
-    if (!user || (await userModel.comparepassword(password))) { //It check the user email or password is valid or not
-        return res.status(401).json({ message: "Invalid data" }); //401-unauthorized user
-    }
+//     if (!user || (await userModel.comparepassword(password))) { //It check the user email or password is valid or not
+//         return res.status(401).json({ message: "Invalid data" }); //401-unauthorized user
+//     }
 
-    //If the user is valid then below code will run which is to response the token for user.
-    const token = jwt.sign({ _id: userModel.id }, process.env.JWT_SIGN, { expiresIn: '1h' })
-    //expiresIn: '1h' -- The token will expire with in 1hour from the user device
-    res.status(200).json({ message: "User is logged in", token });
-})
+//     //If the user is valid then below code will run which is to response the token for user.
+//     const token = jwt.sign({ _id: userModel.id }, process.env.JWT_SIGN, { expiresIn: '1h' })
+//     //expiresIn: '1h' -- The token will expire with in 1hour from the user device
+//     res.status(200).json({ message: "User is logged in", token });
+// })
 
-router.post('/upload', upload.single('file'), async (req, res) => {
-    const { userID } = req.body;
-    const newFile = new userFiles({
-        userID,
-        fileName: req.file.originalname,
-        filePath: req.file.path
-    })
+// router.post('/upload', upload.single('file'), async (req, res) => {
+//     const { userID } = req.body;
+//     const newFile = new userFiles({
+//         userID,
+//         fileName: req.file.originalname,
+//         filePath: req.file.path
+//     })
 
-    await newFile.save();
-    res.status(200).json({ message: "File uploaded successfully", fileName: newFile });
-})
+//     await newFile.save();
+//     res.status(200).json({ message: "File uploaded successfully", fileName: newFile });
+// })
 
-//List user files
-router.get('/files/:userId', async (req, res) => {  
-    const files = await File.find({ userId: req.params.userId });  
-    res.status(200).json(files);  
-});  
+// //List user files
+// router.get('/files/:userId', async (req, res) => {
+//     const files = await File.find({ userId: req.params.userId });
+//     res.status(200).json(files);
+// });
 
 export default router;

@@ -17,8 +17,12 @@ mongoDb();
 
 // set up middlewares
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/user", router);
+// app.use('/user', require('./routes/user.route.js'));
+
 
 export default app;

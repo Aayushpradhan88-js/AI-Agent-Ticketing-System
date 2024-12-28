@@ -13,15 +13,17 @@ const userFields = new mongoose.Schema({
         type: String,
         required: [true, "Email is required"],
         unique: true,
+        minlength: [5, "Email must be at least 5 characters long"],
     },
     password: {
         type: String,
         required: [true, "Password is required"],
+        minlength: [6, "Password must be at least 6 characters long"],
     }
 })
 
 userFields.pre("save", async function (next) {
-    if(this.isModified("password")) {
+    if (this.isModified("password")) {
         this.password = await bcrypt.hash(this.password, 10);
     }
     next();
