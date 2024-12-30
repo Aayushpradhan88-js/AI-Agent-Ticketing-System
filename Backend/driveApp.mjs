@@ -24,5 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", router);
 // app.use('/user', require('./routes/user.route.js'));
 
+//Port
+const PORT=3000;
+app.listen(PORT, ()=>{
+    console.log(`Server is running on PORT ${PORT}`);
+} )
 
 export default app;
