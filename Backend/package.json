@@ -5,7 +5,7 @@
   "type": "module",
   "ext": "js,mjs,json",
   "scripts": {
-    "start": "nodemon driveServer.mjs"
+    "start": "nodemon driveApp.mjs"
   },
   "keywords": [],
   "author": "",
