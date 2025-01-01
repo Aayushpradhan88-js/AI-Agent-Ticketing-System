@@ -1,40 +1,22 @@
-"strict mode";
-
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 
 const userFields = new mongoose.Schema({
-    userName: {
+    username: {
         type: String,
-        required: [true, "Username is required"],
-        unique: true,
+        required: [true, "Username is required"]
     },
     email: {
         type: String,
-        required: [true, "Email is required"],
+        required: true,
         unique: true,
-        minlength: [5, "Email must be at least 5 characters long"],
+        minlength: [5, "Email must be at least 5 characters long"]
     },
     password: {
         type: String,
-        required: [true, "Password is required"],
-        minlength: [6, "Password must be at least 6 characters long"],
+        required: true,
+        minlength: [6, "Password must be at least 6 characters long"]
     }
-})
+});
 
-userFields.pre("save", async function (next) {
-    if (this.isModified("password")) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    next();
-})
-
-userFields.method("comparePassword", async function (password) {
-    if (!password || !this.password) {
-        throw new Error("Password is required");
-    }
-    return await bcrypt.compare(password, this.password);
-})
-
-const userModel = mongoose.model("User", userFields);
-export default userModel;
+const User = mongoose.model("User", userFields);
+export default User;

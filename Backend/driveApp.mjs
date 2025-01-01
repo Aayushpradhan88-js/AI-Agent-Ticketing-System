@@ -2,21 +2,19 @@ import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 
-
+//call-1
 dotenv.config();
-app.use(cors());
 const app = express();
+app.use(cors());
 
 //imported files
 import userSchema from "./models/user.model.mjs";
-import userFilesSchema from "./models/files.model.mjs";
 import router from "./routes/userApi.route.mjs";
-import mongoDb from "./db/db.mjs";
+import mongodb from "./db/db.mjs";
 
+//call-2
 userSchema();
-userFilesSchema();
 router;
-mongoDb();
 
 //middlewares
 app.set('view engine', 'ejs');
@@ -24,9 +22,9 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+//router
 app.use("/user", router);
-
+mongodb();
 
 //Port
 const PORT=3000;

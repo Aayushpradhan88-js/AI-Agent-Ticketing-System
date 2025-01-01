@@ -1,1 +1,42 @@
 import express from 'express';
+import {body, validationResult} from 'express-validator';
+import bcrypt from 'bcrypt';
+const router = express.Router();
+
+//imported file
+import User from '../models/user.model.mjs';
+
+//register route
+router.get('/register', (req, res)=>{
+    res.render('register');
+})
+
+router.post('/register',
+    body('username').trim().isLength(5, 'Write at least 5 characters'),
+    body('email').trim().isLength(13).isEmail(),
+    body('password').trim().isLength(6, 'Make strong password'),
+    
+    async(req, res)=>{
+        const err = validationResult(req);
+
+        if(!err.isEmpty()){
+            return res.status(400).json({
+                err: err.array(),
+                message: "Please fill all the input fields"
+            })
+        }
+
+        const {username, email, password} = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await User.create({
+            username,
+            email,
+            password:hashedPassword
+        })
+
+        res.json(user);
+    });
+
+export default router;
