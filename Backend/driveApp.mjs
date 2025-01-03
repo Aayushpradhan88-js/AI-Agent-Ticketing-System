@@ -9,7 +9,7 @@ app.use(cors());
 
 //imported files
 import userSchema from "./models/user.model.mjs";
-import router from "./routes/userApi.route.mjs";
+import router from "./routes/auth.mjs";
 import mongodb from "./db/db.mjs";
 
 //call-2
