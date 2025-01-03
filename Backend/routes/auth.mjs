@@ -1,7 +1,12 @@
 import express from 'express';
+
+//installation
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
+import cookie from 'cookie-parser'
+
 const router = express.Router();
+
 
 //imported file
 import User from '../models/user.model.mjs';
@@ -40,18 +45,35 @@ router.post('/register',
     });
 
 //login route
-router.get('/login', (req, res)=>{
+router.get('/login', (req, res) => {
     res.render('login');
 })
 
-router.post('/login', async(req, res)=>{
-    const {email, password} = req.body;
-    const user = await User.findOne({email: email});
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
 
-
-    if(!user){
-        
+    //checking the email
+    if (!user) {
+        return res.status(401).json({
+            message: "Cannot find email & password"
+        })
     }
-    
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    //checking the password
+    if (!isMatch) {
+        return res.status(401).json({
+            message: "Cannot find email & password"
+        })
+    }
+
+    //sending cookie to frontend
+    res.cookie('user', user._id);
+
+    res.json({
+        message: "Successfully loggedin",
+        user: user
+    })
 })
 export default router;
