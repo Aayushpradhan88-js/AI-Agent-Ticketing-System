@@ -76,4 +76,11 @@ router.post('/login', async (req, res) => {
         user: user
     })
 })
+
+//home
+router.get('/', (req, res)=>{
+    res.render('home');
+})
+
+// router.post('/', (req, res))
 export default router;

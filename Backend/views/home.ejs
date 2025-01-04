@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <form action="/user/home" method="post">
+
+
+        <nav class="bg-white border-gray-200 dark:bg-gray-900">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+                </a>
+                <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <button type="button"
+                        class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                        id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+                        data-dropdown-placement="bottom">
+                        <span class="sr-only">Open user menu</span>
+                        <img class="w-8 h-8 rounded-full" src="2.jpg">
+                    </button>
+                    //signup and login btn
+                    <button >
+                        signup
+                    </button>
+                    <button>
+                        signin
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                        id="user-dropdown">
+                        <div class="px-4 py-3">
+                            <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+                            <span
+                                class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+                        </div>
+                        <ul class="py-2" aria-labelledby="user-menu-button">
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
+                                    out</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <button data-collapse-toggle="navbar-user" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        aria-controls="navbar-user" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 17 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 1h15M1 7h15M1 13h15" />
+                        </svg>
+                    </button> -->
+                </div>
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+                    <ul
+                        class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                                aria-current="page">Home</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Pricing</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="min-h-screen bg-gray-300">
+            <div class="container mx-auto p-10 max-w-screen-lg">
+                <div class="bg-white rounded shadow p-8">
+                    <!--  ToastBar  -->
+                    <div class="w-full bg-orange-200 text-yellow-900 px-4 py-2 flex items-center">
+                        <img src="https://svgsilh.com/svg/151889.svg" class="w-10 block pr-2">
+                        <div class="text-sm">Congrats you're eligible for a <b>Coupon Code</b> in this order </div>
+                    </div>
+                    <!-- Order Summary  -->
+                    <div>
+                        <h3 class="text-xl mt-4 font-bold">Order Summary</h3>
+                        <!--     BOX     -->
+                        <div class="border w-full rounded mt-5 flex p-4 justify-between items-center flex-wrap">
+                            <img src="https://images-na.ssl-images-amazon.com/images/I/41KufN65f8L.jpg" class="w-12">
+                            <div class="w-2/3">
+                                <h3 class="text-lg font-medium">Black Jacket XL</h3>
+                                <p class="text-gray-600 text-xs">Sold by <b>Aashir Khan</b></p>
+                                <h4 class="text-red-700 text-xs font-bold mt-1">Only 2 left in stock</h4>
+                            </div>
+                            <div>
+                                <h4 class="text-3xl font-medium"><sup class="text-lg text-purple-800">$</sup> 89</h4>
+                                <h5 class="text-sm font-bold text-purple-800">60% OFF</h5>
+                            </div>
+                            <div class="w-full flex justify-between mt-4">
+                                <button class="text-red-700 hover:bg-red-100 px-2">DELETE</button>
+                                <label class="block uppercase tracking-wide text-gray-700" for="grid-first-name">
+                                    QTY
+                                    <select
+                                        class="ml-3 text-sm bg-purple-700 border border-purple-200 text-white p-2 rounded leading-tight"
+                                        id="grid-state">
+                                        <option>1</option>
+                                        <option>2</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="border w-full rounded mt-5 flex p-4 justify-between items-center flex-wrap">
+                            <img src="https://cdn11.bigcommerce.com/s-tboh32g/images/stencil/1280x1280/products/385314/492280/104C_BlackBlackHQ__07610.1557157866.jpg?c=2?imbypass=on"
+                                class="w-12">
+                            <div class="w-2/3">
+                                <h3 class="text-lg font-medium">Black Hat</h3>
+                                <p class="text-gray-600 text-xs">Sold by <b>Taha Dildar</b></p>
+                                <h4 class="text-red-700 text-xs font-bold mt-1">Only 1 left in stock</h4>
+                            </div>
+                            <div>
+                                <h4 class="text-3xl font-medium"><sup class="text-lg text-purple-800">$</sup> 20</h4>
+                                <h5 class="text-sm font-bold text-purple-800">40% OFF</h5>
+                            </div>
+                            <div class="w-full flex justify-between mt-4">
+                                <button class="text-red-700 hover:bg-red-100 px-2">DELETE</button>
+                                <label class="block uppercase tracking-wide text-gray-700" for="grid-first-name">
+                                    QTY
+                                    <select
+                                        class="ml-3 text-sm bg-purple-700 border border-purple-200 text-white p-2 rounded leading-tight"
+                                        id="grid-state">
+                                        <option>1</option>
+                                        <option>2</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="px-4 py-4 bg-purple-700 text-white w-full mt-3 rounded shadow font-bold hover:bg-purple-900">PROCEED
+                        TO CHECKOUT SCREEN</button>
+                </div>
+                <div class="flex justify-between mt-8 flex-wrap lg:justify-center">
+                    <div class="bg-white rounded shadow p-2 w-full lg:w-2/4">
+                        <div class="w-full bg-orange-200 px-8 py-6">
+                            <h3 class="text-2xl mt-4 font-bold">Price Breakdown</h3>
+                            <div class="flex justify-between mt-3">
+                                <div class="text-xl text-orange-900 font-bold">Amount</div>
+                                <div class='text-xl text-right font-bold '>$102</div>
+                            </div>
+                            <div class="flex justify-between mt-3">
+                                <div class="text-xl text-orange-900 font-bold">VAT (15%)</div>
+                                <div class='text-xl text-right font-bold'>$12</div>
+                            </div>
+                            <div class="bg-orange-300 h-1 w-full mt-3"></div>
+                            <div class="flex justify-between mt-3">
+                                <div class="text-xl text-orange-900 font-bold">Total Amount</div>
+                                <div class="text-2xl text-orange-900 font-bold">$114</div>
+                            </div>
+                            <button
+                                class="px-4 py-4 bg-purple-700 text-white w-full mt-3 rounded shadow font-bold hover:bg-purple- 900">
+                                CHECKOUT</button>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded shadow px-10 py-6 w-full mt-4 flex flex-wrap justify-center lg:w-2/4 lg:ml-3">
+                        <div class="pr-8">
+                            <h3 class="text-2xl mt-4 font-bold text-purple-900">Thank You, Alex</h3>
+                            <h4 class="text-sm text-gray-600 font-bold">ORDER #5624</h4>
+                        </div>
+                        <img src="https://image.flaticon.com/icons/svg/1611/1611768.svg" alt="" class="w-24">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+</body>
+
+</html>
