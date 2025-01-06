@@ -78,9 +78,12 @@ router.post('/login', async (req, res) => {
 })
 
 //home
-router.get('/', (req, res)=>{
+router.get('/home', (req, res)=>{
     res.render('home');
 })
 
-// router.post('/', (req, res))
+router.post('/home', (req, res)=>{
+    res.redirect('/user/login');
+
+})
 export default router;
