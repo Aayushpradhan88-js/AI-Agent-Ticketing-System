@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const fileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'UserModel',
         require: true
     },
     fileName: {
@@ -14,17 +14,17 @@ const fileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    UploadAt: {
+    uploadAt: {
         type: Date,
         default: Date.now
     },
     sharedWith: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }]
-})
+            ref: 'UserModel'
+        }
+    ],
+});
 
-const userFiles = mongoose.model('File', fileSchema);
-
-export default userFiles;
+const userFileSchema = mongoose.model('userFileSchema', fileSchema);
+export default userFileSchema;

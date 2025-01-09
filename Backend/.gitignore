@@ -8,3 +8,6 @@ package-lock.json
 
 #environmental varibale
 .env
+
+module-1.js
+module-2.js

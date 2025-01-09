@@ -2,18 +2,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 
-//call-1
+//imported files
+import users from "./models/user.model.mjs";
+import router from "./routes/auth.routes.mjs";
+import mongodb from "./db/db.mjs";
+
+//call
 dotenv.config();
 const app = express();
 app.use(cors());
-
-//imported files
-import userSchema from "./models/user.model.mjs";
-import router from "./routes/auth.mjs";
-import mongodb from "./db/db.mjs";
-
-//call-2
-userSchema();
+users();
 router;
 
 //middlewares

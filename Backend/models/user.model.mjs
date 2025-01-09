@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userFields = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, "Username is required"]
@@ -15,8 +15,9 @@ const userFields = new mongoose.Schema({
         type: String,
         required: true,
         minlength: [6, "Password must be at least 6 characters long"]
-    }
+    },
 });
 
-const User = mongoose.model("User", userFields);
-export default User;
+//EXPORTING
+const users = mongoose.model("users", userSchema);
+export default users;
