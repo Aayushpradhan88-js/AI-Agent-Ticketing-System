@@ -14,6 +14,7 @@ app.use(cors());
 users();
 router;
 
+
 //middlewares
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
