@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "driveServer.mjs",
   "type": "module",
-  "ext": "js,mjs,json",
   "scripts": {
     "start": "nodemon driveApp.mjs"
   },
