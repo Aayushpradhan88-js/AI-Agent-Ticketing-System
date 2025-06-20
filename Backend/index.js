@@ -25,10 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", router);
 mongodb();
 
+console.log(process.env.CLOUDINARY_NAME)
+console.log(process.env.CLOUDINARY_API_KEY)
+console.log(process.env.CLOUDINARY_API_SECRET)
+
+
 //Port
-const PORT=3000;
+const PORT= process.env.PORT;
 app.listen(PORT, ()=>{
     console.log(`Server is running on PORT ${PORT}`);
 })
-
-export default app;
