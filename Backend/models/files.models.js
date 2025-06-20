@@ -27,4 +27,4 @@ const fileSchema = new mongoose.Schema({
 });
 
  const userfile = mongoose.model('userfile', fileSchema);
- exports {userfile}:
+ export {userfile}
