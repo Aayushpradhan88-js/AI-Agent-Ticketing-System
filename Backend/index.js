@@ -17,18 +17,12 @@ router;
 
 //middlewares
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //router
 app.use("/user", router);
 mongodb();
-
-console.log(process.env.CLOUDINARY_NAME)
-console.log(process.env.CLOUDINARY_API_KEY)
-console.log(process.env.CLOUDINARY_API_SECRET)
-
 
 //Port
 const PORT= process.env.PORT;
