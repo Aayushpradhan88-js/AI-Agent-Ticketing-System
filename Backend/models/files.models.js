@@ -6,7 +6,11 @@ const fileSchema = new mongoose.Schema({
         ref: 'UserModel',
         require: true
     },
-    fileName: {
+    title: {
+        type: String,
+        required: true
+    },
+    note:{
         type: String,
         required: true
     },
@@ -24,7 +28,8 @@ const fileSchema = new mongoose.Schema({
             ref: 'UserModel'
         }
     ],
-});
+},
+{timestamps: true});
 
  const userfile = mongoose.model('userfile', fileSchema);
  export {userfile}

@@ -3,8 +3,21 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: [true, "Username is required"]
+        required: [true, "Username is required"],
+        unique: true
     },
+
+    fullname: {
+        type: String,
+        required: [true, "Full name is required"],
+        minlength: [3, "Full name must be at least 3 characters long"]
+    },
+
+    profilePicture: {
+        type: String,
+        default: "https://example.com/default-profile-picture.png" // Placeholder URL for default profile picture
+    },
+
     email: {
         type: String,
         required: true,
@@ -19,5 +32,5 @@ const userSchema = new mongoose.Schema({
 });
 
 //EXPORTING
-const users = mongoose.model("users", userSchema);
+const User = mongoose.model("User", userSchema);
 export default users;
