@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -29,8 +32,15 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: [6, "Password must be at least 6 characters long"]
     },
-});
+}, {timestamps: true});
+
+userSchema.pre("save",async(next ) => {
+    if(!this.modified(password)) next();
+
+    this.password = await bcrypt.hash(this.password, 10);
+
+    next();
+}) 
 
 //EXPORTING
-const User = mongoose.model("User", userSchema);
-export default users;
+export const User = mongoose.model("User", userSchema);
