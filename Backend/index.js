@@ -2,27 +2,21 @@ import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 
-//imported files
-import users from "./models/user.models.js";
-import router from "./routes/route.routes.js";
-import mongodb from "./db/db.js";
+import {router as userRouter} from "./routes/route.routes.js";
+import {dbConnection} from "./db/db.js";
 
-//call
 dotenv.config();
 const app = express();
 app.use(cors());
-users();
-router;
 
-
-//middlewares
-app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//router
-app.use("/user", router);
-mongodb();
+
+app.use("/api/user", userRouter);
+//  console.log("running")
+    //   console.log(process.env.MONGO_URL)
+dbConnection()
 
 //Port
 const PORT= process.env.PORT;

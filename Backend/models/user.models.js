@@ -16,11 +16,6 @@ const userSchema = new mongoose.Schema({
         minlength: [3, "Full name must be at least 3 characters long"]
     },
 
-    profilePicture: {
-        type: String,
-        default: "https://example.com/default-profile-picture.png" // Placeholder URL for default profile picture
-    },
-
     email: {
         type: String,
         required: true,
@@ -30,17 +25,61 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: [6, "Password must be at least 6 characters long"]
+        minlength: [5, "Password must be at least 6 characters long"]
     },
+
+    avatar: {
+        type: String,
+        required: true
+    },
+    
+    accessToken: {
+        type: String,
+    }
 }, {timestamps: true});
 
+
+//----------HASHING PASSWORD----------//
 userSchema.pre("save",async(next ) => {
     if(!this.modified(password)) next();
 
     this.password = await bcrypt.hash(this.password, 10);
 
     next();
-}) 
+}); 
 
-//EXPORTING
+//----------VERIFYING PASSWORD----------//
+userSchema.methods.isPasswordCorrect = async(password) => {
+    return await bcrypt.compare(this.password, password);
+};
+
+//----------GENERATE ACCESS-TOKEN----------//  
+userSchema.methods.generateAccessToken = async() => {
+    return jwt.sign(
+        {
+            _id: this._id,
+            username: this.username,
+            fullname: this.fullname,
+            email: this.email
+        }, 
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+};
+
+//----------GENERATE REFRESH-TOKEN----------//  
+userSchema.methods.generateRefreshToken = async() => {
+    return jwt.sign(
+        {
+            _id: this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+
 export const User = mongoose.model("User", userSchema);

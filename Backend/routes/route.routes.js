@@ -1,52 +1,12 @@
 import express from 'express';
-import { body, validationResult } from 'express-validator';
-import bcrypt from 'bcrypt';
-import cookie from 'cookie-parser'
+import {
+    signUpUser
+} from "../controllers/user.controller.js"
 const router = express.Router();
 
-//imported file
-import users from '../models/user.models.js';
 
+router.post('/signup',signUpUser );
 
-
-//register route
-router.get('/register', (req, res) => {
-    res.render('register');
-})
-
-router.post('/register',
-    body('username').trim().isLength(5, 'username at least 5 letters!!'),
-    body('email').trim().isLength(13).isEmail(),
-    body('password').trim().isLength(6, 'Make strong password'),
-
-    async (req, res) => {
-
-        //checking the user fields
-        const err = validationResult(req);
-
-        if (!err.isEmpty()) {
-            return res.status(400).json({
-                err: err.array(),
-                message: "Please fill all the input fields"
-            })
-        }
-
-        //securing the user password......
-        const { username, email, password } = req.body;
-        const genSalt = 10;
-        const hashedPassword = await bcrypt.hash(password, genSalt);
-        const user = await users.create({
-            username,
-            email,
-            password: hashedPassword
-        })
-
-        res.json(user);
-    });
-
-
-
-//login route
 router.get('/login', (req, res) => {
     res.render('login');
 })
@@ -90,4 +50,4 @@ router.post('/home', (req, res) => {
     res.redirect('/user/login');
 
 })
-export default router;
+export {router};
