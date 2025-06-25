@@ -68,7 +68,13 @@ const signUpUser = async(req, res) => {
 }
 
 const signInUser = async(req, res) => {
+    const {email, password} = req.body;
 
+    if(
+        [email, password].some((fields) => fields?.trim() === 'undefined') 
+    ) {
+        throw new ApiError(401, "ALL FIELDS ARE REQUIRED");
+    };
 }
 
 const logoutUser = async(req, res) =>{
