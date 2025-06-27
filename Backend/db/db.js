@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const DB_NAME = "PERSONALSTORAGEMANAGEMENTDRIVE"
 
-const MONGODB_URI="mongodb+srv://aayush:aayush12345@cluster0.hwmd9ql.mongodb.net/"
+const MONGODB_URI="mongodb+srv://aayush:aayush12345@cluster0.hwmd9ql.mongodb.net"
 
 
 export const dbConnection = async () => {

@@ -28,10 +28,10 @@ const userSchema = new mongoose.Schema({
         minlength: [5, "Password must be at least 6 characters long"]
     },
 
-    avatar: {
-        type: String,
-        required: true
-    },
+    // avatar: {
+    //     type: String,
+    //     required: true
+    // },
     
     accessToken: {
         type: String,
@@ -40,8 +40,8 @@ const userSchema = new mongoose.Schema({
 
 
 //----------HASHING PASSWORD----------//
-userSchema.pre("save",async(next ) => {
-    if(!this.modified(password)) next();
+userSchema.pre("save",  async function(next ){
+    if(!this.isModified('password')) next();
 
     this.password = await bcrypt.hash(this.password, 10);
 
@@ -54,7 +54,7 @@ userSchema.methods.isPasswordCorrect = async(password) => {
 };
 
 //----------GENERATE ACCESS-TOKEN----------//  
-userSchema.methods.generateAccessToken = async() => {
+userSchema.methods.generateAccessToken = function() {
     return jwt.sign(
         {
             _id: this._id,
@@ -70,7 +70,7 @@ userSchema.methods.generateAccessToken = async() => {
 };
 
 //----------GENERATE REFRESH-TOKEN----------//  
-userSchema.methods.generateRefreshToken = async() => {
+userSchema.methods.generateRefreshToken = function() {
     return jwt.sign(
         {
             _id: this._id

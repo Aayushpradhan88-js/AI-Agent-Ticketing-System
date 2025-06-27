@@ -52,18 +52,28 @@ const signUpUser = async(req, res) => {
 
     if(!user) throw new ApiError(500, "SERVER OR DATABASE INTERNAL ERROR");
 
-    //  const {accessToken, refreshToken} = await generateAccessTokenAndRefreshToken(user._id);
-    const createdUser = await User.findById(user._id).select("-password -refreshToken");
-    
+     const {refreshToken} = await generateAccessTokenAndRefreshToken(user._id);
+    const createdUser = await User.findById(user._id).select("-password -refreshToken"); 
+
+       console.log("running token")
+
         return res
         .status(201)
+        .cookie('refreshToken', refreshToken, {
+            httpOnly: true, 
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60* 1000 //-----7days in ms-----//
+        })
         .json(
             new ApiResponse(
                 200, 
                 createdUser, 
                 "User registered Successfully"
             )
-    )
+        )
+
+        //  console.log("running token")
     
 }
 
