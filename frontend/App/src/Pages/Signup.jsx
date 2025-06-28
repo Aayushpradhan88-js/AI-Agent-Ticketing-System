@@ -3,13 +3,37 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 
 export const SignUp = () => {
-    const [username, setUsername] = useState('');
-    const [fullname, setFullname] = useState('');
-    const [profilePicture, setProfilePicture] = useState(null); // Changed to null for file input
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        fullname: '',
+        password: '',
+        profilePicture: null
+    });
+    const[isLoading, setIsLoading] = useState(false);
 
-    
+    const handleChangeValue = (e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [e.target.name]: e.target.value;
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            profilePicture: e.target.files[0]
+        }));
+    };
+
+    //----------------FETCHING BACKEND DATA--------------------//
+    const handleSubmit = async(e) => {
+        e.preventData();
+        setIsLoading(true);
+
+        const responseData = await fetch(`http://localhost:1000/api/v1/user/signup`)
+
+    }
 
     return (
         // Main container with green background, centered content, and responsive padding
