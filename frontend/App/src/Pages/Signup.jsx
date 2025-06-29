@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // Import BrowserRouter from react-router-dom to provide routing context
 import { BrowserRouter as Router, Link } from 'react-router-dom';
+import {toast} from 'react-toastify'
 
 export const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -11,11 +12,13 @@ export const SignUp = () => {
         profilePicture: null
     });
     const[isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
+    
     const handleChangeValue = (e) => {
         setFormData((prevData) => ({
             ...prevData,
-            [e.target.name]: e.target.value;
+            [e.target.name]: e.target.value
         }));
     };
 
@@ -28,10 +31,27 @@ export const SignUp = () => {
 
     //----------------FETCHING BACKEND DATA--------------------//
     const handleSubmit = async(e) => {
-        e.preventData();
+        e.preventData();8
         setIsLoading(true);
 
-        const responseData = await fetch(`http://localhost:1000/api/v1/user/signup`)
+        const responseData = await fetch(`http://localhost:1000/api/v1/user/signup`,{
+            "method" : 'POST',
+
+            "Content-Type" : 'application/json'
+        })
+
+        const data = await responseData.json();
+
+        if(data.ok) {
+            if(data.data.user){
+                localStorage.setItem("USER", JSON.stringify(data.data.user));
+            };
+            navigate("/home");
+        }
+        else{
+            toast.error("data is not saved");
+            setError("DATA IS NOT SAVED IN LOCAL-STORAGE", data.json());
+        }
 
     }
 
@@ -79,7 +99,7 @@ export const SignUp = () => {
                 </div>
 
                 {/* Bottom Design - Form */}
-                <form  className="space-y-6">
+                <form onSubmit={handleSubmit}  className="space-y-6">
                     <div>
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
                         <input
@@ -87,9 +107,7 @@ export const SignUp = () => {
                             type="text"
                             placeholder="Enter username"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value
-
-                            )}
+                            onChange={handleChangeValue}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                             required
                         />
@@ -128,7 +146,7 @@ export const SignUp = () => {
                             type="password"
                             placeholder="Enter password"
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                             required
                         />
