@@ -1,44 +1,76 @@
-"use Client"
+"use client"
 
-import { useState } from "react";
-import {useForm} from "react-hook-form"
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import { object } from "zod/v4-mini";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 type FormType = "sign-in" | "sign-up";
 
-const AuthFormReolver = (formType : FormType) => {
+const authFormSchema = (formtype: FormType) => {
     return z.object({
         email: z.string().email(),
-        fullname: 
-          formType === 'sign-up' ? z.string().min(2).max(20) : z.string().optional()
+        fullName: formtype === "sign-up" ?
+            z.string().min(2).max(50) :
+            z.string().optional()
     });
-}
+};
 
-function AuthForm({type}: {formType: FormType}) {
-    const[isLoading, setIsLoading] = useState(false);
-    const[errorMessage, setErrorMessage] = useState("");
-    const[accountId, setAccountId] = useState(null);
-
-    const formSchema = AuthFormReolver(type);
-
-    const form = useForm<z.infer<typeof formSchema>>({
-            resolver: zodResolver(formSchema),
-            defaultValues: {
-                email: "",
-                fullname: ""
-            }
+const AuthForm({ type }: { type: FormType }) => {
+    const formSchema = authFormSchema(type)
+    const form = useForm< z.infer< typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            fullName: '',
+            email: ''
+        },
     });
 
-    const formSubmit = async (values: z.inferor<typeof formSchema>) => {
-        setIsLoading(true)
-        setErrorMessage("");
+    const onSubmit = await (values: z.infer<typeof formSchema>) => {
+        console.log(values);
 
-        const user = type === "signup" ? await createAccount({
-            fullname: values.fullname | "",
-            email: values.email
-        }) : await SignInUser({ email: values.email})
+        return (
+            <>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form">
+                        <h1 className='form-title'>
+                            {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                        </h1>
+
+                        {type === 'sign-up' &&
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="shadcn" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            This is your public display name.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        }
+                        <Button type="submit">Submit</Button>
+                    </form>
+                </Form>
+            </>
+        )
     }
 }
 

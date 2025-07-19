@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/appwrite/index"
 import { appwriteConfig } from "../appwrite/config";
 import { Query, ID } from "appwrite";
+import { parseStringify } from "../utils";
 
 const getUserByEmail = async(email: string) => {
     const{database} = await createAdminClient();
@@ -42,7 +43,7 @@ export const createAccount = async ({fullname, email} : {
 }) => {
     const existingUser = await getUserByEmail(email);
 
-    const accountId = await sendEmailOTP({email} : {email});
+    const accountId = await sendEmailOTP({email});
     if(!accountId) {
         throw new Error(message: "FAILED TO SEND OTP");
          
@@ -58,4 +59,6 @@ export const createAccount = async ({fullname, email} : {
             }
         )
     }
+
+    return parseStringify({accountId});
 };

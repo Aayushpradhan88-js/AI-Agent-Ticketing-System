@@ -1,14 +1,8 @@
 
 import React from 'react';
-// import layout from '@/components/layout';
+ import AuthForm from '@/components/AuthForm';
 
-const SignIn = () => {
-    return(
-        <h1 className="text-3xl font-bold underline">
-            Sign In Page
-        </h1>
-    )
-}
+const SignIn = () => <AuthForm type='sign-in'/>
 
 export default SignIn;
 
