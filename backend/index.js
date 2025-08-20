@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 import express from "express"
 import connectDB from "./db/connectdb.js"
+import { authRoute } from "./routes/auth.routes.js"
 const app = express()
 
 
@@ -10,9 +11,13 @@ app.use(express.json());
 
 connectDB();
 
+app.use("/api/auth", authRoute);
+
 app.get("/home", (req, res) => {
     res.send("welcome to home!!")
 });
+
+
 
 console.log("mongodb uri", process.env.MONGODB_URI)
 
