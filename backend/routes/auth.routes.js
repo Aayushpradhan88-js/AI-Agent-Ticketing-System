@@ -6,7 +6,7 @@ import {
     logoutAccount,
     updateAccount,
     getAllAccountUsers
-} from "../controllers/user.controller";
+} from "../controllers/user.controller.js";
 
 export const authRoute = express.Router();
 

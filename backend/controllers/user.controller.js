@@ -1,7 +1,7 @@
-import { User } from "../models/user.models";
-import { ApiResponse } from "../utils/ApiResponse.utils";
-import { ApiError } from "../utils/ApiError.utils";
-import { inngest } from "../inngest/client";
+import { User } from "../models/user.models.js";
+import { ApiResponse } from "../utils/ApiResponse.utils.js";
+import { ApiError } from "../utils/ApiError.utils.js";
+import { inngest } from "../inngest/client.js";
 
 //---------REGISTER ACCOUNT----------
 export const registerAccount = async (req, res) => {

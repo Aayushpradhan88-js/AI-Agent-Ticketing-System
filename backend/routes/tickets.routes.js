@@ -1,5 +1,5 @@
 import express from "express"
-import { createTicket } from "../controllers/ticket.controller";
+import { createTicket } from "../controllers/ticket.controller.js";
 
 export const ticketRoute = express.Router();
 
