@@ -2,9 +2,10 @@
 ALGORITHM FOR CREATING TICKET
 
 1. getting title and desciption from the frontend
-2. if it is not given throw error
+2. Not given throw error
 3. create the ticket
-4. using inngest==
+4. using inngesT
+
 */
 import { Ticket } from "../models/ticket.models.js";
 import { ApiError } from "../utils/ApiError.utils.js"
@@ -17,7 +18,6 @@ export const createTicket = async (req, res) => {
         new ApiError(402, "title or description is required");
     };
     try {
-
         const newTicket = Ticket.create(
             {
                 title,
@@ -28,7 +28,7 @@ export const createTicket = async (req, res) => {
 
         await inngest.send(
             {
-                name: "ticket/created",
+                name: "ticket/created", //---hit the function (on-ticket-created)---//
                 data: {
                     ticketId: (await newTicket)._id.toString(),
                     title,
@@ -41,13 +41,11 @@ export const createTicket = async (req, res) => {
         res
             .send(200)
             .json(
-
                 new ApiResponse(
                     200,
                     "ticket created successfully & processing has been started",
                     newTicket
                 )
-
             )
     }
 
@@ -64,6 +62,7 @@ export const createTicket = async (req, res) => {
     }
 };
 
+//-----GET ALL TICKETS-----//
 export const getAllTickets = async (req, res) => {
     try {
         const user = req.user;
@@ -95,16 +94,63 @@ export const getAllTickets = async (req, res) => {
 
     catch (error) {
         return res
-        .status(200)
-        .json(
-            new ApiError(
-                500,
-                "INTERNAL SERVER ERROR"
+            .status(200)
+            .json(
+                new ApiError(
+                    500,
+                    "INTERNAL SERVER ERROR"
+                )
             )
-        )
     };
 };
 
-export const getTicket = async(req, res) => {
-    
-}
+//-----GET TICKET By Id-----//
+export const getTicketById = async (req, res) => {
+    try {
+        const user = req.user;
+        let ticket;
+
+        if (user.role !== "admin") {
+            ticket = Ticket.findById(req.params.id).populate(
+                "assignedTo",
+                [
+                    "emai",
+                    "id"
+                ]
+            );
+        }
+
+        else {
+            ticket = await Ticket.findOne(
+                {
+                    createdBy: user._id,
+                    _id: req.params.id
+                }
+            ).select("title and description is createdBy")
+        }
+
+        if (!ticket) {
+            res
+                .status(404)
+                .json(
+                    new ApiError(
+                        404,
+                        "ticket not found",
+                        ticket
+                    )
+                )
+        }
+    }
+
+    catch (error) {
+        console.error("Error fetching ticket", error.message);
+        return res
+            .status(500)
+            .json(
+                new ApiError(
+                    500,
+                    "Internal Server Error"
+                )
+            );
+    }
+};

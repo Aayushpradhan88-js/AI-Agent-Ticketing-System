@@ -1,6 +1,7 @@
 import { createAgent, grok } from "@inngest/agent-kit";
+import { ApiError } from "./ApiError.utils.js";
 
-export const analyzingTicket = async (ticket) => {
+export const analyzeTicket = async (ticket) => {
     const supportAgent = createAgent({
         model: grok(
             {
@@ -23,6 +24,7 @@ export const analyzingTicket = async (ticket) => {
         Repeat: Do not wrap your output in markdown or code fences.`,
     });
 
+    //-----RUNNING THE AGENT-----//
     const response = await supportAgent.run(
         `You are a ticket triage agent. Only return a strict JSON object with no extra text, headers, or markdown.
         Analyze the following support ticket and provide a JSON object with:
@@ -46,7 +48,26 @@ export const analyzingTicket = async (ticket) => {
         }`
     )
 
-    const raw = response.output[0].context
+    const raw = response.output[0].context;
 
-    const match = raw.match
+    //-----HANDLING AI RESPONSE-----//
+    try {
+
+        const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
+        const jsonString = match ? match[1] : raw.trim();
+        return JSON.parse(jsonString);
+
+    }
+
+    catch (error) {
+        res
+            .status(500)
+            .json(
+                new ApiError(
+                    500,
+                    "Failed to parse AI response",
+                    error
+                )
+            )
+    }
 }

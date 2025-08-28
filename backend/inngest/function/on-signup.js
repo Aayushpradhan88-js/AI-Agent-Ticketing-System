@@ -6,13 +6,18 @@ import { ApiResponse } from "../../utils/ApiResponse.utils.js";
 import { NonRetriableError } from "inngest";
 
 export const onSigningUp = inngest.createFunction(
-    { id: "on-user-signup", retries: 2 },
+    { 
+        id: "on-user-signup", 
+        retries: 2 
+    },
     { event: "user/signup" },
 
     async ({ event, step }) => {
         try {
+            
             //PIPELINE - 1
             const { email } = event.data
+            //-----fetch data from the database-----//
             const user = await step.run("get-user-email", async () => {
                 const userObject = await User.findOne({ email })
                 if (!userObject) {

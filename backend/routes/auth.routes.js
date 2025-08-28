@@ -8,10 +8,13 @@ import {
     getAllAccountUsers
 } from "../controllers/user.controller.js";
 
+import { authenticate } from "../middlewares/auth.js";
+
 export const authRoute = express.Router();
 
 authRoute.post("/signup", registerAccount);
 authRoute.post("/login", loginAccount);
 authRoute.post("/logout", logoutAccount);
-authRoute.post("/update-account", updateAccount);
-authRoute.get("/get-users-account", getAllAccountUsers);
+
+authRoute.post("/update-account", authenticate, updateAccount);
+authRoute.get("/get-users-account", authenticate, getAllAccountUsers);
