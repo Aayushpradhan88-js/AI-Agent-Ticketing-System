@@ -5,3 +5,6 @@ node_modules
 .env
 
 breakdown.js
+
+#drawing
+project.excalidraw
