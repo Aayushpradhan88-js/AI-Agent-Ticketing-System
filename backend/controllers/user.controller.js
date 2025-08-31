@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { inngest } from "../inngest/client.js";
 
-//---------REGISTER ACCOUNT----------
+//---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
     const { username, email, password, skills = [] } = req.body;
 
@@ -67,7 +67,7 @@ export const registerAccount = async (req, res) => {
     }
 }
 
-//---------LOGIN ACCOUNT----------
+//---------LOGIN ACCOUNT----------//
 export const loginAccount = async (req, res) => {
     const { email, password } = req.body;
 
@@ -92,7 +92,7 @@ export const loginAccount = async (req, res) => {
     }
 }
 
-//---------LOGOUT ACCOUNT----------
+//---------LOGOUT ACCOUNT----------//
 export const logoutAccount = async (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     if (!token) throw new ApiError(401, "Unauthorized")
@@ -106,7 +106,7 @@ export const logoutAccount = async (req, res) => {
 
 }
 
-//---------UPDATING ACCOUNT----------
+//---------UPDATING ACCOUNT----------//
 export const updateAccount = async (req, res) => {
     const { username, email, skills = [], role } = req.body;
 
@@ -152,7 +152,7 @@ export const updateAccount = async (req, res) => {
     };
 };
 
-//----------GETTING ALL USER ACCOUNT----------
+//----------GETTING ALL USER ACCOUNT----------//
 export const getAllAccountUsers = async (req, res) => {
     try {
         if (req.user.role !== "admin") {

@@ -8,25 +8,25 @@ AUTHENTICATION ALGORITHM
 */
 
 import jwt from "jsonwebtoken";
-import ApiError from "../utils/ApiError.js";
+import { ApiError } from "../utils/ApiError.utils.js";
 
-export const authenticate = async(req, res, next) => {
+export const authenticate = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
-    if(!token){
+    if (!token) {
         return res
-        .status(401)
-        .json(
-            new ApiError(
-                401,
-                "Unauthorized, Token is missing"
+            .status(401)
+            .json(
+                new ApiError(
+                    401,
+                    "Unauthorized, Token is missing"
+                )
             )
-        )
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
-        next(); 
+        next();
     } catch (error) {
         return res
             .status(401)

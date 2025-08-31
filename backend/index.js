@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 import cors from "cors"
 import express from "express"
+
 import { serve } from "inngest/express"
 import connectDB from "./db/connectdb.js"
 import { authRoute } from "./routes/auth.routes.js"
@@ -18,7 +19,7 @@ app.use(express.json());
 
 connectDB();
 
-app.use("/api/auth", authRoute);
+app.use("/api/v1/auth", authRoute);
 app.use("/api/tickets", ticketRoute);
 app.use("/api/inngest", serve(
     {

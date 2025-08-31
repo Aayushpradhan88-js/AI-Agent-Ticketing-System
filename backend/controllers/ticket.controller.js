@@ -11,6 +11,8 @@ import { Ticket } from "../models/ticket.models.js";
 import { ApiError } from "../utils/ApiError.utils.js"
 import { ApiResponse } from "../utils/ApiResponse.utils.js"
 
+
+//-----CREATING TICKET-----//
 export const createTicket = async (req, res) => {
     const { title, description } = req.body
 

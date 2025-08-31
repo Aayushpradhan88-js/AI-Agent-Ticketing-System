@@ -12,7 +12,7 @@ import { authenticate } from "../middlewares/auth.js";
 
 export const authRoute = express.Router();
 
-authRoute.post("/signup", registerAccount);
+authRoute.post("/register", registerAccount);
 authRoute.post("/login", loginAccount);
 authRoute.post("/logout", logoutAccount);
 

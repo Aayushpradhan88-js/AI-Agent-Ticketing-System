@@ -1,5 +1,5 @@
 import { inngest } from "../client.js";
-import User from "../../models/user.models.js";
+import {User} from "../../models/user.models.js";
 import { sendMail } from "../../utils/Node-mailer.utils.js";
 import { ApiError } from "../../utils/ApiError.utils.js";
 import { ApiResponse } from "../../utils/ApiResponse.utils.js";
