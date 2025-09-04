@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [form, setForm] = useState(
@@ -63,7 +63,7 @@ const RegisterPage = () => {
         <p className="text-center text-gray-600 mb-8"></p>
 
         {/* Google Sign-in Button */}
-        <button className="w-full flex items-center justify-center space-x-2 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-4 rounded-xl font-medium transition-colors hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
+        <button className="w-full flex items-center cursor-pointer justify-center space-x-2 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-4 rounded-xl font-medium transition-colors hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
           <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_1_25)">
               <path d="M44.5 20H24V28.5H35.25C34.25 31.83 31.5 35 24 35C16.48 35 10 28.52 10 20C10 11.48 16.48 5 24 5C28.52 5 31.98 6.9 34.2 9.1L40.48 2.8C36.98 0.52 32.78 0 24 0C10.74 0 0 10.74 0 24C0 37.26 10.74 48 24 48C36.98 48 45.1 38.6 45.1 38.6C45.1 38.6 44.5 37 44.5 37V31.5H44.5C44.5 31.5 45.1 30.5 45.1 29.5V28.5H44.5V20Z" fill="#4285F4" />
@@ -79,6 +79,7 @@ const RegisterPage = () => {
           </svg>
           <span>Sign up with Google</span>
         </button>
+
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
@@ -92,7 +93,7 @@ const RegisterPage = () => {
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <div className="mt-1">
-              <input type="text" name="username" id="username" autoComplete="username" required className="block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              <input type="text" name="username" placeholder='username' id="username" autoComplete="username" required className="block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-black-400 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               value={form.username}
               onChange={handleChange}
               />
@@ -101,9 +102,9 @@ const RegisterPage = () => {
 
           {/*--- Email ---*/}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-mediu text-gray-700">Email</label>
             <div className="mt-1">
-              <input type="email" name="email" id="email" autoComplete="email" required className="block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+              <input type="email" name="email" placeholder='email' id="email" autoComplete="email" required className="block text-black w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
               value={form.email}
               onChange={handleChange}
               />
@@ -117,10 +118,11 @@ const RegisterPage = () => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
+                placeholder='password'
                 id="password"
                 autoComplete="new-password"
                 required
-                className="block w-full px-4 py-2 border border-gray-300 rounded-xl pr-10 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="block w-full px-4 py-2 border border-gray-300 text-black rounded-xl pr-10 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 value={form.password}
             onChange={handleChange}
               />
@@ -147,7 +149,7 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            <button type="submit" className="w-full flex cursor-pointer justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             disabled={loading}
             >
                {loading ? "Signing up..." : "Sign Up"}
@@ -156,8 +158,11 @@ const RegisterPage = () => {
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          If you already have an account, then
-          <a href="#" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">login</a>.
+          If you already have an account, then? 
+          <a className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
+            <Link to="/login">login</Link>
+            
+            </a>.
         </p>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const CheckAuth = ({ children, protectedRoute }) => {
+export const CheckAuth = ({ children, protected: protectedRoute }) => {
    const navigate = useNavigate();
    const [loading, setLoading] = useState(false);
 
@@ -28,5 +28,3 @@ const CheckAuth = ({ children, protectedRoute }) => {
     }
     return children;
 }
-
-export default CheckAuth;

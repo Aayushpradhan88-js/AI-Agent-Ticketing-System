@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Diamond, ArrowRight, CheckCircle, Users, Settings, FileText, MessageSquare } from 'lucide-react';
 
 function HomePage() {
@@ -12,9 +13,12 @@ function HomePage() {
       {/* Header */}
       <header className="flex justify-between items-center p-6 border-b border-gray-800">
         <div className="text-3xl font-bold text-white">superagent</div>
-        <div className="text-sm text-gray-400">Problem Solving Guide</div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-700 transition-colors">
-          login/Create account
+        <button  className="px-4 py-2 cursor-pointer border-1 text-white rounded-lg text-lg transition-colors">
+          <Link to="/login">login</Link>
+        </button>
+        <button className="px-4 py-2 bg-blue-600 text-white cursor-pointer rounded-lg text-lg hover:bg-blue-700 transition-colors">
+          <Link to="/register-form">Create account</Link>
+          
         </button>
       </header>
 

@@ -21,18 +21,16 @@ connectDB();
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/tickets", ticketRoute);
-app.use("/api/inngest", serve(
-    {
-        client: inngest,
-        function: [onSigningUp, onTicketCreated]
-    }
-))
+app.use("/api/inngest", serve({
+    client: inngest,
+    functions: [onSigningUp, onTicketCreated]
+}))
 
 app.get("/home", (req, res) => {
     res.send("welcome to home!!")
 });
 
-console.log("mongodb uri", process.env.MONGODB_URI)
+console.log("mongodb uri", process.env.MONGO_URI)
 
 const PORT = process.env.PORT
 app.listen(PORT || 3000, () => {

@@ -3,7 +3,7 @@ import AppRoutes from './routes/approutes.jsx'
 
 const App = () => {
 
-   return (
+  return (
     <>
       <AppRoutes />
     </>
@@ -11,4 +11,4 @@ const App = () => {
 
 }
 
-export default App
+export default App;

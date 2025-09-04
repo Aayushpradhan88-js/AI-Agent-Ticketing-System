@@ -11,7 +11,7 @@ ALGORITHM
 */
 
 import { inngest } from '../client.js'
-import {Ticket} from '../../models/ticket.models.js'
+import { Ticket } from '../../models/ticket.models.js'
 // import { ApiError } from '../../utils/ApiError.utils.js';
 import { NonRetriableError } from 'inngest';
 import { analyzeTicket } from '../../utils/AnalyzeTicket.utils.js';

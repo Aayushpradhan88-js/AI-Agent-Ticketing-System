@@ -1,20 +1,20 @@
 import { inngest } from "../client.js";
-import {User} from "../../models/user.models.js";
+import { User } from "../../models/user.models.js";
 import { sendMail } from "../../utils/Node-mailer.utils.js";
 import { ApiError } from "../../utils/ApiError.utils.js";
 import { ApiResponse } from "../../utils/ApiResponse.utils.js";
 import { NonRetriableError } from "inngest";
 
 export const onSigningUp = inngest.createFunction(
-    { 
-        id: "on-user-signup", 
-        retries: 2 
+    {
+        id: "on-user-signup",
+        retries: 2
     },
     { event: "user/signup" },
 
     async ({ event, step }) => {
         try {
-            
+
             //PIPELINE - 1
             const { email } = event.data
             //-----fetch data from the database-----//
