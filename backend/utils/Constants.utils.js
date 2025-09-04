@@ -1,1 +1,0 @@
-export const DB_NAME="ticket-system-ai-agent"

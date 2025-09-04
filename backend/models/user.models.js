@@ -18,14 +18,20 @@ const userModel = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return !this.googleId; //--password not required if Google OAuth user
+        },
         lowercase: true,
         minlength: [5, "minimum 5 letter is required"],
         trim: true
     },
-    skills: {
+    googleId: {
         type: String,
-        required: true,
+        sparse: true //-----Allow multiple null values but ensure uniqueness for non-null values-----//
+    },
+    skills: {
+        type: [String], //-----Change to array of strings-----//
+        default: [],
         trim: true,
     },
     role: {
@@ -33,8 +39,10 @@ const userModel = new mongoose.Schema({
         enum: ["user", "admin", "moderator"],
         default: "user"
     }
-}, {
-    timestamps: true
-});
+},
+    {
+        timestamps: true
+    }
+);
 
 export const User = mongoose.model("User", userModel);

@@ -2,6 +2,8 @@ import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { inngest } from "../inngest/client.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 //---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
@@ -33,7 +35,7 @@ export const registerAccount = async (req, res) => {
         await user.save();
 
         //FIRE INNGEST
-        await inngest.send(
+        await         inngest.send(
             {
                 name: 'user/signup',
                 data: {
@@ -45,7 +47,7 @@ export const registerAccount = async (req, res) => {
         const token = jwt.sign(
             { id: user._id, user: user.username, user: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1d' }
+            process.env.JWT_TOKEN_EXPIRY_DATE 
         );
 
         res
@@ -72,10 +74,10 @@ export const loginAccount = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = User.findOne({ email });
+        const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ error: "User not found" });
 
-        const isMatch = await brcypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });

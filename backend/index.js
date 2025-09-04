@@ -2,6 +2,8 @@ import dotenv from "dotenv"
 dotenv.config()
 import cors from "cors"
 import express from "express"
+import session from "express-session"
+import passport from "passport"
 
 import { serve } from "inngest/express"
 import connectDB from "./db/connectdb.js"
@@ -11,11 +13,35 @@ import { inngest } from "./inngest/client.js"
 import { onSigningUp } from "./inngest/function/on-signup.js"
 import { onTicketCreated } from "./inngest/function/on-ticket-created.js"
 
+import passport from "./config/passport.js"
+
 const app = express()
-app.use(cors())
+app.use(cors(
+    {
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true
+}
+))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
+
+// Session configuration
+app.use(session(
+    {
+    secret: process.env.SESSION_SECRET || 'your-secret-key-here',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 connectDB();
 
