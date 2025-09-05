@@ -36,13 +36,15 @@ export const onSigningUp = inngest.createFunction(
                 await sendMail(user.email, subject, message);
             });
 
-            return res.status(204).json(
-                new ApiResponse(200, "Successfully send mail to user")
-            );
+            return {
+                message: "Successfully sent welcome email to user",
+                email: user.email,
+                status: "success"
+            };
 
         }
         catch (error) {
-            throw new ApiError(500, error, "Failed to send mail to user. SERVER ERROR")
+            throw new ApiError(500, "Failed to send mail to user. SERVER ERROR", error.message)
         }
     }
 )

@@ -13,21 +13,24 @@ export const sendMail = async (to, subject, text, html) => {
       },
     });
 
-    (async () => {
-      const info = await transporter.sendMail({
-        from: ' INNGEST AGENT TMS ',
-        to,
-        subject,
-        text,
-        html: "<b>Hello world?</b>",
-      });
+    console.log(`🚀 Attempting to send email to: ${to}`);
+    console.log(`📧 Subject: ${subject}`);
+    
+    const info = await transporter.sendMail({
+      from: ' INNGEST AGENT TMS ',
+      to,
+      subject,
+      text,
+      html: html || "<b>Hello world?</b>", // Use provided html or default
+    });
 
-      console.log("Message sent:", info.messageId);
-      return info
-    })();
+    console.log("Message sent:", info.messageId);
+    return info;
   }
 
   catch (error) {
-    console.log("FAILED TO SEND EMAIL", error)
+    console.log("FAILED TO SEND EMAIL:", error.message)
+    console.log("Full error:", error)
+    throw error; // Re-throw so calling function knows it failed
   }
 }

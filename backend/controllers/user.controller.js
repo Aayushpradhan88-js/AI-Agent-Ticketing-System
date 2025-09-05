@@ -47,9 +47,9 @@ export const registerAccount = async (req, res) => {
         )
 
         const token = jwt.sign(
-            { id: user._id, user: user.username, user: user.role },
+            { id: user._id, user: user.username },
             process.env.JWT_SECRET,
-            process.env.JWT_TOKEN_EXPIRY_DATE
+            { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE }
         );
         console.log(process.env.JWT_SECRET);
         console.log(user)
@@ -91,7 +91,11 @@ export const loginAccount = async (req, res) => {
             process.env.JWT_SECRET
         );
 
-        res.json({ user, token });
+        res.json(
+            { user, 
+                token 
+            }
+        );
     } catch (error) {
         res.status(500).json({ error: "Login failed", details: error.message });
     }
