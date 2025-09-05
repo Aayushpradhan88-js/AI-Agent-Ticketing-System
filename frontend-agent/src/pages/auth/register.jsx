@@ -44,7 +44,7 @@ const RegisterPage = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/");
+        navigate("/ticket");
       } else {
         alert(data.message, "Failed to signup, Please try again");
       }

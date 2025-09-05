@@ -1,12 +1,12 @@
-import { createAgent, grok } from "@inngest/agent-kit";
+import { createAgent, gemini} from "@inngest/agent-kit";
 import { ApiError } from "./ApiError.utils.js";
 
 export const analyzeTicket = async (ticket) => {
     const supportAgent = createAgent({
-        model: grok(
+        model: gemini(
             {
-                model: "grok-3-mini-fast",
-                apiKey: process.env.GORK_API_KEY
+                model: "gemini-2.0-flash",
+                apiKey: process.env.GEMINI_API_KEY
             }
         ),
         name: "AI Ticket Triage Assistant",

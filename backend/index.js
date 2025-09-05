@@ -51,10 +51,6 @@ app.use("/api/inngest", serve({
     functions: [onSigningUp, onTicketCreated]
 }))
 
-app.get("/home", (req, res) => {
-    res.send("welcome to home!!")
-});
-
 console.log("mongodb uri", process.env.MONGO_URI)
 
 const PORT = process.env.PORT

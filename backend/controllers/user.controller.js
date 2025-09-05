@@ -1,3 +1,5 @@
+// import dotenv from "dotenv"
+// dotenv.config()
 import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
@@ -35,7 +37,7 @@ export const registerAccount = async (req, res) => {
         await user.save();
 
         //FIRE INNGEST
-        await         inngest.send(
+        await inngest.send(
             {
                 name: 'user/signup',
                 data: {
@@ -47,9 +49,10 @@ export const registerAccount = async (req, res) => {
         const token = jwt.sign(
             { id: user._id, user: user.username, user: user.role },
             process.env.JWT_SECRET,
-            process.env.JWT_TOKEN_EXPIRY_DATE 
+            process.env.JWT_TOKEN_EXPIRY_DATE
         );
-
+        console.log(process.env.JWT_SECRET);
+        console.log(user)
         res
             .status(201)
             .json({

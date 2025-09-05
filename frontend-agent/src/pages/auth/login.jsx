@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const LoginPage = () => {
-const [form, setForm] = useState({
-      email: "",
-      password: ""
-    });
+const [form, setForm] = useState(
+    {
+      username: " ",
+      email: " ",
+      password: " ",
+    }
+  );
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,7 +24,6 @@ const [form, setForm] = useState({
   const handleLogin = async (event) => {
     event.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       //----------FETCHING FROM THE BACKEND----------//
@@ -45,10 +45,10 @@ const [form, setForm] = useState({
         localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/tickets");
       } else {
-        setError(data.message || "Failed to login. Please try again.");
+        alert(data.message, "Failed to login, Please try again");
       }
     } catch (error) {
-      setError("Something went wrong. Please try again later.");
+      alert("SomeThing went wrong")
       console.log(error)
     } finally {
       setLoading(false);
@@ -58,23 +58,31 @@ const [form, setForm] = useState({
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-inter">
       <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Login to Your Account</h1>
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">login Account</h1>
         <p className="text-center text-gray-600 mb-8"></p>
 
         {/* Google Sign-in Button */}
-        <GoogleLoginButton />
+        <button className="w-full flex items-center justify-center cursor-pointer space-x-2 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-4 rounded-xl font-medium transition-colors hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
+          <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_1_25)">
+              <path d="M44.5 20H24V28.5H35.25C34.25 31.83 31.5 35 24 35C16.48 35 10 28.52 10 20C10 11.48 16.48 5 24 5C28.52 5 31.98 6.9 34.2 9.1L40.48 2.8C36.98 0.52 32.78 0 24 0C10.74 0 0 10.74 0 24C0 37.26 10.74 48 24 48C36.98 48 45.1 38.6 45.1 38.6C45.1 38.6 44.5 37 44.5 37V31.5H44.5C44.5 31.5 45.1 30.5 45.1 29.5V28.5H44.5V20Z" fill="#4285F4" />
+              <path d="M44.5 20L24 20L24 28.5L35.25 28.5C34.25 31.83 31.5 35 24 35C16.48 35 10 28.52 10 20C10 11.48 16.48 5 24 5C28.52 5 31.98 6.9 34.2 9.1L40.48 2.8C36.98 0.52 32.78 0 24 0C10.74 0 0 10.74 0 24C0 37.26 10.74 48 24 48C36.98 48 45.1 38.6 45.1 38.6V20H44.5Z" fill="#FBBC05" />
+              <path d="M24 0C10.74 0 0 10.74 0 24C0 37.26 10.74 48 24 48C36.98 48 45.1 38.6 45.1 38.6C45.1 38.6 44.5 37 44.5 37V31.5H44.5C44.5 31.5 45.1 30.5 45.1 29.5V28.5H44.5V20H24V0Z" fill="#EA4335" />
+              <path d="M44.5 20L24 20V28.5H35.25C34.25 31.83 31.5 35 24 35C16.48 35 10 28.52 10 20C10 11.48 16.48 5 24 5C28.52 5 31.98 6.9 34.2 9.1L40.48 2.8C36.98 0.52 32.78 0 24 0C10.74 0 0 10.74 0 24C0 37.26 10.74 48 24 48C36.98 48 45.1 38.6 45.1 38.6C45.1 38.6 44.5 37 44.5 37V31.5H44.5C44.5 31.5 45.1 30.5 45.1 29.5V28.5H44.5V20Z" fill="#34A853" />
+            </g>
+            <defs>
+              <clipPath id="clip0_1_25">
+                <rect width="48" height="48" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span>Login with Google</span>
+        </button>
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
-
-        {/*---------- Error Display ----------*/}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
-            {error}
-          </div>
-        )}
 
         {/*---------- Login Form ----------*/}
         <form onSubmit={handleLogin} className="space-y-6">
@@ -125,19 +133,19 @@ const [form, setForm] = useState({
           </div>
 
           <div>
-            <button type="submit" className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            <button type="submit" className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             disabled={loading}
             >
-               {loading ? "Signing in..." : "Sign In"}
+               {loading ? "Signing up..." : "Sign Up"}
             </button>
           </div>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register-form" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
-            Sign up here
-          </Link>
+          Create a new account, then
+          <a className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
+              <Link to="/register-form">register account</Link>
+            </a>.
         </p>
       </div>
     </div>

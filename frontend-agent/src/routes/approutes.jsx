@@ -2,8 +2,8 @@ import React from 'react'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 
 import HomePage from '../pages/Home.jsx'
-import RegisterPage from '../pages/register.jsx'
-import LoginPage from '../pages/login.jsx'
+import RegisterPage from '../pages/auth/register.jsx'
+import LoginPage from '../pages/auth/login.jsx'
 import AdminPage from '../pages/admin.jsx'
 import TicketPage from '../pages/ticket.jsx'
 import TicketsPage from '../pages/tickets.jsx'
@@ -29,7 +29,7 @@ const AppRoutes = () => {
                 } />
                 
                 <Route path='/admin' element={
-                    <CheckAuth protected={false}>
+                    <CheckAuth protected={true}>
                         <AdminPage />
                     </CheckAuth>
                 } />
