@@ -4,7 +4,6 @@ import cors from "cors"
 import express from "express"
 import session from "express-session"
 import passport from "passport"
-
 import { serve } from "inngest/express"
 import connectDB from "./db/connectdb.js"
 import { authRoute } from "./routes/auth.routes.js"
@@ -13,12 +12,12 @@ import { inngest } from "./inngest/client.js"
 import { onSigningUp } from "./inngest/function/on-signup.js"
 import { onTicketCreated } from "./inngest/function/on-ticket-created.js"
 
-import passport from "./config/passport.js"
+import "./config/passport.js"
 
 const app = express()
 app.use(cors(
     {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true
 }
 ))
@@ -29,11 +28,11 @@ app.use(express.json());
 // Session configuration
 app.use(session(
     {
-    secret: process.env.SESSION_SECRET || 'your-secret-key-here',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        // secure: process.env.NODE_ENV === 'production', //--HOLD---//
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }

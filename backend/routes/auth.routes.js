@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import jwt from "jsonwebtoken";
 
 import {
     registerAccount,
@@ -13,12 +14,11 @@ import { authenticate } from "../middlewares/auth.js";
 
 export const authRoute = express.Router();
 
-// Traditional authentication routes
 authRoute.post("/register", registerAccount);
 authRoute.post("/login", loginAccount);
 authRoute.post("/logout", logoutAccount);
 
-// Google OAuth routes
+//----------Google OAuth routes----------//
 authRoute.get("/google",
     passport.authenticate("google", {
         scope: ["profile", "email"]
@@ -30,23 +30,22 @@ authRoute.get("/google/callback",
         failureRedirect: "/login?error=oauth_failed"
     }),
     (req, res) => {
-        // Successful authentication
-        const redirectUrl = process.env.CLIENT_URL || "http://localhost:3000";
-        res.redirect(`${redirectUrl}/dashboard?auth=success`);
+        //-----Successful authentication-----//
+        const redirectUrl = process.env.CLIENT_URL || "http://localhost:5173";
+        res.redirect(`${redirectUrl}/tickets?auth=success`);
     }
 );
 
-// Get current user (for both JWT and session-based auth)
 authRoute.get("/me", (req, res) => {
     if (req.user) {
-        // Session-based authentication (OAuth)
+        //-----Session-based authentication (OAuth)-----//
         res.json({
             success: true,
             user: req.user,
             authType: "session"
         });
     } else {
-        // Check JWT token
+        //-----Check JWT token-----//
         const token = req.headers.authorization?.split(" ")[1];
         if (token) {
             try {
@@ -65,7 +64,7 @@ authRoute.get("/me", (req, res) => {
     }
 });
 
-// Session-based logout
+//----------Session-based logout----------//
 authRoute.post("/logout/session", (req, res) => {
     req.logout((err) => {
         if (err) {
