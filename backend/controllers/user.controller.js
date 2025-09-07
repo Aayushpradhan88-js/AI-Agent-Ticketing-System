@@ -18,7 +18,7 @@ export const registerAccount = async (req, res) => {
 
         const existingUsername = await User.findOne({ username });
         if (existingUsername) {
-            throw new ApiError.status(400).json({ message: 'Username already taken' });
+            return res.status(400).json({ message: 'Username already taken' });
         }
         const existingEmail = await User.findOne({ email });
         if (existingEmail) {
@@ -80,15 +80,16 @@ export const loginAccount = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ error: "User not found" });
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
         const token = jwt.sign(
-            { _id: user._id, role: user.role },
-            process.env.JWT_SECRET
+            { _id: user._id, role: user.role, user: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE || '24h' }
         );
 
         res.json(
@@ -103,16 +104,33 @@ export const loginAccount = async (req, res) => {
 
 //---------LOGOUT ACCOUNT----------//
 export const logoutAccount = async (req, res) => {
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) throw new ApiError(401, "Unauthorized")
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized - No token provided" });
+        }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decodedToken?._id).select("-password");
+        
+        if (!user) {
+            return res.status(401).json({ message: "Invalid Access Token" });
+        }
 
-    const user = await User.findById(decodedToken?._id).select("-password")
-    if (!user) throw new ApiError(401, "Invalid Access Token")
-
-    req.user = user;
-
+        // For JWT-based logout, we just send success response
+        // Client should remove token from storage
+        res.status(200).json({ 
+            success: true, 
+            message: "Logged out successfully" 
+        });
+        
+    } catch (error) {
+        console.error('Logout Error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Server error during logout" 
+        });
+    }
 }
 
 //---------UPDATING ACCOUNT----------//
