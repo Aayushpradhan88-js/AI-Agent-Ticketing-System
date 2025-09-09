@@ -17,6 +17,8 @@ export const authRoute = express.Router();
 authRoute.post("/register", registerAccount);
 authRoute.post("/login", loginAccount);
 authRoute.post("/logout", logoutAccount);
+authRoute.post("/update-account", authenticate, updateAccount);
+authRoute.get("/get-users-account", authenticate, getAllAccountUsers);
 
 //----------Google OAuth routes----------//
 authRoute.get("/google",
@@ -79,6 +81,3 @@ authRoute.post("/logout/session", (req, res) => {
         });
     });
 });
-
-authRoute.post("/update-account", authenticate, updateAccount);
-authRoute.get("/get-users-account", authenticate, getAllAccountUsers);

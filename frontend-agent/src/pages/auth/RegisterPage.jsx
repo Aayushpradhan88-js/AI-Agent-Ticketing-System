@@ -45,6 +45,7 @@ const RegisterPage = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.role));
         navigate("/tickets");
       } else {
         alert(data.message, "Failed to signup, Please try again");

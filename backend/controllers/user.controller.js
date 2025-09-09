@@ -47,7 +47,7 @@ export const registerAccount = async (req, res) => {
         )
 
         const token = jwt.sign(
-            { id: user._id, user: user.username },
+            { _id: user._id, role: user.role, user: user.username },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE }
         );
@@ -93,8 +93,9 @@ export const loginAccount = async (req, res) => {
         );
 
         res.json(
-            { user, 
-                token 
+            {
+                user,
+                token
             }
         );
     } catch (error) {
@@ -112,69 +113,97 @@ export const logoutAccount = async (req, res) => {
 
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decodedToken?._id).select("-password");
-        
+
         if (!user) {
             return res.status(401).json({ message: "Invalid Access Token" });
         }
 
         // For JWT-based logout, we just send success response
         // Client should remove token from storage
-        res.status(200).json({ 
-            success: true, 
-            message: "Logged out successfully" 
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
         });
-        
+
     } catch (error) {
         console.error('Logout Error:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: "Server error during logout" 
+        res.status(500).json({
+            success: false,
+            message: "Server error during logout"
         });
     }
 }
 
 //---------UPDATING ACCOUNT----------//
 export const updateAccount = async (req, res) => {
-    const { username, email, skills = [], role } = req.body;
+    const { username, email, skills, role, location, bio } = req.body;
 
     try {
-        if (req.user?.role !== "admin") {
+        // changes verify it
+        // Get user ID from JWT token
+        const userId = req.user?._id || req.user?.id;
+        if (!userId) {
             return res
                 .status(401)
                 .json(
-                    new ApiError(400, "Unauthorized")
+                    new ApiError(401, "Unauthorized - Invalid token")
                 );
-        };
+        }
 
-        const user = await User.findOne({ email });
-        if (!user) return res
-            .status(403)
-            .json(
-                new ApiError(404, "user not found")
-            );
+        // Find user by ID from token (more secure than email from body)
+        const user = await User.findById(userId);
+        if (!user) {
+            return res
+                .status(404)
+                .json(
+                    new ApiError(404, "User not found")
+                );
+        }
 
-        const updateAcc = await User.updateOne(
-            { email },
+        // Prepare update object - only update provided fields
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (email) updateData.email = email;
+        if (skills) updateData.skills = skills;
+        if (location) updateData.location = location;
+        if (bio) updateData.bio = bio;
+
+        // Only admins can update role
+        if (role && req.user?.role === "admin") {
+            updateData.role = role;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            updateData,
             {
-                skills: skills.length ? skills : user.skills,
-                role,
-                username
+                new: true,
+                select: "-password"
             }
         );
+
+        console.log("updated user ", updatedUser);
 
         return res
             .status(200)
             .json(
-                new ApiResponse(200, "User updated successfully", updateAcc)
+                new ApiResponse(
+                    200,
+                    "User updated successfully",
+                    updatedUser
+                )
             );
     }
     catch (error) {
-        console.log("Failed to update user");
+        console.error("Failed to update user:", error);
 
         res
             .status(500)
             .json(
-                new ApiError(500, "INTERNAL SERVER ERROR, FAILED TO UPDATE USER")
+                new ApiError(
+                    500,
+                    "INTERNAL SERVER ERROR, FAILED TO UPDATE USER"
+                )
             );
     };
 };

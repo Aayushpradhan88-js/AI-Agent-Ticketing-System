@@ -7,6 +7,7 @@ import LoginPage from '../pages/auth/LoginPage.jsx'
 import AdminPage from '../pages/AdminPage.jsx'
 import TicketPage from '../pages/TicketPage.jsx'
 import TicketsPage from '../pages/TicketsPage.jsx'
+import ProfilePage from '../pages/ProfilePage.jsx'
 
 import { CheckAuth } from '../components/check-auth.jsx'
 
@@ -15,40 +16,55 @@ const AppRoutes = () => {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={
-                   
-                       <HomePage />
-          
-                    } />
-                
+
+                    <HomePage />
+
+                } />
+
                 <Route path='/register-form' element={
-                 
-                        <RegisterPage />
-               
+
+                    <RegisterPage />
+
                 } />
-                
+
                 <Route path='/login' element={
-                   
-                        <LoginPage />
-         
+
+                    <LoginPage />
+
                 } />
-                
+
                 <Route path='/admin' element={
                     <CheckAuth protected={true}>
                         <AdminPage />
                     </CheckAuth>
                 } />
-                
+
                 <Route path='/tickets' element={
                     <CheckAuth protected={true}>
                         <TicketPage />
                     </CheckAuth>
                 } />
-                
+
                 <Route path='/ticket/:id' element={
                     <CheckAuth protected={true}>
                         <TicketsPage />
                     </CheckAuth>
                 } />
+
+                <Route path='/profile/edit' element={
+                    <CheckAuth protected={true}>
+                        <ProfilePage />
+                    </CheckAuth>
+                }
+                />
+
+                <Route path='/admin' element={
+                    <CheckAuth protected={true}>
+                        <AdminPage />
+                    </CheckAuth>
+                }
+                />
+
             </Routes>
         </BrowserRouter>
     )

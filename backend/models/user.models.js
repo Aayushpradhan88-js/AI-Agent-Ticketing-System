@@ -38,6 +38,9 @@ const userModel = new mongoose.Schema({
         type: String,
         enum: ["user", "admin", "moderator"],
         default: "user"
+    },
+    location: {
+        type: String,
     }
 },
     {

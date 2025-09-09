@@ -1,6 +1,7 @@
 import React from 'react'
 import { LogoutBtn } from '../components/LogoutBtn.jsx'
-import { Profile } from '../components/Profile.jsx'
+import { Profile } from '../components/profile-page/Profile.jsx'
+import { AdminBtn } from '../components/AdminBtn.jsx'
 
 const TicketPage = () => {
   return (
@@ -9,8 +10,10 @@ const TicketPage = () => {
         <h1 className="text-2xl">superagent</h1>
         <input type="text" placeholder="search tickets" className="p-2 bg-black border border-white rounded w-1/2" />
         <div className="flex items-center space-x-4">
-          <button className="bg-blue-700 text-white p-2 rounded">Admin</button>
+
+          <AdminBtn />
           <Profile />
+
         </div>
       </div>
       <div className="w-full max-w-md">
