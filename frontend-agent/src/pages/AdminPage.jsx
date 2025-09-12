@@ -24,13 +24,13 @@ export default function AdminPanel() {
     setLoading(true)
     try {
       //----------FETCHING FROM THE BACKEND----------//
-      const response = await fetch(`http://localhost:3000/api/v1/tickets/all-tickets`, 
+      const response = await fetch(`http://localhost:3000/api/v1/tickets/all-tickets`,
         {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-      });
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        });
       //----------FETCHING FROM THE BACKEND----------//
       const data = response.data;
       if (response.ok) {
@@ -57,19 +57,20 @@ export default function AdminPanel() {
     });
   }, [users, searchQuery, filterStatus, filterRole]);
 
-  const handleEdit = async() => {
-    try{
+  const handleEdit = async () => {
+    try {
       const response = await fetch(`http://localhost:3000/api/v1/auth/update-account`,
-   {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        }
       )
-    } catch(error) {
-      
+    } catch (error) {
+
     }
-  } 
+  }
   const handleEditUser = (user) => {
     setEditingUser({ ...user, skillsText: user.skills.join(', ') });
   };
