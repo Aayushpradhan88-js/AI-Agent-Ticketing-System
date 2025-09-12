@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 import { Diamond, ArrowRight, CheckCircle, Users, Settings, FileText, MessageSquare } from 'lucide-react';
 
 function HomePage() {
-  // const [activeTab, setActiveTab] = useState('workflow');
 
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: "'Lilita One', cursive" }}>
-      {/* Google Fonts Link - Lilita One */}
       <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
       
       {/* Header */}
@@ -46,6 +44,9 @@ function HomePage() {
             <span>Microsoft</span>
             <span>PostMan</span>
             <span>MongoDB</span>
+            <span>Apple</span>
+            <span>Meta</span>
+            <span>Google</span>
           </div>
           <p className="text-lg text-gray-400 mt-6">Behind the scenes Workflows</p>
         </div>

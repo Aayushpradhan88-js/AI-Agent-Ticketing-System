@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Edit3, Trash2, Plus, Filter, Eye, EyeOff, Users, UserCheck, UserX, ChevronDown } from 'lucide-react';
+import { Search, ArrowLeft, Edit3, Trash2, Plus, Filter, Eye, EyeOff, Users, UserCheck, UserX, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminPanel() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -7,30 +8,43 @@ export default function AdminPanel() {
   const [filterRole, setFilterRole] = useState('all');
   const [editingUser, setEditingUser] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useStat(false);
 
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      email: 'aayush@gmail.com',
-      role: 'moderator',
-      skills: ['javascript', 'nextjs', 'react'],
-      status: 'active'
-    },
-    {
-      id: 2,
-      email: 'aayush@gmail.com',
-      role: 'moderator',
-      skills: [],
-      status: 'inactive'
-    },
-    {
-      id: 3,
-      email: 'aayush@gmail.com',
-      role: 'moderator',
-      skills: ['python', 'pytorch', 'django', 'numpy'],
-      status: 'active'
+  //---------- TASK-1 FETCH ALL THE USERS & MODERATORS DATA FROM THE DB----------//
+  //---------- TASK-2 HOW CAN YOU ACCESS THAT THE MODERATORS || USERS ARE ACTIVE/INACTIVE --------//
+  //---------- TASK-3 THERE ARE FEATURES DELETE,EDIT FEATURES---------//
+  // const handle
+
+  const [users, setUsers] = useState();
+
+  //---------ALL TICKETS----------//
+  const handleUsers = async (event) => {
+    event.preventDefaut();
+    setLoading(true)
+    try {
+      //----------FETCHING FROM THE BACKEND----------//
+      const response = await fetch(`http://localhost:3000/api/v1/tickets/all-tickets`, 
+        {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      //----------FETCHING FROM THE BACKEND----------//
+      const data = response.data;
+      if (response.ok) {
+        localStorage.setItem("Tickets", data.ticket);
+      } else {
+        alert("FAILED TO SAVE DATA OR FAILED TO OPEN REQUEST");
+      }
+    } catch (error) {
+      console.log(error.message);
+      setError("FAILED TO FETCH ALL TICKETS");
+    } finally {
+      setLoading(false)
     }
-  ]);
+  }
 
   const filteredUsers = useMemo(() => {
     return users.filter(user => {
@@ -43,6 +57,19 @@ export default function AdminPanel() {
     });
   }, [users, searchQuery, filterStatus, filterRole]);
 
+  const handleEdit = async() => {
+    try{
+      const response = await fetch(`http://localhost:3000/api/v1/auth/update-account`,
+   {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      )
+    } catch(error) {
+      
+    }
+  } 
   const handleEditUser = (user) => {
     setEditingUser({ ...user, skillsText: user.skills.join(', ') });
   };
@@ -88,11 +115,30 @@ export default function AdminPanel() {
     }
   };
 
+  const navigate = useNavigate();
+  const backNavigate = () => {
+    navigate("/tickets")
+  }
+  const handleError = () => {
+    error("Some thing went wrong!!");
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
+
+          <h1
+            onClick={handleError}
+            className='bg-red'>demo error</h1>
+          <button
+            onClick={backNavigate}
+            className="flex items-center gap-2 border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-800 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Admin Panel
           </h1>

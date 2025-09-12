@@ -76,7 +76,6 @@ export const getAllTickets = async (req, res) => {
                 .populate("assigned To", ["id", "email"])
                 .sort({ createdBy: -1 })
         }
-
         else {
             tickets = await Ticket
                 .find({ createdBy: user._id })

@@ -45,7 +45,7 @@ app.use(passport.session());
 connectDB();
 
 app.use("/api/v1/auth", authRoute);
-app.use("/api/tickets", ticketRoute);
+app.use("/api/v1/tickets", ticketRoute);
 app.use("/api/inngest", serve({
     client: inngest,
     functions: [onSigningUp, onTicketCreated]

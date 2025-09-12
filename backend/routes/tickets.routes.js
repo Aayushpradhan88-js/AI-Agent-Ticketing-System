@@ -10,4 +10,4 @@ export const ticketRoute = express.Router();
 
 ticketRoute.post("/create", authenticate, createTicket);
 ticketRoute.get("/:id", authenticate, getTicketById);
-ticketRoute.get("/", authenticate, getAllTickets);
+ticketRoute.get("/all-tickets", authenticate, getAllTickets);

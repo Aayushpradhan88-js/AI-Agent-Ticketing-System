@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import BackBtn from '../components/BackBtn.jsx';
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react';
+import { BackBtn } from '../components/BackBtn.jsx';
 
 const ProfilePage = () => {
-  const navigate = useNavigate();
-
   const [editForm, setEditForm] = useState(
     {
-      username:"",
-      bio:"",
-      skills:"",
-      email:"",
-      location:""
+      'username':'',
+      'bio':'',
+      'skills':'',
+      'email':'',
+      'location':''
     }
   )
   const [loading, setLoading] = useState(false);
@@ -21,6 +20,7 @@ const ProfilePage = () => {
     setEditForm({ ...editForm, [event.target.name]: event.target.value })
   };
 
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -71,7 +71,7 @@ const ProfilePage = () => {
             "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(editForm)
-        },
+        }, 
       )
 
       const updatedData = await response.json();
@@ -81,141 +81,138 @@ const ProfilePage = () => {
         localStorage.setItem("bio", JSON.stringify(updatedData.bio))
         localStorage.setItem("skills", JSON.stringify(updatedData.skills))
         localStorage.setItem("location", JSON.stringify(updatedData.location))
+
+       setEditForm({
+          ...editForm,
+          'username': response.data.username,
+          'bio': response.data.bio,
+          'skills':response.user.role,
+          'email': response.user.user,
+          'location':response.data.location
+        })
         navigate("/tickets");
       } else {
-
         setError(updatedData.message || updatedData.error || "FAILED TO UPDATE USER")
       }
     } catch (error) {
-
       setError(`SERVER ERROR: ${error.message}`)
     } finally {
       setLoading(false);
     }
   }
 
-  const handleCancel = () => {
+  const cancelNavigate = () => {
     navigate("/tickets"); // Navigate back to tickets page
   };
+  const handleError = () => {
+    error("Some thing went wrong!!");
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-[#1a1a1a] font-['Roboto']">
-
-      <div className="w-full max-w-2xl bg-base-100 p-8 rounded-3xl border border-white/20 shadow-2xl">
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
+      <div className="border border-gray-600 rounded-lg w-full max-w-2xl p-8">
         <div className="flex items-center justify-between mb-8">
-         <BackBtn/>
-          <div className="text-center flex-1">
-            <h1 className="text-3xl font-bold text-white">Edit Profile</h1>
-            <p className="text-sm opacity-70 mt-1">update your personal details to keep your profile up-to-date</p>
-          </div>
-          <div className="w-16"></div>
+
+          <h1
+            onClick={handleError}
+            className='bg-red'>demo error</h1>
+          <button
+            className="flex items-center gap-2 border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-800 transition-colors"
+          >
+            <BackBtn>
+              <ArrowLeft className="w-4 h-4" />
+            </BackBtn>
+
+          </button>
+
+          <h1 className="text-xl font-medium">Edit Profile</h1>
+
+          <div className="w-20"></div> {/* Spacer for centering */}
         </div>
 
-        {/*--------Error Display----------*/}
-        {error && (
-          <div className="alert alert-error mb-4">
-            <span className="text-white">{error}</span>
-          </div>
-        )}
+        <p className="text-center text-gray-400 mb-12">
+          update your personal details to keep your profile up-to-date
+        </p>
 
-        {/*----------- Profile Edit Form---------- */}
-        <form className="space-y-6" onSubmit={handleEdit}>
-
+        {/*----------- Profile Edit Form----------*/}
+        <form className="space-y-8">
           {/*-----Username Input-----*/}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-white">Username</span>
-            </label>
+          <div>
+            <label className="block text-sm font-medium mb-3">username</label>
             <input
               type="text"
-              placeholder="your username"
-              value={editForm.user}
+              value={editForm.username}
               onChange={handleChange}
-              className="input input-bordered w-full rounded-2xl focus:outline-none focus:border-[#2563eb] focus:shadow-md focus:shadow-[#2563eb]/50"
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
           {/*-----Bio Input-----*/}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-white">Bio</span>
-            </label>
-            <textarea
-                 type="text"
-              placeholder="A short bio about you"
-              value={editForm.user}
+          <div>
+            <label className="block text-sm font-medium mb-3">Bio</label>
+            <input
+              type="text"
+              value={editForm.bio}
               onChange={handleChange}
-              className="input input-bordered w-full rounded-2xl focus:outline-none focus:border-[#2563eb] focus:shadow-md focus:shadow-[#2563eb]/50"
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
           {/*-----Skills Input-----*/}
-           <div className="form-control">
-            <label className="label">
-              <span className="label-text text-white">Skills</span>
-            </label>
+          <div>
+            <label className="block text-sm font-medium mb-3">Skills</label>
             <input
               type="text"
-              placeholder="your username"
-              value={editForm.user}
+              value={editForm.skills}
               onChange={handleChange}
-              className="input input-bordered w-full rounded-2xl focus:outline-none focus:border-[#2563eb] focus:shadow-md focus:shadow-[#2563eb]/50"
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-
 
           {/*-----Email Input-----*/}
-           <div className="form-control">
-            <label className="label">
-              <span className="label-text text-white">Email</span>
-            </label>
+          <div>
+            <label className="block text-sm font-medium mb-3">Email</label>
             <input
-              type="text"
-              placeholder="your username"
-              value={editForm.user}
+              type="email"
+              value={editForm.email}
               onChange={handleChange}
-              className="input input-bordered w-full rounded-2xl focus:outline-none focus:border-[#2563eb] focus:shadow-md focus:shadow-[#2563eb]/50"
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
-
-          {/*----- Location Input-----t */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-white">Location</span>
-            </label>
+          {/*-----Location Input-----*/}
+          <div>
+            <label className="block text-sm font-medium mb-3">Location</label>
             <input
               type="text"
-              placeholder="your username"
-              value={editForm.user}
+              value={editForm.location}
               onChange={handleChange}
-              className="input input-bordered w-full rounded-2xl focus:outline-none focus:border-[#2563eb] focus:shadow-md focus:shadow-[#2563eb]/50"
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
-
-          {/*----- Action Buttons -----*/}
-          <div className="flex justify-center items-center pt-4 space-x-8">
+          <div className="flex items-center gap-4 mt-12">
             <button
               type="submit"
+              onClick={handleEdit}
               disabled={loading}
-              className="btn btn-primary px-8 py-2 rounded-full text-white bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50"
+              className="bg-green-700 hover:bg-green-600 px-6 py-2 rounded-lg transition-colors font-medium"
             >
               {loading ? "Updating..." : "Update Profile"}
             </button>
+
             <button
               type="button"
-              onClick={handleCancel}
-              className="btn btn-secondary px-8 py-2 rounded-full text-gray-700 bg-gray-200 hover:bg-gray-300"
+              onClick={cancelNavigate}
+              className="text-gray-400 hover:text-white transition-colors"
             >
-              Cancel
+              cancel
             </button>
           </div>
         </form>
-
-      </div>
+      </div >
     </div>
-  )
+  );
 }
 
 export default ProfilePage

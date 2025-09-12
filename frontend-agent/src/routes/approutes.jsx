@@ -16,21 +16,15 @@ const AppRoutes = () => {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={
-
                     <HomePage />
-
                 } />
 
                 <Route path='/register-form' element={
-
                     <RegisterPage />
-
                 } />
 
                 <Route path='/login' element={
-
                     <LoginPage />
-
                 } />
 
                 <Route path='/admin' element={

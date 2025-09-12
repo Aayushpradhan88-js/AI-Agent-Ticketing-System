@@ -139,8 +139,6 @@ export const updateAccount = async (req, res) => {
     const { username, email, skills, role, location, bio } = req.body;
 
     try {
-        // changes verify it
-        // Get user ID from JWT token
         const userId = req.user?._id || req.user?.id;
         if (!userId) {
             return res
