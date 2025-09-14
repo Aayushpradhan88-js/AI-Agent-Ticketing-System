@@ -17,9 +17,8 @@ export default function AdminPanel() {
   const makeAuthenticatedRequest = async (url, options = {}) => {
     const token = localStorage.getItem('token');
     const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
-
+    
     const config = {
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { 'Authorization': `Bearer ${token}` }),
@@ -38,39 +37,34 @@ export default function AdminPanel() {
     setError('');
     try {
       const response = await makeAuthenticatedRequest('/api/v1/auth/get-users-account');
-
+      
       if (response.ok) {
         const userData = await response.json();
-        // -----Add status field to users (for UI purposes)-----
-        const usersWithStatus = userData.map(user => (
-          {
-            ...user,
-            id: user._id,
-            status: 'active'
-          }
-        ));
-
+        // Add status field to users (for UI purposes)
+        const usersWithStatus = userData.map(user => ({
+          ...user,
+          id: user._id,
+          status: 'active' // Default status since backend doesn't have this field yet
+        }));
+        
         setUsers(usersWithStatus);
-
-        //-----Save to localStorage for optimization-----
-        localStorage.setItem('adminUsers', JSON.stringify(
-          {
+        
+        // Save to localStorage for optimization
+        localStorage.setItem('adminUsers', JSON.stringify({
           data: usersWithStatus,
           timestamp: Date.now(),
-          expires: Date.now() + (5 * 60 * 1000) //---5 minutes cache
-        }
-      ));
-
+          expires: Date.now() + (5 * 60 * 1000) // 5 minutes cache
+        }));
+        
         setSuccess('Users loaded successfully');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to fetch users');
       }
-      
     } catch (error) {
       console.error('Error fetching users:', error);
       setError('Network error: Failed to fetch users');
-
+      
       const cachedData = localStorage.getItem('adminUsers');
       if (cachedData) {
         try {
@@ -102,13 +96,13 @@ export default function AdminPanel() {
         console.error('Failed to parse cached data:', parseError);
       }
     }
-
+    
     // Fetch fresh data from API
     fetchAllUsers();
   }, []);
 
   const filteredUsers = useMemo(() => {
-    return handleUsers.filter(user => {
+    return users.filter(user => {
       const matchesSearch = user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = filterStatus === 'all' || user.status === filterStatus;
@@ -116,38 +110,62 @@ export default function AdminPanel() {
 
       return matchesSearch && matchesStatus && matchesRole;
     });
-  }, [handleUsers, searchQuery, filterStatus, filterRole]);
+  }, [users, searchQuery, filterStatus, filterRole]);
 
-  const handleEdit = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/v1/auth/update-account`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-        }
-      )
-    } catch (error) {
-      console.log(error.message);
-      setError("FAILED TO UPDATE")
-    }
-  }
   const handleEditUser = (user) => {
     setEditingUser({ ...user, skillsText: user.skills.join(', ') });
   };
 
-  const handleSaveUser = () => {
-    const updatedUsers = users.map(user =>
-      user.id === editingUser.id
-        ? {
-          ...editingUser,
-          skills: editingUser.skillsText.split(',').map(s => s.trim()).filter(s => s)
-        }
-        : user
-    );
-    setUsers(updatedUsers);
-    setEditingUser(null);
+  const handleSaveUser = async () => {
+    if (!editingUser) return;
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      const updateData = {
+        username: editingUser.username,
+        email: editingUser.email,
+        skills: editingUser.skillsText.split(',').map(s => s.trim()).filter(s => s),
+        role: editingUser.role
+      };
+      
+      const response = await makeAuthenticatedRequest('/api/v1/auth/update-account', {
+        method: 'POST',
+        body: JSON.stringify(updateData)
+      });
+      
+      if (response.ok) {
+        const updatedUsers = users.map(user =>
+          user.id === editingUser.id
+            ? {
+              ...editingUser,
+              skills: updateData.skills
+            }
+            : user
+        );
+        
+        setUsers(updatedUsers);
+        
+        // Update localStorage cache
+        localStorage.setItem('adminUsers', JSON.stringify({
+          data: updatedUsers,
+          timestamp: Date.now(),
+          expires: Date.now() + (5 * 60 * 1000)
+        }));
+        
+        setSuccess('User updated successfully');
+        setEditingUser(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to update user');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      setError('Network error: Failed to update user');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteUser = (userId) => {
@@ -191,12 +209,21 @@ export default function AdminPanel() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1
-            onClick={handleError}
-            className='bg-red'>demo error</h1>
+          {/* Error and Success Messages */}
+          {error && (
+            <div className="bg-red-900/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-4">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-900/20 border border-green-500/30 text-green-300 px-4 py-3 rounded-lg mb-4">
+              {success}
+            </div>
+          )}
+          
           <button
             onClick={backNavigate}
-            className="flex items-center gap-2 border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-2 border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-800 transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -205,6 +232,13 @@ export default function AdminPanel() {
             Admin Panel
           </h1>
           <p className="text-gray-400">Manage users and their permissions</p>
+          
+          {loading && (
+            <div className="flex items-center gap-2 mt-4">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+              <span className="text-gray-400">Loading...</span>
+            </div>
+          )}
         </div>
 
         {/* Stats Cards */}
@@ -305,14 +339,19 @@ export default function AdminPanel() {
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-lg font-medium">{handleUsers.email}</span>
-                    <span className={`w-3 h-3 rounded-full ${getStatusColor(handleUsers.status)}`}></span>
-                    <span className="text-sm text-gray-400 capitalize">{handleUsers.status}</span>
+                    <span className="text-lg font-medium">{user.email}</span>
+                    <span className={`w-3 h-3 rounded-full ${getStatusColor(user.status)}`}></span>
+                    <span className="text-sm text-gray-400 capitalize">{user.status}</span>
                   </div>
 
                   <div className="mb-2">
                     <span className="text-sm text-gray-400">Role: </span>
-                    <span className="text-blue-400 font-medium capitalize">{handleUsers.role}</span>
+                    <span className="text-blue-400 font-medium capitalize">{user.role}</span>
+                  </div>
+                  
+                  <div className="mb-2">
+                    <span className="text-sm text-gray-400">Username: </span>
+                    <span className="text-gray-300">{user.username}</span>
                   </div>
 
                   <div>
