@@ -9,5 +9,5 @@ import { authenticate } from "../middlewares/auth.js";
 export const ticketRoute = express.Router();
 
 ticketRoute.post("/create", authenticate, createTicket);
-ticketRoute.get("/:id", authenticate, getTicketById);
 ticketRoute.get("/all-tickets", authenticate, getAllTickets);
+ticketRoute.get("/:id", authenticate, getTicketById);
