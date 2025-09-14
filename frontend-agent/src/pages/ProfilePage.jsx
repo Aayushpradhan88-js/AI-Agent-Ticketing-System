@@ -2,23 +2,72 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react';
 import { BackBtn } from '../components/BackBtn.jsx';
+import storage from '../utils/localStorage.js';
+import { userAPI } from '../utils/api.js';
 
 const ProfilePage = () => {
-  const [editForm, setEditForm] = useState(
-    {
-      'username':'',
-      'bio':'',
-      'skills':'',
-      'email':'',
-      'location':''
-    }
-  )
-  const [loading, setLoading] = useState(false);
+  const [editForm, setEditForm] = useState({
+    'username': '',
+    'bio': '',
+    'skills': '',
+    'email': '',
+    'location': ''
+  })
+  const [initialLoading, setInitialLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('')
 
   const handleChange = (event) => {
     setEditForm({ ...editForm, [event.target.name]: event.target.value })
+    if (error) setError('')
+    if (success) setSuccess('');
   };
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!storage.isAuthenticated()) {
+        setError('PLEASE LOGIN TO CONTINUE');
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const cachedProfile = storage.getProfile();
+        const cachedUser = storage.getUser();
+
+        if (cachedProfile || cachedUser) {
+          const profileData = cachedProfile || cachedUser
+          setEditForm({
+            username: profileData.username || '',
+            bio: profileData.bio,
+            skills: Array.isArray(profileData.skills) ? profileData.skills.join(', ') : (profileData.skills || ''),
+            email: profileData.email || '',
+            location: profileData.location || '',
+          })
+        }
+
+        const profileResponse = await userAPI.getProfile();
+
+        if (profileResponse.user) {
+          const userData = profileResponse.user;
+          setEditForm({
+            username: userData.username || '',
+            bio: userData.bio,
+            skills: Array.isArray(userData.skills) ? userData.skills.join(', ') : (profileData.skills || ''),
+            email: userData.email || '',
+            location: userData.location || '',
+          })
+          storage.setUser(userData);
+          storage.setProfile(userData);
+        };
+      } catch (error) {
+        console.log('ERROR LOADING PROFILE', error);
+        setError('FAILED TO LOAD PROFILE DATA. PLEASE TRY AGAIN');
+      } finally {
+        setInitialLoading(false);
+      };
+    }
+  })
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -71,7 +120,7 @@ const ProfilePage = () => {
             "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(editForm)
-        }, 
+        },
       )
 
       const updatedData = await response.json();
@@ -82,13 +131,13 @@ const ProfilePage = () => {
         localStorage.setItem("skills", JSON.stringify(updatedData.skills))
         localStorage.setItem("location", JSON.stringify(updatedData.location))
 
-       setEditForm({
+        setEditForm({
           ...editForm,
           'username': response.data.username,
           'bio': response.data.bio,
-          'skills':response.user.role,
+          'skills': response.user.role,
           'email': response.user.user,
-          'location':response.data.location
+          'location': response.data.location
         })
         navigate("/tickets");
       } else {
