@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ArrowLeft, Edit3, Trash2, Plus, Filter, Eye, EyeOff, Users, UserCheck, UserX, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,45 +9,106 @@ export default function AdminPanel() {
   const [editingUser, setEditingUser] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useStat(false);
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [success, setSuccess] = useState('');
 
-  //---------- TASK-1 FETCH ALL THE USERS & MODERATORS DATA FROM THE DB----------//
-  //---------- TASK-2 HOW CAN YOU ACCESS THAT THE MODERATORS || USERS ARE ACTIVE/INACTIVE --------//
-  //---------- TASK-3 THERE ARE FEATURES DELETE,EDIT FEATURES---------//
-  // const handle
+  // API utility function with authentication
+  const makeAuthenticatedRequest = async (url, options = {}) => {
+    const token = localStorage.getItem('token');
+    const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
 
-  const [users, setUsers] = useState();
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+        ...options.headers,
+      },
+      ...options,
+    };
 
-  //---------ALL TICKETS----------//
-  const handleUsers = async (event) => {
-    event.preventDefaut();
-    setLoading(true)
+    const response = await fetch(`${serverUrl}${url}`, config);
+    return response;
+  };
+
+  // Fetch all users from backend
+  const fetchAllUsers = async () => {
+    setLoading(true);
+    setError('');
     try {
-      //----------FETCHING FROM THE BACKEND----------//
-      const response = await fetch(`http://localhost:3000/api/v1/tickets/all-tickets`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-        });
-      //----------FETCHING FROM THE BACKEND----------//
-      const data = response.data;
+      const response = await makeAuthenticatedRequest('/api/v1/auth/get-users-account');
+
       if (response.ok) {
-        localStorage.setItem("Tickets", data.ticket);
+        const userData = await response.json();
+        // -----Add status field to users (for UI purposes)-----
+        const usersWithStatus = userData.map(user => (
+          {
+            ...user,
+            id: user._id,
+            status: 'active'
+          }
+        ));
+
+        setUsers(usersWithStatus);
+
+        //-----Save to localStorage for optimization-----
+        localStorage.setItem('adminUsers', JSON.stringify(
+          {
+          data: usersWithStatus,
+          timestamp: Date.now(),
+          expires: Date.now() + (5 * 60 * 1000) //---5 minutes cache
+        }
+      ));
+
+        setSuccess('Users loaded successfully');
       } else {
-        alert("FAILED TO SAVE DATA OR FAILED TO OPEN REQUEST");
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to fetch users');
       }
+      
     } catch (error) {
-      console.log(error.message);
-      setError("FAILED TO FETCH ALL TICKETS");
+      console.error('Error fetching users:', error);
+      setError('Network error: Failed to fetch users');
+
+      const cachedData = localStorage.getItem('adminUsers');
+      if (cachedData) {
+        try {
+          const parsed = JSON.parse(cachedData);
+          if (parsed.expires > Date.now()) {
+            setUsers(parsed.data);
+            setSuccess('Loaded from cache due to network error');
+          }
+        } catch (parseError) {
+          console.error('Failed to parse cached data:', parseError);
+        }
+      }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  // Load cached data on component mount
+  useEffect(() => {
+    // Try to load from cache first
+    const cachedData = localStorage.getItem('adminUsers');
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData);
+        if (parsed.expires > Date.now()) {
+          setUsers(parsed.data);
+        }
+      } catch (parseError) {
+        console.error('Failed to parse cached data:', parseError);
+      }
+    }
+
+    // Fetch fresh data from API
+    fetchAllUsers();
+  }, []);
 
   const filteredUsers = useMemo(() => {
-    return users.filter(user => {
+    return handleUsers.filter(user => {
       const matchesSearch = user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = filterStatus === 'all' || user.status === filterStatus;
@@ -55,7 +116,7 @@ export default function AdminPanel() {
 
       return matchesSearch && matchesStatus && matchesRole;
     });
-  }, [users, searchQuery, filterStatus, filterRole]);
+  }, [handleUsers, searchQuery, filterStatus, filterRole]);
 
   const handleEdit = async () => {
     try {
@@ -68,7 +129,8 @@ export default function AdminPanel() {
         }
       )
     } catch (error) {
-
+      console.log(error.message);
+      setError("FAILED TO UPDATE")
     }
   }
   const handleEditUser = (user) => {
@@ -129,7 +191,6 @@ export default function AdminPanel() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-
           <h1
             onClick={handleError}
             className='bg-red'>demo error</h1>
@@ -244,14 +305,14 @@ export default function AdminPanel() {
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-lg font-medium">{user.email}</span>
-                    <span className={`w-3 h-3 rounded-full ${getStatusColor(user.status)}`}></span>
-                    <span className="text-sm text-gray-400 capitalize">{user.status}</span>
+                    <span className="text-lg font-medium">{handleUsers.email}</span>
+                    <span className={`w-3 h-3 rounded-full ${getStatusColor(handleUsers.status)}`}></span>
+                    <span className="text-sm text-gray-400 capitalize">{handleUsers.status}</span>
                   </div>
 
                   <div className="mb-2">
                     <span className="text-sm text-gray-400">Role: </span>
-                    <span className="text-blue-400 font-medium capitalize">{user.role}</span>
+                    <span className="text-blue-400 font-medium capitalize">{handleUsers.role}</span>
                   </div>
 
                   <div>
