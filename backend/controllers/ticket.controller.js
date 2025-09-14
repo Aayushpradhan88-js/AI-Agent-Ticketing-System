@@ -4,13 +4,13 @@ ALGORITHM FOR CREATING TICKET
 1. getting title and desciption from the frontend
 2. Not given throw error
 3. create the ticket
-4. using inngesT
+4. using inngest
 
 */
 import { Ticket } from "../models/ticket.models.js";
 import { ApiError } from "../utils/ApiError.utils.js"
 import { ApiResponse } from "../utils/ApiResponse.utils.js"
-
+import { inngest } from "../inngest/client.js"
 
 //-----CREATING TICKET-----//
 export const createTicket = async (req, res) => {
