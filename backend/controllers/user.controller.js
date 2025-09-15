@@ -212,11 +212,11 @@ export const getAllAccountUsers = async (req, res) => {
         if (req.user.role !== "admin") {
             console.log("account should not be admin");
             return res
-                .status(402)
+                .status(403)
                 .json(
                     new ApiError(403, "YOU'RE NOT ADMIN OF THIS ACCOUNT, try again")
-                )
-        };
+                );
+        }
 
         const users = await User.find().select("-password");
         if (!users || users.length === 0) {
@@ -224,15 +224,20 @@ export const getAllAccountUsers = async (req, res) => {
                 .status(404)
                 .json(
                     new ApiError(404, "USERS ARE NOT FOUND")
-                )
-        };
+                );
+        }
+
         return res
             .status(200)
             .json(
-                new ApiResponse(200, "Users fetched Successfully", users)
-            )
+                new ApiResponse(
+                    200,
+                    "Users fetched successfully",
+                    users
+                )
+            );
     } catch (error) {
-        console.log("Failed to find users");
+        console.error("Failed to find users:", error);
 
         return res
             .status(500)
@@ -243,53 +248,217 @@ export const getAllAccountUsers = async (req, res) => {
 };
 
 //----------ADMIN UPDATE USER----------//
-export const adminUpdateAccount = async (req, res) => {
-    const {userId} = req.params;
-    const {username, email, bio, skills, location} = req.body;
+export const adminUpdateUser = async (req, res) => {
+    const { userId } = req.params;
+    const { username, email, skills, role, location, bio, status } = req.body;
 
-    try{
-        if(req.user.role != "admin") {
+    // 1.Check if user is admin
+    // 2.Find target user
+    // 3.Check if trying to modify another admin (prevent admin lockout)
+    // 4.Prepare update object
+    try {
+        if (req.user.role !== "admin") {
             return res
-            .status(403)
-            .json(
-                new ApiError(403, "ACCESS DENIED, YOU'RE NOT ADMIN")
-            )
-        };
+                .status(403)
+                .json(
+                    new ApiError(403, "Access denied. Admin privileges required.")
+                );
+        }
 
-        const targetedUser = await User.findById(userId);
-        if(!targetedUser) {
+        const targetUser = await User.findById(userId);
+        if (!targetUser) {
             return res
-            .status(404)
-            .json(
-                new ApiError(404, "USER NOT FOUND!!")
-            );
-        };
+                .status(404)
+                .json(
+                    new ApiError(404, "User not found")
+                );
+        }
 
-        if(targetedUser.role === "admin" && targetedUser._id.toString() != req.user._id.toString()){
+        if (targetUser.role === "admin" && targetUser._id.toString() !== req.user._id.toString()) {
             return res
-            .status(403)
-            .json(
-                new ApiError(403, "CANNOT MODIFY OTHER ADMIN ACCOUNTS")
-            )
-        };
+                .status(403)
+                .json(
+                    new ApiError(403, "Cannot modify other admin accounts")
+                );
+        }
 
-        const updatedData = {};
-        if(username) updatedData.username = username;
-        if(email) updatedData.email = email;
-        if(skills) updatedData.skills = skills;
-        if(bio) updatedData.bio = bio;
-        if(location) updatedData.location = location;
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (email) updateData.email = email;
+        if (skills) updateData.skills = Array.isArray(skills) ? skills : skills.split(',').map(s => s.trim());
+        if (role) updateData.role = role;
+        if (location) updateData.location = location;
+        if (bio) updateData.bio = bio;
+        if (status) updateData.status = status;
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            updatedData,
+            updateData,
             {
                 new: true,
                 select: "-password"
             }
-        )
-    } catch(error) {
-        console.log(error.messsage)
-    }
-}
+        );
 
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    "User updated successfully by admin",
+                    updatedUser
+                )
+            );
+    } catch (error) {
+        console.error("Failed to update user as admin:", error);
+
+        return res
+            .status(500)
+            .json(
+                new ApiError(
+                    500,
+                    "INTERNAL SERVER ERROR, FAILED TO UPDATE USER"
+                )
+            );
+    }
+};
+
+//----------ADMIN DELETE USER----------//
+export const adminDeleteUser = async (req, res) => {
+    const { userId } = req.params;
+
+    // 1.Check if user is admin
+    // 2.Find target user
+    // 3.Prevent admin from deleting themselves
+    // 4.Prevent deleting other admins
+    try {
+        if (req.user.role !== "admin") {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "ACCESS IS DENIED.  ADMIN IS REQUIRED")
+                );
+        }
+
+        const targetUser = await User.findById(userId);
+        if (!targetUser) {
+            return res
+                .status(404)
+                .json(
+                    new ApiError(404, "USER NOT FOUND!!")
+                );
+        }
+        //---UN-NECESSARY FEATURE----//
+        if (targetUser._id.toString() === req.user._id.toString()) {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "CANNOT DELETE OWN ACCOUNT")
+                );
+        }
+
+        if (targetUser.role === "admin") {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "Cannot delete admin accounts")
+                );
+        }
+
+        await User.findByIdAndDelete(userId);
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    "User deleted successfully",
+                    { deletedUserId: userId }
+                )
+            );
+    } catch (error) {
+        console.error("Failed to delete user:", error);
+
+        return res
+            .status(500)
+            .json(
+                new ApiError(
+                    500,
+                    "INTERNAL SERVER ERROR, FAILED TO DELETE USER"
+                )
+            );
+    }
+};
+
+//----------ADMIN TOGGLE USER STATUS----------//
+export const adminToggleUserStatus = async (req, res) => {
+    const { userId } = req.params;
+    const { status } = req.body; // 'active' or 'inactive'
+
+    try {
+        if (req.user.role !== "admin") {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "Access denied. Admin privileges required.")
+                );
+        }
+
+        const targetUser = await User.findById(userId);
+        if (!targetUser) {
+            return res
+                .status(404)
+                .json(
+                    new ApiError(404, "User not found")
+                );
+        }
+
+        // Prevent admin from deactivating themselves
+        if (targetUser._id.toString() === req.user._id.toString()) {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "Cannot change your own status")
+                );
+        }
+
+        // Prevent deactivating other admins
+        if (targetUser.role === "admin" && status === "inactive") {
+            return res
+                .status(403)
+                .json(
+                    new ApiError(403, "Cannot deactivate admin accounts")
+                );
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { status: status || (targetUser.status === 'active' ? 'inactive' : 'active') },
+            {
+                new: true,
+                select: "-password"
+            }
+        );
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    `User status updated to ${updatedUser.status}`,
+                    updatedUser
+                )
+            );
+    } catch (error) {
+        console.error("Failed to toggle user status:", error);
+
+        return res
+            .status(500)
+            .json(
+                new ApiError(
+                    500,
+                    "INTERNAL SERVER ERROR, FAILED TO UPDATE USER STATUS"
+                )
+            );
+    }
+};

@@ -41,6 +41,17 @@ const userModel = new mongoose.Schema({
     },
     location: {
         type: String,
+        trim: true
+    },
+    status: {
+        type: String,
+        enum: ["active", "inactive"],
+        default: "active"
+    },
+    bio: {
+        type: String,
+        trim: true,
+        maxlength: [500, "Bio cannot exceed 500 characters"]
     }
 },
     {

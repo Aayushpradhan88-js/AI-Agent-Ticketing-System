@@ -7,7 +7,10 @@ import {
     loginAccount,
     logoutAccount,
     updateAccount,
-    getAllAccountUsers
+    getAllAccountUsers,
+    adminUpdateUser,
+    adminDeleteUser,
+    adminToggleUserStatus
 } from "../controllers/user.controller.js";
 
 import { authenticate } from "../middlewares/auth.js";
@@ -19,6 +22,11 @@ authRoute.post("/login", loginAccount);
 authRoute.post("/logout", logoutAccount);
 authRoute.post("/update-account", authenticate, updateAccount);
 authRoute.get("/get-users-account", authenticate, getAllAccountUsers);
+
+//----------Admin-only routes----------//
+authRoute.put("/admin/user/:userId", authenticate, adminUpdateUser);
+authRoute.delete("/admin/user/:userId", authenticate, adminDeleteUser);
+authRoute.patch("/admin/user/:userId/status", authenticate, adminToggleUserStatus);
 
 //----------Google OAuth routes----------//
 authRoute.get("/google",

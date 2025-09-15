@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { Plus, User, LogOut, Filter, Clock, AlertCircle, CheckCircle, Calendar, Tag, MessageSquare } from 'lucide-react';
-// import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Plus, User, LogOut, Filter, Clock, AlertCircle, CheckCircle, Calendar, Tag, MessageSquare, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { LogoutBtn } from '../components/LogoutBtn.jsx'
 import { Profile } from '../components/profile-page/Profile.jsx'
 import { AdminBtn } from '../components/AdminBtn.jsx'
+import { ticketAPI, userAPI } from '../utils/api.js'
+import storage from '../utils/localStorage.js'
 
 const TicketPage = () => {
   const [newTicket, setNewTicket] = useState(
@@ -13,6 +15,13 @@ const TicketPage = () => {
     }
   );
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [filter, setFilter] = useState('all'); // all, open, in-progress, resolved, closed
+  const navigate = useNavigate();
 
   // Sample data for UI display
   const sampleTickets = [
@@ -71,9 +80,129 @@ const TicketPage = () => {
     const icons = {
       'open': <AlertCircle className="w-4 h-4" />,
       'in-progress': <Clock className="w-4 h-4" />,
-      'resolved': <CheckCircle className="w-4 h-4" />
+      'resolved': <CheckCircle className="w-4 h-4" />,
+      'active': <AlertCircle className="w-4 h-4" /> // Backend uses 'active' for open
     };
     return icons[status] || <MessageSquare className="w-4 h-4" />;
+  };
+
+  // Fetch tickets from API
+  const fetchTickets = async () => {
+    if (!storage.isAuthenticated()) {
+      setError('Please login to continue.');
+      navigate('/login');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await ticketAPI.getAllTickets();
+      
+      // Transform tickets to match UI expectations
+      const transformedTickets = response.data?.map(ticket => ({
+        id: ticket._id,
+        title: ticket.title,
+        description: ticket.description,
+        status: ticket.status === 'active' ? 'open' : ticket.status,
+        priority: ticket.priority || 'medium',
+        createdAt: new Date(ticket.createdAt).toLocaleDateString(),
+        assignee: ticket.assignedTo?.username || 'Unassigned',
+        tags: ticket.relatedSkills ? ticket.relatedSkills.split(',').map(s => s.trim()) : [],
+        createdBy: ticket.createdBy
+      })) || [];
+      
+      setTickets(transformedTickets);
+      setSuccess('Tickets loaded successfully');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+      setError(error.message || 'Failed to fetch tickets');
+      
+      // Try to load from cache if available
+      const cachedTickets = storage.getCachedTickets();
+      if (cachedTickets && cachedTickets.length > 0) {
+        setTickets(cachedTickets);
+        setSuccess('Loaded from cache due to network error');
+        setTimeout(() => setSuccess(''), 5000);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Create new ticket
+  const handleCreateTicket = async () => {
+    if (!newTicket.title.trim() || !newTicket.description.trim()) {
+      setError('Title and description are required');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await ticketAPI.createTicket({
+        title: newTicket.title.trim(),
+        description: newTicket.description.trim()
+      });
+      
+      setSuccess('Ticket created successfully! Processing has been started.');
+      setNewTicket({ title: '', description: '' });
+      setShowCreateForm(false);
+      
+      // Refresh tickets list
+      await fetchTickets();
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => setSuccess(''), 5000);
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+      setError(error.message || 'Failed to create ticket');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter tickets based on selected filter
+  const filteredTickets = tickets.filter(ticket => {
+    if (filter === 'all') return true;
+    return ticket.status === filter;
+  });
+
+  // Load current user and tickets on component mount
+  useEffect(() => {
+    const loadUserAndTickets = async () => {
+      try {
+        const userData = storage.getUser();
+        setCurrentUser(userData);
+        await fetchTickets();
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setError('Failed to load user data');
+      }
+    };
+    
+    loadUserAndTickets();
+  }, []);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return dateString;
+    }
   };
 
   return (
@@ -102,6 +231,25 @@ const TicketPage = () => {
         </div>
 
         <div className="p-6">
+          {/* Error and Success Messages */}
+          {error && (
+            <div className="bg-red-900/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-4">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-900/20 border border-green-500/30 text-green-300 px-4 py-3 rounded-lg mb-4">
+              {success}
+            </div>
+          )}
+          
+          {loading && (
+            <div className="flex items-center gap-2 mb-4">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+              <span className="text-gray-400">Loading...</span>
+            </div>
+          )}
+
           {/* Create Ticket Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -109,6 +257,7 @@ const TicketPage = () => {
               <button
                 onClick={() => setShowCreateForm(!showCreateForm)}
                 className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                disabled={loading}
               >
                 <Plus className="w-4 h-4" />
                 {showCreateForm ? 'Cancel' : 'New Ticket'}
@@ -124,6 +273,7 @@ const TicketPage = () => {
                     value={newTicket.title}
                     onChange={(e) => setNewTicket({ ...newTicket, title: e.target.value })}
                     className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={loading}
                   />
                 </div>
 
@@ -134,18 +284,16 @@ const TicketPage = () => {
                     value={newTicket.description}
                     onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
                     className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    disabled={loading}
                   />
                 </div>
 
                 <button
-                  onClick={() => {
-                    // Add your create ticket logic here
-                    console.log('Create ticket:', newTicket);
-                  }}
-                  disabled={!newTicket.title.trim() || !newTicket.description.trim()}
+                  onClick={handleCreateTicket}
+                  disabled={!newTicket.title.trim() || !newTicket.description.trim() || loading}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors"
                 >
-                  create
+                  {loading ? 'Creating...' : 'Create'}
                 </button>
               </div>
             )}
@@ -154,12 +302,42 @@ const TicketPage = () => {
           {/* All Tickets */}
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">All Tickets</h2>
-              <span className="text-sm text-gray-400">{sampleTickets.length} tickets</span>
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-semibold">All Tickets</h2>
+                <button
+                  onClick={fetchTickets}
+                  className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                  disabled={loading}
+                  title="Refresh tickets"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+              <div className="flex items-center gap-4">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="open">Open</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="closed">Closed</option>
+                </select>
+                <span className="text-sm text-gray-400">{filteredTickets.length} tickets</span>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              {sampleTickets.map((ticket) => (
+            {tickets.length === 0 && !loading ? (
+              <div className="text-center py-12">
+                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400 text-lg">No tickets found</p>
+                <p className="text-gray-500">Create your first ticket to get started</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredTickets.map((ticket) => (
                 <div key={ticket.id} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-colors">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
@@ -204,7 +382,8 @@ const TicketPage = () => {
                   </div>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 

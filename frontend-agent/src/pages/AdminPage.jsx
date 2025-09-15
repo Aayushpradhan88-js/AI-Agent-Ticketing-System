@@ -113,8 +113,8 @@ export default function AdminPanel() {
         role: editingUser.role
       };
       
-      // Use the new API utility - note: this might need backend changes for admin updates
-      const result = await userAPI.updateProfile(updateData);
+      // Use the admin-specific API endpoint
+      const result = await userAPI.adminUpdateUser(editingUser.id, updateData);
       
       if (result.data) {
         const updatedUsers = users.map(user =>
@@ -146,38 +146,60 @@ export default function AdminPanel() {
   };
 
   const handleDeleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return;
+    }
+    
     try {
       setLoading(true);
-      // TODO: Implement delete user API call when backend supports it
-      // await userAPI.deleteUser(userId);
+      setError('');
       
-      // For now, just remove from local state
+      // Call the admin delete API
+      await userAPI.adminDeleteUser(userId);
+      
+      // Remove from local state
       const updatedUsers = users.filter(user => user.id !== userId);
       setUsers(updatedUsers);
       storage.setCachedUsers(updatedUsers);
       
-      setSuccess('User removed from view (API not implemented yet)');
+      setSuccess('User deleted successfully');
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
+      console.error('Error deleting user:', error);
       setError(error.message || 'Failed to delete user');
     } finally {
       setLoading(false);
     }
   };
 
+  //---Check this feature some fisshly happens---//
   const toggleUserStatus = async (userId) => {
     try {
+      setLoading(true);
+      setError('');
+      
+      const currentUser = users.find(user => user.id === userId);
+      const newStatus = currentUser.status === 'active' ? 'inactive' : 'active';
+      
+      // Call the admin toggle status API
+      await userAPI.adminToggleUserStatus(userId, newStatus);
+      
+      // Update local state
       const updatedUsers = users.map(user =>
         user.id === userId
-          ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
+          ? { ...user, status: newStatus }
           : user
       );
       setUsers(updatedUsers);
       storage.setCachedUsers(updatedUsers);
       
-      // TODO: Update status on backend when API supports it
+      setSuccess(`User status updated to ${newStatus}`);
+      setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       console.error('Error toggling user status:', error);
+      setError(error.message || 'Failed to update user status');
+    } finally {
+      setLoading(false);
     }
   };
 

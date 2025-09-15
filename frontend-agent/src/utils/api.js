@@ -106,6 +106,21 @@ class ApiClient {
     return response.json();
   }
 
+  // PATCH request
+  async patch(endpoint, data = {}) {
+    const response = await this.makeRequest(endpoint, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
   // DELETE request
   async delete(endpoint) {
     const response = await this.makeRequest(endpoint, { method: 'DELETE' });
@@ -200,13 +215,16 @@ class UserAPI extends ApiClient {
     return users;
   }
 
-  async updateUser(userId, userData) {
-    // Note: This might need a different endpoint for admin user updates
-    return this.post('/api/v1/auth/update-account', { ...userData, userId });
+  async adminUpdateUser(userId, userData) {
+    return this.put(`/api/v1/auth/admin/user/${userId}`, userData);
+  };
+
+  async adminDeleteUser(userId) {
+    return this.delete(`/api/v1/auth/admin/user/${userId}`);
   }
 
-  async deleteUser(userId) {
-    return this.delete(`/api/v1/auth/user/${userId}`);
+  async adminToggleUserStatus(userId, status) {
+    return this.patch(`/api/v1/auth/admin/user/${userId}/status`, { status });
   }
 }
 
@@ -242,7 +260,19 @@ class TicketAPI extends ApiClient {
   }
 
   async updateTicketStatus(ticketId, status) {
-    return this.post(`/api/v1/tickets/update-status`, { ticketId, status });
+    return this.patch(`/api/v1/tickets/admin/status/${ticketId}`, { status });
+  }
+
+  async adminAssignTicket(ticketId, assigneeId) {
+    return this.post(`/api/v1/tickets/admin/assign/${ticketId}`, { assigneeId });
+  }
+
+  async adminDeleteTicket(ticketId) {
+    return this.delete(`/api/v1/tickets/admin/delete/${ticketId}`);
+  }
+
+  async adminUpdateTicketStatus(ticketId, status) {
+    return this.patch(`/api/v1/tickets/admin/status/${ticketId}`, { status });
   }
 }
 
