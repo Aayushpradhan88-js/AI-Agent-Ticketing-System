@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ArrowLeft, Edit3, Trash2, Plus, Filter, Eye, EyeOff, Users, UserCheck, UserX, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import storage from '../utils/localStorage.js';
+import { userAPI } from '../utils/api.js';
 
 export default function AdminPanel() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,96 +10,77 @@ export default function AdminPanel() {
   const [filterRole, setFilterRole] = useState('all');
   const [editingUser, setEditingUser] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [success, setSuccess] = useState('');
-
-  // API utility function with authentication
-  const makeAuthenticatedRequest = async (url, options = {}) => {
-    const token = localStorage.getItem('token');
-    const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
-    
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    const response = await fetch(`${serverUrl}${url}`, config);
-    return response;
-  };
+  const navigate = useNavigate();
 
   // Fetch all users from backend
   const fetchAllUsers = async () => {
+    // Check authentication first
+    if (!storage.isAuthenticated()) {
+      setError('Please login to continue.');
+      navigate('/login');
+      return;
+    }
+
+    // Check if user is admin
+    const userRole = storage.getUserRole();
+    if (userRole !== 'admin') {
+      setError('Access denied. Admin privileges required.');
+      navigate('/tickets');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    
     try {
-      const response = await makeAuthenticatedRequest('/api/v1/auth/get-users-account');
-      
-      if (response.ok) {
-        const userData = await response.json();
-        // Add status field to users (for UI purposes)
-        const usersWithStatus = userData.map(user => ({
+      // Try to load from cache first
+      const cachedUsers = storage.getCachedUsers();
+      if (cachedUsers) {
+        const usersWithStatus = cachedUsers.map(user => ({
           ...user,
-          id: user._id,
-          status: 'active' // Default status since backend doesn't have this field yet
+          id: user._id || user.id,
+          status: user.status || 'active'
         }));
-        
         setUsers(usersWithStatus);
-        
-        // Save to localStorage for optimization
-        localStorage.setItem('adminUsers', JSON.stringify({
-          data: usersWithStatus,
-          timestamp: Date.now(),
-          expires: Date.now() + (5 * 60 * 1000) // 5 minutes cache
-        }));
-        
-        setSuccess('Users loaded successfully');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch users');
       }
+
+      // Fetch fresh data from API
+      const userData = await userAPI.getAllUsers();
+      
+      // Add status field to users (for UI purposes)
+      const usersWithStatus = userData.map(user => ({
+        ...user,
+        id: user._id || user.id,
+        status: user.status || 'active' // Default status since backend doesn't have this field yet
+      }));
+      
+      setUsers(usersWithStatus);
+      setSuccess('Users loaded successfully');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(''), 3000);
+      
     } catch (error) {
       console.error('Error fetching users:', error);
-      setError('Network error: Failed to fetch users');
+      setError(error.message || 'Failed to fetch users');
       
-      const cachedData = localStorage.getItem('adminUsers');
-      if (cachedData) {
-        try {
-          const parsed = JSON.parse(cachedData);
-          if (parsed.expires > Date.now()) {
-            setUsers(parsed.data);
-            setSuccess('Loaded from cache due to network error');
-          }
-        } catch (parseError) {
-          console.error('Failed to parse cached data:', parseError);
-        }
+      // If we have cached data and there's a network error, show cache notice
+      const cachedUsers = storage.getCachedUsers();
+      if (cachedUsers && cachedUsers.length > 0) {
+        setSuccess('Loaded from cache due to network error');
+        setTimeout(() => setSuccess(''), 5000);
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // Load cached data on component mount
+  // Load data on component mount
   useEffect(() => {
-    // Try to load from cache first
-    const cachedData = localStorage.getItem('adminUsers');
-    if (cachedData) {
-      try {
-        const parsed = JSON.parse(cachedData);
-        if (parsed.expires > Date.now()) {
-          setUsers(parsed.data);
-        }
-      } catch (parseError) {
-        console.error('Failed to parse cached data:', parseError);
-      }
-    }
-    
-    // Fetch fresh data from API
     fetchAllUsers();
   }, []);
 
@@ -130,12 +113,10 @@ export default function AdminPanel() {
         role: editingUser.role
       };
       
-      const response = await makeAuthenticatedRequest('/api/v1/auth/update-account', {
-        method: 'POST',
-        body: JSON.stringify(updateData)
-      });
+      // Use the new API utility - note: this might need backend changes for admin updates
+      const result = await userAPI.updateProfile(updateData);
       
-      if (response.ok) {
+      if (result.data) {
         const updatedUsers = users.map(user =>
           user.id === editingUser.id
             ? {
@@ -148,37 +129,56 @@ export default function AdminPanel() {
         setUsers(updatedUsers);
         
         // Update localStorage cache
-        localStorage.setItem('adminUsers', JSON.stringify({
-          data: updatedUsers,
-          timestamp: Date.now(),
-          expires: Date.now() + (5 * 60 * 1000)
-        }));
+        storage.setCachedUsers(updatedUsers);
         
         setSuccess('User updated successfully');
         setEditingUser(null);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to update user');
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccess(''), 3000);
       }
     } catch (error) {
       console.error('Error updating user:', error);
-      setError('Network error: Failed to update user');
+      setError(error.message || 'Failed to update user');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteUser = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
+  const handleDeleteUser = async (userId) => {
+    try {
+      setLoading(true);
+      // TODO: Implement delete user API call when backend supports it
+      // await userAPI.deleteUser(userId);
+      
+      // For now, just remove from local state
+      const updatedUsers = users.filter(user => user.id !== userId);
+      setUsers(updatedUsers);
+      storage.setCachedUsers(updatedUsers);
+      
+      setSuccess('User removed from view (API not implemented yet)');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      setError(error.message || 'Failed to delete user');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleUserStatus = (userId) => {
-    const updatedUsers = users.map(user =>
-      user.id === userId
-        ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
-        : user
-    );
-    setUsers(updatedUsers);
+  const toggleUserStatus = async (userId) => {
+    try {
+      const updatedUsers = users.map(user =>
+        user.id === userId
+          ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
+          : user
+      );
+      setUsers(updatedUsers);
+      storage.setCachedUsers(updatedUsers);
+      
+      // TODO: Update status on backend when API supports it
+    } catch (error) {
+      console.error('Error toggling user status:', error);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -196,13 +196,9 @@ export default function AdminPanel() {
     }
   };
 
-  const navigate = useNavigate();
   const backNavigate = () => {
-    navigate("/tickets")
-  }
-  const handleError = () => {
-    error("Some thing went wrong!!");
-  }
+    navigate("/tickets");
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">

@@ -7,171 +7,145 @@ import { userAPI } from '../utils/api.js';
 
 const ProfilePage = () => {
   const [editForm, setEditForm] = useState({
-    'username': '',
-    'bio': '',
-    'skills': '',
-    'email': '',
-    'location': ''
-  })
-  const [initialLoading, setInitialLoading] = useState(false);
+    username: '',
+    bio: '',
+    skills: '',
+    email: '',
+    location: ''
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('')
+  const [success, setSuccess] = useState('');
+  const [initialLoad, setInitialLoad] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
-    setEditForm({ ...editForm, [event.target.name]: event.target.value })
-    if (error) setError('')
+    setEditForm({ ...editForm, [event.target.name]: event.target.value });
+    // Clear messages when user starts typing
+    if (error) setError('');
     if (success) setSuccess('');
   };
 
+  // Load user data on component mount
   useEffect(() => {
     const loadUserData = async () => {
+      // Check authentication
       if (!storage.isAuthenticated()) {
-        setError('PLEASE LOGIN TO CONTINUE');
-        navigate('/login');
+        setError("Please login to continue.");
+        navigate("/login");
         return;
       }
 
       try {
+        //Try to load from cache first
         const cachedProfile = storage.getProfile();
         const cachedUser = storage.getUser();
-
+        
         if (cachedProfile || cachedUser) {
-          const profileData = cachedProfile || cachedUser
+          const profileData = cachedProfile || cachedUser;
           setEditForm({
             username: profileData.username || '',
-            bio: profileData.bio,
+            bio: profileData.bio || '',
             skills: Array.isArray(profileData.skills) ? profileData.skills.join(', ') : (profileData.skills || ''),
             email: profileData.email || '',
-            location: profileData.location || '',
-          })
+            location: profileData.location || ''
+          });
         }
 
+        // Fetch fresh data from API
         const profileResponse = await userAPI.getProfile();
-
+        
         if (profileResponse.user) {
           const userData = profileResponse.user;
           setEditForm({
             username: userData.username || '',
-            bio: userData.bio,
-            skills: Array.isArray(userData.skills) ? userData.skills.join(', ') : (profileData.skills || ''),
+            bio: userData.bio || '',
+            skills: Array.isArray(userData.skills) ? userData.skills.join(', ') : (userData.skills || ''),
             email: userData.email || '',
-            location: userData.location || '',
-          })
+            location: userData.location || ''
+          });
+          
+          // Update storage
           storage.setUser(userData);
           storage.setProfile(userData);
-        };
-      } catch (error) {
-        console.log('ERROR LOADING PROFILE', error);
-        setError('FAILED TO LOAD PROFILE DATA. PLEASE TRY AGAIN');
-      } finally {
-        setInitialLoading(false);
-      };
-    }
-  })
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setError("No authentication token found. Please login again.");
-      navigate("/login");
-      return;
-    }
-
-    try {
-      const tokenParts = token.split('.');
-      if (tokenParts.length === 3) {
-        const payload = JSON.parse(atob(tokenParts[1]));
-
-        // Check if token is expired
-        if (payload.exp * 1000 < Date.now()) {
-          setError("Token expired. Please login again.");
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          navigate("/login");
-          return;
         }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        setError('Failed to load profile data. Please try again.');
+      } finally {
+        setInitialLoad(false);
       }
-    } catch (e) {
-      console.error("Error decoding token:", e);
-      setError("Invalid token format. Please login again.");
-    }
+    };
+
+    loadUserData();
   }, [navigate]);
 
   const handleEdit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError('');
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("No authentication token. Please login again.");
-      setLoading(false);
-      return;
-    }
+    setSuccess('');
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/update-account`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(editForm)
-        },
-      )
+      // Prepare data for API
+      const updateData = {
+        username: editForm.username.trim(),
+        bio: editForm.bio.trim(),
+        skills: editForm.skills.split(',').map(skill => skill.trim()).filter(skill => skill),
+        email: editForm.email.trim(),
+        location: editForm.location.trim()
+      };
 
-      const updatedData = await response.json();
+      // Validate required fields
+      if (!updateData.username || !updateData.email) {
+        setError('Username and email are required.');
+        setLoading(false);
+        return;
+      }
 
-      if (response.ok) {
-        localStorage.setItem("username", JSON.stringify(updatedData.username))
-        localStorage.setItem("bio", JSON.stringify(updatedData.bio))
-        localStorage.setItem("skills", JSON.stringify(updatedData.skills))
-        localStorage.setItem("location", JSON.stringify(updatedData.location))
-
+      const result = await userAPI.updateProfile(updateData);
+      
+      if (result.data) {
+        setSuccess('Profile updated successfully!');
+        
+        // Update form with response data
+        const updatedData = result.data;
         setEditForm({
-          ...editForm,
-          'username': response.data.username,
-          'bio': response.data.bio,
-          'skills': response.user.role,
-          'email': response.user.user,
-          'location': response.data.location
-        })
-        navigate("/tickets");
-      } else {
-        setError(updatedData.message || updatedData.error || "FAILED TO UPDATE USER")
+          username: updatedData.username || '',
+          bio: updatedData.bio || '',
+          skills: Array.isArray(updatedData.skills) ? updatedData.skills.join(', ') : '',
+          email: updatedData.email || '',
+          location: updatedData.location || ''
+        });
+
+        // Navigate back after a short delay
+        setTimeout(() => {
+          navigate("/tickets");
+        }, 1500);
       }
     } catch (error) {
-      setError(`SERVER ERROR: ${error.message}`)
+      console.error('Error updating profile:', error);
+      setError(error.message || 'Failed to update profile. Please try again.');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const cancelNavigate = () => {
-    navigate("/tickets"); // Navigate back to tickets page
+    navigate("/tickets");
   };
-  const handleError = () => {
-    error("Some thing went wrong!!");
-  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
       <div className="border border-gray-600 rounded-lg w-full max-w-2xl p-8">
         <div className="flex items-center justify-between mb-8">
-
-          <h1
-            onClick={handleError}
-            className='bg-red'>demo error</h1>
           <button
+            onClick={cancelNavigate}
             className="flex items-center gap-2 border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-800 transition-colors"
           >
-            <BackBtn>
-              <ArrowLeft className="w-4 h-4" />
-            </BackBtn>
-
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </button>
 
           <h1 className="text-xl font-medium">Edit Profile</h1>
@@ -179,19 +153,39 @@ const ProfilePage = () => {
           <div className="w-20"></div> {/* Spacer for centering */}
         </div>
 
-        <p className="text-center text-gray-400 mb-12">
-          update your personal details to keep your profile up-to-date
+        <p className="text-center text-gray-400 mb-8">
+          Update your personal details to keep your profile up-to-date
         </p>
 
-        {/*----------- Profile Edit Form----------*/}
-        <form className="space-y-8">
+        {/* Error and Success Messages */}
+        {error && (
+          <div className="bg-red-900/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-6">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-900/20 border border-green-500/30 text-green-300 px-4 py-3 rounded-lg mb-6">
+            {success}
+          </div>
+        )}
+        {initialLoad && (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <span className="ml-3 text-gray-400">Loading profile...</span>
+          </div>
+        )}
+
+        {!initialLoad && (
+        <form className="space-y-6" onSubmit={handleEdit}>
           {/*-----Username Input-----*/}
           <div>
-            <label className="block text-sm font-medium mb-3">username</label>
+            <label className="block text-sm font-medium mb-3">Username *</label>
             <input
               type="text"
+              name="username"
               value={editForm.username}
               onChange={handleChange}
+              required
               className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -199,11 +193,13 @@ const ProfilePage = () => {
           {/*-----Bio Input-----*/}
           <div>
             <label className="block text-sm font-medium mb-3">Bio</label>
-            <input
-              type="text"
+            <textarea
+              name="bio"
               value={editForm.bio}
               onChange={handleChange}
-              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows="3"
+              placeholder="Tell us about yourself..."
+              className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />
           </div>
 
@@ -212,19 +208,24 @@ const ProfilePage = () => {
             <label className="block text-sm font-medium mb-3">Skills</label>
             <input
               type="text"
+              name="skills"
               value={editForm.skills}
               onChange={handleChange}
+              placeholder="JavaScript, React, Node.js..."
               className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            <p className="text-xs text-gray-400 mt-1">Separate skills with commas</p>
           </div>
 
           {/*-----Email Input-----*/}
           <div>
-            <label className="block text-sm font-medium mb-3">Email</label>
+            <label className="block text-sm font-medium mb-3">Email *</label>
             <input
               type="email"
+              name="email"
               value={editForm.email}
               onChange={handleChange}
+              required
               className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -234,8 +235,10 @@ const ProfilePage = () => {
             <label className="block text-sm font-medium mb-3">Location</label>
             <input
               type="text"
+              name="location"
               value={editForm.location}
               onChange={handleChange}
+              placeholder="City, Country"
               className="w-full bg-transparent border border-gray-600 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -259,7 +262,8 @@ const ProfilePage = () => {
             </button>
           </div>
         </form>
-      </div >
+        )}
+      </div>
     </div>
   );
 }

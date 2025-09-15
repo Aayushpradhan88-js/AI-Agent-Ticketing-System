@@ -80,7 +80,7 @@ export const loginAccount = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ error: "User not found" });
 
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
@@ -211,30 +211,85 @@ export const getAllAccountUsers = async (req, res) => {
     try {
         if (req.user.role !== "admin") {
             console.log("account should not be admin");
-            res
+            return res
                 .status(402)
                 .json(
-                    new ApiError("YOU'RE NOT ADMIN OF THIS ACCOUNT, try again")
+                    new ApiError(403, "YOU'RE NOT ADMIN OF THIS ACCOUNT, try again")
                 )
         };
 
         const users = await User.find().select("-password");
-        if (!users) {
-            res
+        if (!users || users.length === 0) {
+            return res
                 .status(404)
                 .json(
-                    new ApiError("USERS ARE NOT FOUND")
+                    new ApiError(404, "USERS ARE NOT FOUND")
                 )
         };
-
-        res.send(users);
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, "Users fetched Successfully", users)
+            )
     } catch (error) {
         console.log("Failed to find users");
 
-        res
+        return res
             .status(500)
             .json(
                 new ApiError(500, "INTERNAL SERVER ERROR, FAILED TO FIND USERS")
             );
     }
+};
+
+//----------ADMIN UPDATE USER----------//
+export const adminUpdateAccount = async (req, res) => {
+    const {userId} = req.params;
+    const {username, email, bio, skills, location} = req.body;
+
+    try{
+        if(req.user.role != "admin") {
+            return res
+            .status(403)
+            .json(
+                new ApiError(403, "ACCESS DENIED, YOU'RE NOT ADMIN")
+            )
+        };
+
+        const targetedUser = await User.findById(userId);
+        if(!targetedUser) {
+            return res
+            .status(404)
+            .json(
+                new ApiError(404, "USER NOT FOUND!!")
+            );
+        };
+
+        if(targetedUser.role === "admin" && targetedUser._id.toString() != req.user._id.toString()){
+            return res
+            .status(403)
+            .json(
+                new ApiError(403, "CANNOT MODIFY OTHER ADMIN ACCOUNTS")
+            )
+        };
+
+        const updatedData = {};
+        if(username) updatedData.username = username;
+        if(email) updatedData.email = email;
+        if(skills) updatedData.skills = skills;
+        if(bio) updatedData.bio = bio;
+        if(location) updatedData.location = location;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            updatedData,
+            {
+                new: true,
+                select: "-password"
+            }
+        )
+    } catch(error) {
+        console.log(error.messsage)
+    }
 }
+
