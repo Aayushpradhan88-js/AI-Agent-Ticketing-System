@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import {GoogleOAUTHButton} from '../../components/googleoauthbutton';
 
-
 const LoginPage = () => {
 const [form, setForm] = useState(
     {
-      username: " ",
-      email: " ",
-      password: " ",
+      email: "",
+      password: "",
     }
   );
   const navigate = useNavigate();
@@ -23,35 +21,54 @@ const [form, setForm] = useState(
     setShowPassword(!showPassword);
   };
 
+  const [error, setError] = useState('');
+
   const handleLogin = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setError('');
+
+    // Validate form data
+    if (!form.email.trim() || !form.password.trim()) {
+      setError('Email and password are required');
+      setLoading(false);
+      return;
+    }
 
     try {
-      //----------FETCHING FROM THE BACKEND----------//
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(form)
-        }
-      )
-      //----------FETCHING FROM THE BACKEND----------//
+      const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
+      console.log('Attempting login with:', { email: form.email }); // Don't log password
+      console.log('Server URL:', serverUrl);
+      
+      const response = await fetch(`${serverUrl}/api/v1/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: form.email.trim(),
+          password: form.password.trim()
+        })
+      });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
-      if (response.ok) {
+      if (response.ok && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        console.log('Login successful, redirecting...');
         navigate("/tickets");
       } else {
-        alert(data.message, "Failed to login, Please try again");
+        // Handle specific error responses
+        const errorMessage = data.error || data.message || 'Login failed. Please try again.';
+        setError(errorMessage);
+        console.error('Login failed:', data);
       }
     } catch (error) {
-      alert("SomeThing went wrong")
-      console.log(error)
+      console.error('Login error:', error);
+      setError('Something went wrong. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -88,6 +105,18 @@ const [form, setForm] = useState(
           <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4">
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">{error}</span>
+            </div>
+          </div>
+        )}
 
         {/*---------- Login Form ----------*/}
         <form onSubmit={handleLogin} className="space-y-6">
@@ -141,7 +170,7 @@ const [form, setForm] = useState(
             <button type="submit" className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             disabled={loading}
             >
-               {loading ? "logging up..." : "login"}
+               {loading ? "Logging in..." : "Login"}
             </button>
           </div>
         </form>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogoutBtn } from '../components/LogoutBtn.jsx'
 import { Profile } from '../components/profile-page/Profile.jsx'
 import { AdminBtn } from '../components/AdminBtn.jsx'
-import { ticketAPI, userAPI } from '../utils/api.js'
+import { ticketAPI} from '../utils/api.js'
 import storage from '../utils/localStorage.js'
 
 const TicketPage = () => {
@@ -23,39 +23,6 @@ const TicketPage = () => {
   const [filter, setFilter] = useState('all'); // all, open, in-progress, resolved, closed
   const navigate = useNavigate();
 
-  // Sample data for UI display
-  const sampleTickets = [
-    {
-      id: 1,
-      title: 'help in javascript',
-      description: 'Need help in frontend for react',
-      status: 'open',
-      priority: 'medium',
-      createdAt: '2025-03-05, 09:50pm',
-      assignee: 'John Doe',
-      tags: ['frontend', 'react', 'javascript']
-    },
-    {
-      id: 2,
-      title: 'Database connection issue',
-      description: 'Unable to connect to production database. Getting timeout errors consistently.',
-      status: 'in-progress',
-      priority: 'high',
-      createdAt: '2025-03-04, 02:30pm',
-      assignee: 'Sarah Wilson',
-      tags: ['database', 'production', 'urgent']
-    },
-    {
-      id: 3,
-      title: 'UI component not responsive',
-      description: 'The header component breaks on mobile devices. Need responsive design fixes.',
-      status: 'resolved',
-      priority: 'low',
-      createdAt: '2025-03-03, 11:15am',
-      assignee: 'Mike Chen',
-      tags: ['ui', 'responsive', 'mobile']
-    }
-  ];
 
   const getStatusColor = (status) => {
     switch (status) {
