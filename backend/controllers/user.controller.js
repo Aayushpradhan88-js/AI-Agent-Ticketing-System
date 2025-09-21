@@ -80,8 +80,8 @@ export const loginAccount = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ error: "User not found" });
-
-        const isMatch = await bcrypt.compare(password, user.password);
+        
+        const isMatch = bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
@@ -93,12 +93,15 @@ export const loginAccount = async (req, res) => {
             { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE || '24h' }
         );
 
-        res.json(
-            {
-                user,
-                token
-            }
-        );
+        res
+            .status(200)
+            .json(
+                {
+                    message: "User LoggedIn Successfully",
+                    token,
+                    user
+                }
+            );
     } catch (error) {
         res.status(500).json({ error: "Login failed", details: error.message });
     }

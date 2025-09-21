@@ -17,7 +17,7 @@ export const CheckAuth = ({ children, protectedRoute })  => {
       }
     } else {
       if (token) {
-        navigate("/");
+        navigate("/tickets");
       } else {
         setLoading(false);
       }

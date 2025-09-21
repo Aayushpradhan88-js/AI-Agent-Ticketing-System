@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import {GoogleOAUTHButton} from '../../components/googleoauthbutton';
+import { GoogleOAUTHButton } from '../../components/googleoauthbutton';
 
 const RegisterPage = () => {
-  const [form, setForm] = useState(
-    {
-      username: "",
-      email: "",
-      password: "",
-      skills: []
-    }
-  );
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    skills: []
+  });
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -23,13 +21,14 @@ const RegisterPage = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleRegister = async (event) => {
-    event.preventDefault();
+  const handleRegister = async (e) => {
+    e.preventDefault();
     setLoading(true);
 
     try {
       //----------FETCHING FROM THE BACKEND----------//
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`,
+        // console.log(response),
         {
           method: "POST",
           headers: {
@@ -45,26 +44,24 @@ const RegisterPage = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("user", JSON.stringify(data.role));
         navigate("/tickets");
       } else {
         alert(data.message, "Failed to signup, Please try again");
       }
     } catch (error) {
-      alert("SomeThing went wrong")
-      console.log(error)
+      alert("SomeThing went wrong");
+      console.log(error);
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-inter">
       <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Create an Account</h1>
         <p className="text-center text-gray-600 mb-8"></p>
 
-        {/* Google Sign-up Button */}
+        {/*----------Google Sign-up Button----------*/}
         <GoogleOAUTHButton text="Sign up with Google" disabled={loading} />
 
         <div className="flex items-center my-6">
@@ -81,8 +78,8 @@ const RegisterPage = () => {
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <div className="mt-1">
               <input type="text" name="username" placeholder='username' id="username" autoComplete="username" required className="block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-black-400 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              value={form.username}
-              onChange={handleChange}
+                value={form.username}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -91,9 +88,9 @@ const RegisterPage = () => {
           <div>
             <label htmlFor="email" className="block text-sm font-mediu text-gray-700">Email</label>
             <div className="mt-1">
-              <input type="email" name="email" placeholder='email' id="email" autoComplete="email" required className="block text-black w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-              value={form.email}
-              onChange={handleChange}
+              <input type="email" name="email" placeholder='email' id="email" autoComplete="email" required className="block text-black w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                value={form.email}
+                onChange={handleChange}
               />
 
             </div>
@@ -111,8 +108,9 @@ const RegisterPage = () => {
                 required
                 className="block w-full px-4 py-2 border border-gray-300 text-black rounded-xl pr-10 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 value={form.password}
-            onChange={handleChange}
+                onChange={handleChange}
               />
+
               <button
                 type="button"
                 onClick={handleTogglePassword}
@@ -137,19 +135,16 @@ const RegisterPage = () => {
 
           <div>
             <button type="submit" className="w-full flex cursor-pointer justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            disabled={loading}
+              disabled={loading}
             >
-               {loading ? "Signing up..." : "Sign Up"}
+              {loading ? "Signing up..." : "Sign Up"}
             </button>
           </div>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          If you already have an account, then? 
-          <a className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
-            <Link to="/login">login</Link>
-            
-            </a>.
+          If you already have an account, then?
+          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">login</Link>
         </p>
       </div>
     </div>

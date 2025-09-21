@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import { Plus, User, LogOut, Filter, Clock, AlertCircle, CheckCircle, Calendar, Tag, MessageSquare, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -121,7 +122,7 @@ const TicketPage = () => {
       setNewTicket({ title: '', description: '' });
       setShowCreateForm(false);
       
-      // Refresh tickets list
+      //----------Refresh tickets list----------//
       await fetchTickets();
       
       // Clear success message after 5 seconds
@@ -209,7 +210,6 @@ const TicketPage = () => {
               {success}
             </div>
           )}
-          
           {loading && (
             <div className="flex items-center gap-2 mb-4">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
@@ -217,7 +217,7 @@ const TicketPage = () => {
             </div>
           )}
 
-          {/* Create Ticket Section */}
+          {/*----------Create Ticket Section---------*/}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Create Ticket</h2>
@@ -227,7 +227,7 @@ const TicketPage = () => {
                 disabled={loading}
               >
                 <Plus className="w-4 h-4" />
-                {showCreateForm ? 'Cancel' : 'New Ticket'}
+                {/* {showCreateForm ? 'Cancel' : 'New Ticket'} */}
               </button>
             </div>
 
@@ -256,7 +256,7 @@ const TicketPage = () => {
                 </div>
 
                 <button
-                  onClick={handleCreateTicket}
+                  // onClick={handleCreateTicket}
                   disabled={!newTicket.title.trim() || !newTicket.description.trim() || loading}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors"
                 >
@@ -266,13 +266,13 @@ const TicketPage = () => {
             )}
           </div>
 
-          {/* All Tickets */}
+          {/*----------All Tickets----------*/}
           <div>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold">All Tickets</h2>
                 <button
-                  onClick={fetchTickets}
+                  // onClick={fetchTickets}
                   className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
                   disabled={loading}
                   title="Refresh tickets"
@@ -282,7 +282,7 @@ const TicketPage = () => {
               </div>
               <div className="flex items-center gap-4">
                 <select
-                  value={filter}
+                  // value={filter}
                   onChange={(e) => setFilter(e.target.value)}
                   className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
@@ -311,25 +311,31 @@ const TicketPage = () => {
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="font-semibold text-lg">{ticket.title}</h3>
                         <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getStatusColor(ticket.status)}`}>
-                          {getStatusIcon(ticket.status)}
-                          {ticket.status.replace('-', ' ')}
+                          {/* {getStatusIcon(ticket.status)}
+                          {ticket.status.replace('-', ' ')} */}
                         </span>
                         <span className={`text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
-                          {ticket.priority} priority
+                          {/* {ticket.priority} priority */}
                         </span>
                       </div>
 
-                      <p className="text-gray-300 mb-3">{ticket.description}</p>
+                      <p className="text-gray-300 mb-3">
+                        {/* {ticket.description} */}
+                        </p>
 
                       <div className="flex items-center gap-4 text-sm text-gray-400">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          <span>created: {ticket.createdAt}</span>
+                          <span>created: 
+                            {/* {ticket.createdAt} */}
+                            </span>
                         </div>
 
                         <div className="flex items-center gap-1">
                           <User className="w-4 h-4" />
-                          <span>assigned To: {ticket.assignee}</span>
+                          <span>assigned To: 
+                            {/* {ticket.assignee} */}
+                            </span>
                         </div>
                       </div>
 
