@@ -2,28 +2,26 @@
 import React, { useState, useEffect } from 'react'
 import { Plus, User, LogOut, Filter, Clock, AlertCircle, CheckCircle, Calendar, Tag, MessageSquare, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 import { LogoutBtn } from '../components/LogoutBtn.jsx'
-import { Profile } from '../components/profile-page/Profile.jsx'
 import { AdminBtn } from '../components/AdminBtn.jsx'
-import { ticketAPI} from '../utils/api.js'
+import { Profile } from './profile-page/Profile.jsx'
 import storage from '../utils/localStorage.js'
+import { ticketAPI } from '../utils/api.js'
 
 const TicketPage = () => {
-  const [newTicket, setNewTicket] = useState(
-    {
-      title: '',
-      description: ''
-    }
-  );
+  const [newTicket, setNewTicket] = useState({
+    title: '',
+    description: ''
+  });
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, open, in-progress, resolved, closed
+  const [filter, setFilter] = useState('all')
   const navigate = useNavigate();
-
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -64,10 +62,11 @@ const TicketPage = () => {
 
     setLoading(true);
     setError('');
-    
+
     try {
       const response = await ticketAPI.getAllTickets();
-      
+      console.log("response", response)
+
       // Transform tickets to match UI expectations
       const transformedTickets = response.data?.map(ticket => ({
         id: ticket._id,
@@ -80,16 +79,16 @@ const TicketPage = () => {
         tags: ticket.relatedSkills ? ticket.relatedSkills.split(',').map(s => s.trim()) : [],
         createdBy: ticket.createdBy
       })) || [];
-      
+
       setTickets(transformedTickets);
       setSuccess('Tickets loaded successfully');
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       console.error('Error fetching tickets:', error);
       setError(error.message || 'Failed to fetch tickets');
-      
+
       // Try to load from cache if available
       const cachedTickets = storage.getCachedTickets();
       if (cachedTickets && cachedTickets.length > 0) {
@@ -111,20 +110,20 @@ const TicketPage = () => {
 
     setLoading(true);
     setError('');
-    
+
     try {
       const response = await ticketAPI.createTicket({
         title: newTicket.title.trim(),
         description: newTicket.description.trim()
       });
-      
+
       setSuccess('Ticket created successfully! Processing has been started.');
       setNewTicket({ title: '', description: '' });
       setShowCreateForm(false);
-      
+
       //----------Refresh tickets list----------//
       await fetchTickets();
-      
+
       // Clear success message after 5 seconds
       setTimeout(() => setSuccess(''), 5000);
     } catch (error) {
@@ -153,7 +152,7 @@ const TicketPage = () => {
         setError('Failed to load user data');
       }
     };
-    
+
     loadUserAndTickets();
   }, []);
 
@@ -210,12 +209,12 @@ const TicketPage = () => {
               {success}
             </div>
           )}
-          {loading && (
+          {/* {loading && (
             <div className="flex items-center gap-2 mb-4">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-              <span className="text-gray-400">Loading...</span>
+              <span className="text-gray-400">loading...</span>
             </div>
-          )}
+          )} */}
 
           {/*----------Create Ticket Section---------*/}
           <div className="mb-8">
@@ -305,56 +304,56 @@ const TicketPage = () => {
             ) : (
               <div className="space-y-4">
                 {filteredTickets.map((ticket) => (
-                <div key={ticket.id} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-colors">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-lg">{ticket.title}</h3>
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getStatusColor(ticket.status)}`}>
-                          {/* {getStatusIcon(ticket.status)}
+                  <div key={ticket.id} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="font-semibold text-lg">{ticket.title}</h3>
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getStatusColor(ticket.status)}`}>
+                            {/* {getStatusIcon(ticket.status)}
                           {ticket.status.replace('-', ' ')} */}
-                        </span>
-                        <span className={`text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
-                          {/* {ticket.priority} priority */}
-                        </span>
-                      </div>
+                          </span>
+                          <span className={`text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
+                            {/* {ticket.priority} priority */}
+                          </span>
+                        </div>
 
-                      <p className="text-gray-300 mb-3">
-                        {/* {ticket.description} */}
+                        <p className="text-gray-300 mb-3">
+                          {/* {ticket.description} */}
                         </p>
 
-                      <div className="flex items-center gap-4 text-sm text-gray-400">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>created: 
-                            {/* {ticket.createdAt} */}
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>created:
+                              {/* {ticket.createdAt} */}
                             </span>
-                        </div>
+                          </div>
 
-                        <div className="flex items-center gap-1">
-                          <User className="w-4 h-4" />
-                          <span>assigned To: 
-                            {/* {ticket.assignee} */}
+                          <div className="flex items-center gap-1">
+                            <User className="w-4 h-4" />
+                            <span>assigned To:
+                              {/* {ticket.assignee} */}
                             </span>
-                        </div>
-                      </div>
-
-                      {ticket.tags.length > 0 && (
-                        <div className="flex items-center gap-2 mt-3">
-                          <Tag className="w-4 h-4 text-gray-400" />
-                          <div className="flex flex-wrap gap-1">
-                            {ticket.tags.map((tag, index) => (
-                              <span key={index} className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">
-                                {tag}
-                              </span>
-                            ))}
                           </div>
                         </div>
-                      )}
+
+                        {ticket.tags.length > 0 && (
+                          <div className="flex items-center gap-2 mt-3">
+                            <Tag className="w-4 h-4 text-gray-400" />
+                            <div className="flex flex-wrap gap-1">
+                              {ticket.tags.map((tag, index) => (
+                                <span key={index} className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
               </div>
             )}
           </div>

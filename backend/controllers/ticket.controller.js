@@ -75,6 +75,7 @@ export const createTicket = async (req, res) => {
 export const getAllTickets = async (req, res) => {
     try {
         const user = req.user;
+        console.log(user);
         let tickets;
 
         if (user.role !== 'user') {
@@ -89,7 +90,7 @@ export const getAllTickets = async (req, res) => {
                 .select("title description status createdAt")
                 .sort({ createdAt: -1 })
         }
-
+        console.log(tickets);
         return res
             .status(200)
             .json(
