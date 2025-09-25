@@ -79,6 +79,7 @@ const TicketPage = () => {
         tags: ticket.relatedSkills ? ticket.relatedSkills.split(',').map(s => s.trim()) : [],
         createdBy: ticket.createdBy
       })) || [];
+      console.log(transformedTickets);
 
       setTickets(transformedTickets);
       setSuccess('Tickets loaded successfully');

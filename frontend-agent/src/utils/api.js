@@ -159,7 +159,9 @@ class ApiClient {
   }
 }
 
-// API endpoints
+//----------API endpoints----------//
+
+//----------USER END-POINTS----------//
 class UserAPI extends ApiClient {
   // Authentication
   async register(userData) {
@@ -275,7 +277,7 @@ class TicketAPI extends ApiClient {
   }
 }
 
-// Create singleton instances
+//----------Create singleton instances----------//
 const userAPI = new UserAPI();
 const ticketAPI = new TicketAPI();
 
