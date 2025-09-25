@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import storage from '../utils/localStorage.js';
 
 
 export const CheckAuth = ({ children, protectedRoute })  => {
@@ -7,16 +8,16 @@ export const CheckAuth = ({ children, protectedRoute })  => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const isAuthenticated = storage.isAuthenticated();
 
     if (protectedRoute) {
-      if (!token) {
+      if (!isAuthenticated) {
         navigate("/login");
       } else {
         setLoading(false);
       }
     } else {
-      if (token) {
+      if (isAuthenticated) {
         navigate("/tickets");
       } else {
         setLoading(false);

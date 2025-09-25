@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import {GoogleOAUTHButton} from '../../components/googleoauthbutton';
+import { GoogleOAUTHButton } from '../../components/googleoauthbutton';
+import storage from '../../utils/localStorage.js';
 
 const LoginPage = () => {
-const [form, setForm] = useState(
+  const [form, setForm] = useState(
     {
       email: "",
       password: "",
@@ -39,7 +40,7 @@ const [form, setForm] = useState(
       const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
       console.log('Attempting login with:', { email: form.email }); // Don't log password
       console.log('Server URL:', serverUrl);
-      
+
       const response = await fetch(`${serverUrl}/api/v1/auth/login`, {
         method: "POST",
         headers: {
@@ -56,8 +57,8 @@ const [form, setForm] = useState(
       console.log('Response data:', data);
 
       if (response.ok && data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        storage.setToken(data.token);
+        storage.setUser(data.user);
         console.log('Login successful, redirecting...');
         navigate("/tickets");
       } else {
@@ -82,8 +83,8 @@ const [form, setForm] = useState(
 
         {/* Google Sign-in Button */}
         <GoogleOAUTHButton text="Login with Google" disabled={loading} />
-        
-                <div className="flex items-center my-6"></div>
+
+        <div className="flex items-center my-6"></div>
         {/* <button className="w-full flex items-center justify-center cursor-pointer space-x-2 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-4 rounded-xl font-medium transition-colors hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
           <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_1_25)">
@@ -124,9 +125,9 @@ const [form, setForm] = useState(
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <div className="mt-1">
-              <input type="email" name="email"placeholder='email' id="email" autoComplete="email" required className="block  text-black w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-              value={form.email}
-              onChange={handleChange}
+              <input type="email" name="email" placeholder='email' id="email" autoComplete="email" required className="block  text-black w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                value={form.email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -136,14 +137,14 @@ const [form, setForm] = useState(
             <div className="mt-1 relative rounded-xl shadow-sm">
               <input
                 type={showPassword ? 'text' : 'password'}
-                name="password" 
+                name="password"
                 placeholder='password'
                 id="password"
                 autoComplete="new-password"
                 required
                 className="block w-full px-4 py-2 border border-gray-300 rounded-xl pr-10 placeholder-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 value={form.password}
-            onChange={handleChange}
+                onChange={handleChange}
               />
               <button
                 type="button"
@@ -168,9 +169,9 @@ const [form, setForm] = useState(
 
           <div>
             <button type="submit" className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            disabled={loading}
+              disabled={loading}
             >
-               {loading ? "Logging in..." : "Login"}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </div>
         </form>
@@ -178,8 +179,8 @@ const [form, setForm] = useState(
         <p className="mt-6 text-center text-sm text-gray-600">
           Create a new account, then
           <a className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
-              <Link to="/register-form">register account</Link>
-            </a>.
+            <Link to="/register-form">register account</Link>
+          </a>.
         </p>
       </div>
     </div>

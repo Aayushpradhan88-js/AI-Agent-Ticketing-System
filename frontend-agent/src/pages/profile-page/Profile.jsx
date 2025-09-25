@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import {useNavigate } from 'react-router-dom'
+import storage from '../../utils/localStorage.js'
 
-export const Profile = () => {
+export const Profile = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("user");
-    const userData = JSON.parse(data);
+    const userData = storage.getUser();
     setUserInfo(userData)
   }, [])
 
@@ -27,9 +27,9 @@ export const Profile = () => {
   return (
     <div
       onClick={profilePageNavigate}
-      className="w-4 h-5 cursor-pointer rounded-full"
+      className="cursor-pointer rounded-full"
     >
-      {getInitials(userInfo?.user)}
+      {children || getInitials(userInfo?.user)}
     </div>
   )
 }

@@ -25,13 +25,12 @@ class ApiClient {
     const url = `${this.baseURL}${endpoint}`;
     
     const config = {
-      headers: this.getAuthHeaders(),
-      timeout: this.defaultTimeout,
-      ...options,
-      header: { //---issue can be caused-----//
+      headers: {
         ...this.getAuthHeaders(),
         ...(options.headers || {}),
       },
+      timeout: this.defaultTimeout,
+      ...options,
     };
 
     try {

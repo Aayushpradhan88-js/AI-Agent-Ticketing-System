@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAUTHButton } from '../../components/googleoauthbutton';
+import storage from '../../utils/localStorage';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -42,8 +43,8 @@ const RegisterPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        storage.setToken(data.token);
+        storage.setUser("user", JSON.stringify(data.user));
         navigate("/tickets");
       } else {
         alert(data.message, "Failed to signup, Please try again");

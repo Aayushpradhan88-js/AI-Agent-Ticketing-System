@@ -28,33 +28,26 @@ const AppRoutes = () => {
                 } />
 
                 <Route path='/admin' element={
-                    <CheckAuth protected={true}>
+                    <CheckAuth protectedRoute={true}>
                         <AdminPage />
                     </CheckAuth>
                 } />
 
                 <Route path='/tickets' element={
-                    <CheckAuth protected={true}>
+                    <CheckAuth protectedRoute={true}>
                         <TicketPage />
                     </CheckAuth>
                 } />
 
                 <Route path='/ticket/:id' element={
-                    <CheckAuth protected={true}>
+                    <CheckAuth protectedRoute={true}>
                         <TicketsPage />
                     </CheckAuth>
                 } />
 
                 <Route path='/profile/edit' element={
-                    <CheckAuth protected={true}>
+                    <CheckAuth protectedRoute={true}>
                         <ProfilePage />
-                    </CheckAuth>
-                }
-                />
-
-                <Route path='/admin' element={
-                    <CheckAuth protected={true}>
-                        <AdminPage />
                     </CheckAuth>
                 }
                 />
