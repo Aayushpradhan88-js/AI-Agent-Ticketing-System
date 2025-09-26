@@ -1,5 +1,6 @@
 import storage from './localStorage.js';
 
+//----------API CLIENT----------//
 class ApiClient {
   constructor() {
     this.baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
@@ -229,12 +230,15 @@ class UserAPI extends ApiClient {
   }
 }
 
+//----------TICKET END-POINTS----------//
 class TicketAPI extends ApiClient {
-  // Ticket operations
+  //-----Ticket operations-----//
+
+  //-----Get All Tickets-----//
   async getAllTickets() {
     const tickets = await this.get('/api/v1/tickets/get-all-tickets');
     
-    // Cache tickets data
+    //-----Cache tickets data-----//
     storage.setCachedTickets(tickets);
     
     return tickets;

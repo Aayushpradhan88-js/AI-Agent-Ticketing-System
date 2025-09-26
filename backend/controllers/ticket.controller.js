@@ -96,8 +96,8 @@ export const getAllTickets = async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
+                    tickets,
                     "Tickets fetched successfully",
-                    tickets
                 )
             )
     }

@@ -67,8 +67,8 @@ const ProfilePage = () => {
           });
           
           // Update storage
-          storage.setUser(userData);
-          storage.setProfile(userData);
+          // storage.setUser(userData);
+          // storage.setProfile(userData);
         }
       } catch (error) {
         console.error('Error loading profile:', error);

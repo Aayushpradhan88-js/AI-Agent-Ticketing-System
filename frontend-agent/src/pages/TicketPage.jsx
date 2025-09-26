@@ -68,7 +68,7 @@ const TicketPage = () => {
       console.log("response", response)
 
       // Transform tickets to match UI expectations
-      const transformedTickets = response.data(ticket => ({
+      const transformedTickets = await response.data.map(ticket => ({
         id: ticket._id,
         title: ticket.title,
         description: ticket.description,
