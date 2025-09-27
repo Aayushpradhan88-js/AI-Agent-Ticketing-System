@@ -67,6 +67,15 @@ const TicketPage = () => {
       const response = await ticketAPI.getAllTickets();
       console.log("response", response)
 
+      if (!response || !response.data) {
+        throw new Error("INVALID RESPONSE STRUCTURE FROM THE SERVER!!")
+      };
+
+      if (!Array.isArray(response)) {
+        console.log("EXPECTED ARRAY BUT GOT: ", typeof response);
+        throw new Error("SERVER RETURN INVALID DATA FROMAT");
+      }
+
       // Transform tickets to match UI expectations
       const transformedTickets = await response.data.map(ticket => ({
         id: ticket._id,
