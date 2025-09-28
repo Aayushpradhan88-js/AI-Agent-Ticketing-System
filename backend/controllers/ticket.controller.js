@@ -75,7 +75,7 @@ export const createTicket = async (req, res) => {
 export const getAllTickets = async (req, res) => {
     try {
         const user = req.user;
-        console.log(user);
+        // console.log(user);
         let tickets;
 
         if (user.role !== 'user') {
@@ -176,8 +176,8 @@ export const getTicketById = async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
+                    ticket,
                     "Ticket fetched successfully",
-                    ticket
                 )
             )
     }

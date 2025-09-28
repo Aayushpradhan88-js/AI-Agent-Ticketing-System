@@ -234,7 +234,7 @@ class UserAPI extends ApiClient {
 class TicketAPI extends ApiClient {
   //-----Ticket operations-----//
 
-  //-----Get All Tickets-----//
+  //-----Get All Tickets-----//....
   async getAllTickets() {
     const tickets = await this.get('/api/v1/tickets/get-all-tickets');
     

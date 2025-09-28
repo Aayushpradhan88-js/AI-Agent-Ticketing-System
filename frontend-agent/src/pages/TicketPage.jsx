@@ -68,26 +68,33 @@ const TicketPage = () => {
       console.log("response", response)
 
       if (!response || !response.data) {
-        throw new Error("INVALID RESPONSE STRUCTURE FROM THE SERVER!!")
-      };
+        throw new Error("INVALID RESPONSE STRUCTURE FROM THE SERVER!!");
+      }
 
-      if (!Array.isArray(response)) {
-        console.log("EXPECTED ARRAY BUT GOT: ", typeof response);
-        throw new Error("SERVER RETURN INVALID DATA FROMAT");
+      if (!Array.isArray(response.data)) {
+        console.log("EXPECTED ARRAY BUT GOT: ", typeof response.data);
+        throw new Error("SERVER RETURNED INVALID DATA FORMAT");
       }
 
       // Transform tickets to match UI expectations
-      const transformedTickets = await response.data.map(ticket => ({
-        id: ticket._id,
-        title: ticket.title,
-        description: ticket.description,
-        status: ticket.status === 'active' ? 'open' : ticket.status,
-        priority: ticket.priority || 'medium',
-        createdAt: new Date(ticket.createdAt).toLocaleDateString(),
-        assignee: ticket.assignedTo?.username || 'Unassigned',
-        tags: ticket.relatedSkills ? ticket.relatedSkills.split(',').map(s => s.trim()) : [],
-        createdBy: ticket.createdBy
-      })) || [];
+      const transformedTickets = response.data.map(ticket => {
+        if (!ticket || !ticket._id) {
+          console.warn('Invalid ticket data:', ticket);
+          return null;
+        }
+        
+        return {
+          id: ticket._id,
+          title: ticket.title || 'Untitled',
+          description: ticket.description || 'No description provided',
+          status: ticket.status === 'active' ? 'open' : (ticket.status || 'open'),
+          priority: ticket.priority || 'medium',
+          createdAt: ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString() : 'Unknown',
+          assignee: ticket.assignedTo?.username || 'Unassigned',
+          tags: ticket.relatedSkills ? ticket.relatedSkills.split(',').map(s => s.trim()) : [],
+          createdBy: ticket.createdBy
+        };
+      }).filter(ticket => ticket !== null); // Remove any invalid tickets
       console.log(transformedTickets);
 
       setTickets(transformedTickets);
@@ -265,7 +272,7 @@ const TicketPage = () => {
                 </div>
 
                 <button
-                  // onClick={handleCreateTicket}
+                  onClick={handleCreateTicket}
                   disabled={!newTicket.title.trim() || !newTicket.description.trim() || loading}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors"
                 >
@@ -320,31 +327,27 @@ const TicketPage = () => {
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="font-semibold text-lg">{ticket.title}</h3>
                           <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border ${getStatusColor(ticket.status)}`}>
-                            {/* {getStatusIcon(ticket.status)}
-                          {ticket.status.replace('-', ' ')} */}
+                            {getStatusIcon(ticket.status)}
+                            {ticket.status.replace('-', ' ')}
                           </span>
                           <span className={`text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
-                            {/* {ticket.priority} priority */}
+                            {ticket.priority} priority
                           </span>
                         </div>
 
                         <p className="text-gray-300 mb-3">
-                          {/* {ticket.description} */}
+                          {ticket.description}
                         </p>
 
                         <div className="flex items-center gap-4 text-sm text-gray-400">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            <span>created:
-                              {/* {ticket.createdAt} */}
-                            </span>
+                            <span>Created: {ticket.createdAt}</span>
                           </div>
 
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
-                            <span>assigned To:
-                              {/* {ticket.assignee} */}
-                            </span>
+                            <span>Assigned to: {ticket.assignee}</span>
                           </div>
                         </div>
 
