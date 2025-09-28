@@ -118,7 +118,7 @@ const TicketPage = () => {
     }
   };
 
-  // Create new ticket
+  //----------Create new ticket----------//
   const handleCreateTicket = async () => {
     if (!newTicket.title.trim() || !newTicket.description.trim()) {
       setError('Title and description are required');
@@ -134,6 +134,9 @@ const TicketPage = () => {
         description: newTicket.description.trim()
       });
 
+      if(!response.data){
+        throw new Error("SERVER IS NOT CREATING TICKET")
+      } 
       setSuccess('Ticket created successfully! Processing has been started.');
       setNewTicket({ title: '', description: '' });
       setShowCreateForm(false);
@@ -239,7 +242,7 @@ const TicketPage = () => {
               <h2 className="text-xl font-semibold">Create Ticket</h2>
               <button
                 onClick={() => setShowCreateForm(!showCreateForm)}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                className="flex cursor-pointer items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
                 disabled={loading}
               >
                 <Plus className="w-4 h-4" />
@@ -274,7 +277,7 @@ const TicketPage = () => {
                 <button
                   onClick={handleCreateTicket}
                   disabled={!newTicket.title.trim() || !newTicket.description.trim() || loading}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors"
+                  className="bg-blue-600 cursor-pointer hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors"
                 >
                   {loading ? 'Creating...' : 'Create'}
                 </button>
