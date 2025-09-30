@@ -52,7 +52,7 @@ const RegisterPage = () => {
     } catch (error) {
       alert("SomeThing went wrong");
       console.log(error);
-    } finally {
+    } finally { 
       setLoading(false);
     }
   }

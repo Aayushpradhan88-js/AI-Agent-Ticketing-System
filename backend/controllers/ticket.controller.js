@@ -2,8 +2,7 @@
 ALGORITHM FOR CREATING TICKET
 
 1. getting title and desciption from the frontend
-2. Not given throw error
-3. create the ticket
+2. create the ticket
 4. using inngesT
 
 */

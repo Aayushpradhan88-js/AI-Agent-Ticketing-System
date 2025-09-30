@@ -17,11 +17,11 @@ export const registerAccount = async (req, res) => {
         }
 
         const existingUsername = await User.findOne({ username });
-        if (existingUsername) {
+        if (!existingUsername) {
             return res.status(400).json({ message: 'Username already taken' });
         }
         const existingEmail = await User.findOne({ email });
-        if (existingEmail) {
+        if (!existingEmail) {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
