@@ -4,10 +4,7 @@ const userModel = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        lowercase: true,
-        minlength: [3, "minimum 3 letter is required"],
         trim: true,
-        unique: true
     },
     email: {
         type: String,

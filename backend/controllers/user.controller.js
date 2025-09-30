@@ -9,19 +9,19 @@ import jwt from "jsonwebtoken";
 
 //---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
-    const { username, email, password, skills = [] } = req.body;
+    const { username, email, password, skills} = req.body;
 
     try {
-        if (!username || !email || !password || !skills) {
+        if (!username || !email || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
         const existingUsername = await User.findOne({ username });
-        if (!existingUsername) {
+        if (existingUsername) {
             return res.status(400).json({ message: 'Username already taken' });
         }
         const existingEmail = await User.findOne({ email });
-        if (!existingEmail) {
+        if (existingEmail) {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
