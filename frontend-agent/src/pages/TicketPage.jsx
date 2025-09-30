@@ -66,7 +66,7 @@ const TicketPage = () => {
     try {
       const response = await ticketAPI.getAllTickets();
       console.log("response", response)
-
+ 
       if (!response || !response.data) {
         throw new Error("INVALID RESPONSE STRUCTURE FROM THE SERVER!!");
       }
