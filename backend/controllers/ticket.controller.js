@@ -34,6 +34,8 @@ export const createTicket = async (req, res) => {
             }
         );
 
+
+
         await inngest.send(
             {
                 name: "ticket/created", //---hit the function (on-ticket-created)---//
@@ -180,7 +182,7 @@ export const getTicketById = async (req, res) => {
                 )
             )
     }
-    
+
     catch (error) {
         console.error("Error fetching ticket:", error.message);
         return res
@@ -237,8 +239,8 @@ export const adminAssignTicket = async (req, res) => {
             { assignedTo: assigneeId || null },
             { new: true }
         )
-        .populate("assignedTo", ["_id", "username", "email"])
-        .populate("createdBy", ["_id", "username", "email"]);
+            .populate("assignedTo", ["_id", "username", "email"])
+            .populate("createdBy", ["_id", "username", "email"]);
 
         return res
             .status(200)
@@ -293,8 +295,8 @@ export const adminUpdateTicketStatus = async (req, res) => {
             { status },
             { new: true }
         )
-        .populate("assignedTo", ["_id", "username", "email"])
-        .populate("createdBy", ["_id", "username", "email"]);
+            .populate("assignedTo", ["_id", "username", "email"])
+            .populate("createdBy", ["_id", "username", "email"]);
 
         if (!updatedTicket) {
             return res

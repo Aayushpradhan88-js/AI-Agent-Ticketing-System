@@ -17,9 +17,9 @@ import "./config/passport.js"
 const app = express()
 app.use(cors(
     {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true
-}
+        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        credentials: true
+    }
 ))
 
 app.use(express.urlencoded({ extended: true }))
@@ -28,15 +28,15 @@ app.use(express.json());
 // Session configuration
 app.use(session(
     {
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        // secure: process.env.NODE_ENV === 'production', //--HOLD---//
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            // secure: process.env.NODE_ENV === 'production', //--HOLD---//
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        }
+    }));
 
 // Passport middleware
 app.use(passport.initialize());
