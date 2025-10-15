@@ -15,13 +15,13 @@ import { inngest } from "../inngest/client.js"
 
 //-----CREATING TICKET-----//
 export const createTicket = async (req, res) => {
-    const { title, description } = req.body
+    const { title, description, hashtags } = req.body
 
-    if (!title || !description) {
+    if (!title || !description || !hashtags) {
         return res
             .status(402)
             .json(
-                new ApiError(402, "title or description is required")
+                new ApiError(402, "title, description and hashtags is required")
             );
     }
 
@@ -30,11 +30,10 @@ export const createTicket = async (req, res) => {
             {
                 title,
                 description,
+                hashtags,
                 createdBy: req.user._id.toString()
             }
         );
-
-
 
         await inngest.send(
             {
@@ -43,6 +42,7 @@ export const createTicket = async (req, res) => {
                     ticketId: newTicket._id.toString(),
                     title,
                     description,
+                    hashtags,
                     createdBy: req.user._id.toString()
                 }
             }

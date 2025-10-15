@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 
 const ticketModel = new mongoose.Schema(
     {
@@ -11,6 +11,16 @@ const ticketModel = new mongoose.Schema(
             type: String,
             required: true,
             trim: true
+        },
+        hashtags:{
+            type: String,
+            required: true,
+            validate:{
+                validator: function(tag) {
+                    return tag.length > 0 && tag.length <= 4
+                },
+                message: "Provide at least 4 or more hashtags"
+            }
         },
         status: {
             type: String,
