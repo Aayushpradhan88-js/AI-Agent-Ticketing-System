@@ -13,13 +13,13 @@ const ticketModel = new mongoose.Schema(
             trim: true
         },
         hashtags:{
-            type: String,
+            type: [String], //---contains array of string[ ] - ["backend", "mern"] ---//
             required: true,
             validate:{
                 validator: function(tag) {
                     return tag.length > 0 && tag.length <= 4
                 },
-                message: "Provide at least 4 or more hashtags"
+                message: "Provide at least 4 hashtags"
             }
         },
         status: {

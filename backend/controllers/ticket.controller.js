@@ -16,6 +16,7 @@ import { inngest } from "../inngest/client.js"
 //-----CREATING TICKET-----//
 export const createTicket = async (req, res) => {
     const { title, description, hashtags } = req.body
+    console.log(title, description, hashtags)
 
     if (!title || !description || !hashtags) {
         return res
@@ -34,6 +35,7 @@ export const createTicket = async (req, res) => {
                 createdBy: req.user._id.toString()
             }
         );
+        console.log(newTicket)
 
         await inngest.send(
             {
