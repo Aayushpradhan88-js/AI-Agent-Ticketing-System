@@ -28,6 +28,10 @@ authRoute.put("/admin/user/:userId", authenticate, adminUpdateUser);
 authRoute.delete("/admin/user/:userId", authenticate, adminDeleteUser);
 authRoute.patch("/admin/user/:userId/status", authenticate, adminToggleUserStatus);
 
+//----------Moderator-only routes----------//
+authRoute.put("/moderator/:id", authenticate)
+authRoute.delete("/moderator/:id", authenticate)
+
 //----------Google OAuth routes----------//
 authRoute.get("/google",
     passport.authenticate("google", {
@@ -66,6 +70,7 @@ authRoute.get("/me", (req, res) => {
                     authType: "jwt"
                 });
             } catch (error) {
+                console.log(error.message)
                 res.status(401).json({ success: false, message: "Invalid token" });
             }
         } else {
