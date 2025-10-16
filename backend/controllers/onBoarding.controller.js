@@ -5,9 +5,16 @@ export const onBoarding = async (req, res, next) =>{
 
     try {
         let role;
+
         if(userType === 'student'){
-            role = "student"
+            role = 'student'
+        } else if (userType === 'moderator'){
+            role = 'moderator'
+        } else if (userType === 'admin') {
+            role = 'admin'
         }
+
+        
     } catch (error) {
         console.log(error.message)
     }
