@@ -50,7 +50,7 @@ const userModel = new mongoose.Schema({
         trim: true,
         maxlength: [500, "Bio cannot exceed 500 characters"]
     },
-    onBoarding: {
+    onBoardingCompleted: {
         type: String,
         boolean: false
     },
