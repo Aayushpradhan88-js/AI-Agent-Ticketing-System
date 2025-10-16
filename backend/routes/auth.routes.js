@@ -32,6 +32,9 @@ authRoute.patch("/admin/user/:userId/status", authenticate, adminToggleUserStatu
 authRoute.put("/moderator/:id", authenticate)
 authRoute.delete("/moderator/:id", authenticate)
 
+//----------Onboarding route--------//
+authRoute.get("/onboarding")
+
 //----------Google OAuth routes----------//
 authRoute.get("/google",
     passport.authenticate("google", {

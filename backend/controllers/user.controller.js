@@ -63,7 +63,8 @@ export const registerAccount = async (req, res) => {
                     username: user.username,
                     email: user.email,
                     role: user.role,
-                    skills: user.skills
+                    skills: user.skills,
+                    userOnBoardingCompleted: user.onBoardingCompleted
                 }
             });
 
@@ -99,7 +100,11 @@ export const loginAccount = async (req, res) => {
                 {
                     message: "User LoggedIn Successfully",
                     token,
-                    user
+                    user: {
+                        id: user._id,
+                        userOnBoardingCompleted: user.onBoardingCompleted
+                    }
+                    
                 }
             );
     } catch (error) {
