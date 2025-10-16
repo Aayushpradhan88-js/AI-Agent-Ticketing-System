@@ -49,6 +49,16 @@ const userModel = new mongoose.Schema({
         type: String,
         trim: true,
         maxlength: [500, "Bio cannot exceed 500 characters"]
+    },
+    onBoarding: {
+        type: String,
+        boolean: false
+    },
+    onboardingData: {
+        userType: String,
+        experience: String,
+        goals: [String],
+        interests: [String]
     }
 },
     {
