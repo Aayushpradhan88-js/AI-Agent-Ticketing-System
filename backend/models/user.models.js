@@ -54,8 +54,9 @@ const userModel = new mongoose.Schema({
         type: String,
         boolean: false
     },
-    onboardingData: {
+    onBoardingData: {
         userType: String,
+        source: string,
         experience: String,
         goals: [String],
         interests: [String]
