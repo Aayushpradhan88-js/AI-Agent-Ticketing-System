@@ -232,7 +232,7 @@ class UserAPI extends ApiClient {
 
 class OnBoardingAPI extends ApiClient {
   async onBoarding(options) {
-    return this.post('/api/v1/auth/onBoarding', options);
+    return await this.post('/api/v1/auth/onBoarding', options);
   }
 }
 
