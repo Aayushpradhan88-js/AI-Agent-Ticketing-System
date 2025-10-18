@@ -22,7 +22,7 @@ class LocalStorageManager {
     }
   }
 
-  // Get item with expiration check
+  //----------Get item with expiration check----------//
   getItem(key) {
     try {
       const itemStr = localStorage.getItem(this.prefix + key);

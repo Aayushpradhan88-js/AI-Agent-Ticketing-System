@@ -9,7 +9,7 @@ class ApiClient {
 
   //-----Get authorization headers-----//
   getAuthHeaders() {
-    const token = storage.getToken();
+    const token = storage.getToken()
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -24,7 +24,7 @@ class ApiClient {
   // Make authenticated request
   async makeRequest(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    
+
     const config = {
       headers: {
         ...this.getAuthHeaders(),
@@ -67,7 +67,7 @@ class ApiClient {
   // GET request
   async get(endpoint) {
     const response = await this.makeRequest(endpoint, { method: 'GET' });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
@@ -76,7 +76,7 @@ class ApiClient {
     return response.json();
   }
 
-  // POST request
+  //----------POST request--------//
   async post(endpoint, data = {}) {
     const response = await this.makeRequest(endpoint, {
       method: 'POST',
@@ -137,7 +137,7 @@ class ApiClient {
   async upload(endpoint, file, additionalData = {}) {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     Object.keys(additionalData).forEach(key => {
       formData.append(key, additionalData[key]);
     });
@@ -171,13 +171,13 @@ class UserAPI extends ApiClient {
 
   async login(credentials) {
     const result = await this.post('/api/v1/auth/login', credentials);
-    
+
     // Store user data and token after successful login
     if (result.token) {
       storage.setToken(result.token);
       storage.setUser(result.user);
     }
-    
+
     return result;
   }
 
@@ -197,23 +197,23 @@ class UserAPI extends ApiClient {
 
   async updateProfile(profileData) {
     const result = await this.post('/api/v1/auth/update-account', profileData);
-    
+
     // Update cached user data
     if (result.data) {
       storage.setUser(result.data);
       storage.setProfile(result.data);
     }
-    
+
     return result;
   }
 
   // Admin operations
   async getAllUsers() {
     const users = await this.get('/api/v1/auth/get-users-account');
-    
+
     // Cache users data for admin
     storage.setCachedUsers(users);
-    
+
     return users;
   }
 
@@ -243,10 +243,10 @@ class TicketAPI extends ApiClient {
   //-----Get All Tickets-----//....
   async getAllTickets() {
     const tickets = await this.get('/api/v1/tickets/get-all-tickets');
-    
+
     //-----Cache tickets data-----//
     storage.setCachedTickets(tickets);
-    
+
     return tickets;
   }
 
@@ -290,6 +290,7 @@ class TicketAPI extends ApiClient {
 //----------Create singleton instances----------//
 const userAPI = new UserAPI();
 const ticketAPI = new TicketAPI();
+const onboardingApi = new OnBoardingAPI()
 
-export { userAPI, ticketAPI, UserAPI, TicketAPI, ApiClient };
+export { userAPI, ticketAPI, onboardingApi, OnBoardingAPI, UserAPI, TicketAPI, ApiClient };
 export default { user: userAPI, ticket: ticketAPI };
