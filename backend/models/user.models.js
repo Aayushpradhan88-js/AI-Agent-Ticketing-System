@@ -56,7 +56,7 @@ const userModel = new mongoose.Schema({
     },
     onBoardingData: {
         userType: String,
-        source: string,
+        source: String,
         experience: String,
         goals: [String],
         interests: [String]

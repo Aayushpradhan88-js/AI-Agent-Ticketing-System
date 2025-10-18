@@ -14,7 +14,7 @@ import {
 } from "../controllers/user.controller.js";
 
 import { authenticate } from "../middlewares/auth.js";
-import { onBoarding } from "../controllers/onBoarding.controller.js";
+// import { onBoarding } from "../controllers/onBoarding.controller.js";
 
 export const authRoute = express.Router();
 
@@ -34,7 +34,7 @@ authRoute.put("/moderator/:id", authenticate)
 authRoute.delete("/moderator/:id", authenticate)
 
 //----------Onboarding route--------//
-authRoute.get("/onboarding/answers", onBoarding)
+// authRoute.get("/onboarding/answers", onBoarding)
 
 //----------Google OAuth routes----------//
 authRoute.get("/google",

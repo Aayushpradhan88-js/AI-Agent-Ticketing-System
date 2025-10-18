@@ -23,11 +23,11 @@ const AppRoutes = () => {
                     <RegisterPage />
                 } />
 
-                <Route path='/onboarding' element={
+                {/* <Route path='/onboarding' element={
                     
                 }
                 
-                />
+                /> */}
 
                 <Route path='/login' element={
                     <LoginPage />

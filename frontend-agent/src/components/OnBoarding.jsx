@@ -6,7 +6,10 @@ import React, { useState } from 'react'
 1. State management - useState()
 2. defining questions for moderator & student {field:, question:, options:}
 3. setting getting the user type
-4. Questions handler -
+4. Questions handler - takes fields and value
+5. fetch to backend api with a json ({ ...answer })
+6. 200k response message or error message 
+7. invoking all logics in the react-html 
 */
 const OnBoarding = () => {
   const [stage, setStage] = useState('useType');
@@ -75,8 +78,13 @@ const OnBoarding = () => {
     setUserType('signup');
   };
 
+  const questionHandler = (field, value) => {
+    setAnswer(prev => ({...prev, [field] : value}))
+  };
 
-
+  const handleNext = async() => {
+    
+  }
 
   return (
     <div>OnBoarding</div>
