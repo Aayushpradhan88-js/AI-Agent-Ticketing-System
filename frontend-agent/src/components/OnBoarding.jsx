@@ -93,7 +93,7 @@ const OnBoarding = () => {
         ...answer
       })
 
-      const data = response.json()
+      const data = response.json();
 
       if(response.ok) {
         console.log("Onboarding completed");
