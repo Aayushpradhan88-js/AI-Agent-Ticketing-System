@@ -31,7 +31,7 @@ class LocalStorageManager {
       const item = JSON.parse(itemStr);
       const now = Date.now();
 
-      // Check if item is expired
+      //-----Check if item is expired-----//
       if (item.expires && now > item.expires) {
         this.removeItem(key);
         return null;

@@ -4,10 +4,10 @@ import storage from './localStorage.js';
 class ApiClient {
   constructor() {
     this.baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
-    this.defaultTimeout = 10000; // 10 seconds
+    this.defaultTimeout = 10000; //-----10 seconds-----//
   }
 
-  // Get authorization headers
+  //-----Get authorization headers-----//
   getAuthHeaders() {
     const token = storage.getToken();
     const headers = {
