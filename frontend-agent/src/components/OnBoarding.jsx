@@ -21,7 +21,7 @@ const OnBoarding = () => {
     goals: '',
     interests: '',
   });
-  const [currentQuestions, setCurrentQuestions] = useState(0);
+  const [currentQuestion, setCurrentQuestions] = useState(0);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -83,7 +83,13 @@ const OnBoarding = () => {
   };
 
   const handleNext = async() => {
-    
+    const currentQ = moderatorQuestions[currentQuestion];
+
+    if(currentQuestion === question.length - 1) {
+      setLoading(true);
+
+      const response = await fetch(`${}`)
+    }
   }
 
   return (

@@ -92,7 +92,7 @@ class LocalStorageManager {
 
 // User-specific methods
 class UserStorageManager extends LocalStorageManager {
-  // Set user token with longer expiry
+  //-----Set user token with longer expiry-----//
   setToken(token) {
     return this.setItem('token', token, 7 * 24 * 60 * 60 * 1000); // 7 days
   }
@@ -101,7 +101,7 @@ class UserStorageManager extends LocalStorageManager {
     return this.getItem('token');
   }
 
-  // Set user data
+  //-----Set user data-----//
   setUser(userData) {
     return this.setItem('user', userData);
   }
