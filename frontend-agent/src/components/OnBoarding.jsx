@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { onboardingApi } from '../utils/api';
 
 
 //-----STEPS FOR ONBOARDING-------//
@@ -88,7 +89,15 @@ const OnBoarding = () => {
     if(currentQuestion === question.length - 1) {
       setLoading(true);
 
-      const response = await fetch(`${}`)
+      const response = onboardingApi({
+        ...answer
+      })
+
+      const data = response.json()
+
+      if(response.ok) {
+        console.log("Onboarding completed");
+      }
     }
   }
 

@@ -91,7 +91,7 @@ class ApiClient {
     return response.json();
   }
 
-  // PUT request
+  //---------PUT request---------//
   async put(endpoint, data = {}) {
     const response = await this.makeRequest(endpoint, {
       method: 'PUT',
