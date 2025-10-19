@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, DiffIcon } from 'lucide-react';
 import { OnBoardingAPI } from '../utils/api.jsx';
 
 //--------types--------//
@@ -170,7 +170,33 @@ const UserTypeButton: React.FC<IUserTypeButtonsProps> = (props) => {
     )
 }
 
+const UserTypeScreen: React.FC = () => {
+    const {setUserType, resetState} = useOnboardingStore();
 
+    const handleUserTypeSelect = (type: UserType) => {
+        setUserType(type);
+        resetState();
+    };
+
+    //--------------DISPLAY UI PART (STUDENT/MODERATOR) OPTION--------------//
+    return(
+        <div>
+            <div>
+                <p>Let's get you started</p>
+
+                <div>
+                    <UserTypeButton
+                        type='student'
+                        icon='🎓'
+                        title='Student'
+                        description='I am here to learn and grow'
+                        onClick={() => handleUserTypeSelect('student')}
+                    />
+                </div>
+            </div>
+        </div>
+    )
+}
 
 
 
