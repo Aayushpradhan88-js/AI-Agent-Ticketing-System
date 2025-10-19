@@ -10,7 +10,7 @@ interface Question {
     field: string;
     question: string;
     options: string[];
-}
+};
 
 interface OnboardingState {
     //---STATE---//
@@ -71,14 +71,53 @@ const useOnboardingStore = create<OnboardingState>((set) => {
         currentQuestionIndex: state.currentQuestionIndex - 1,
         error: ''
     }))
-})
+});
 
+const MODERATOR_QUESTIONS: Question[] = [
+    {
+        field: 'role',
+        question: 'What is youre role?',
+        options: ["frontend Developer", "Backend Developer", "fullstack Developer", "Python Engineer", "Java Engineer", "Software Engineer", "QA Tester"]
+    },
+    {
+        field: 'experience',
+        question: 'What is youre experience level?',
+        options: ["Beginner", "Intermediate", "Advance", "Expert"]
+    },
+    {
+        field: 'work',
+        question: 'Currently where are you working?',
+        options: ["Product Based Companies/Startups", "Service Based Companies/Startups", "Working in MNCs", "AI startups", "Self-Worker", "Other"]
+    },
+    {
+        field: 'TimeSpan',
+        question: 'How long are you coding?',
+        options: ["5 year", "3 year", "1 year", "less than 1year"]
+    },
+];
 
-
-
-
-
-
+const STUDENT_QUESTIONS: Question[] = [
+    {
+        field: 'Interest',
+        question: 'What is youre interest',
+        options: ["frontend Developer", "Backend Developer", "fullstack Developer", "Python Engineer", "Java Engineer", "Software Engineer", "QA Tester"]
+    },
+    {
+        field: 'experience',
+        question: 'What is youre experience level?',
+        options: ["Beginner", "Intermediate", "Advance", "Expert"]
+    },
+    {
+        field: 'Source',
+        question: 'How did you hear about us?',
+        options: ["Youtube", "Instagram", "Ads", "AI Bots suggestions", "Google Suggestions", "Friends"]
+    },
+    {
+        field: 'TimeSpan',
+        question: 'How long are you coding?',
+        options: ["5 year", "3 year", "1 year", "less than 1year"]
+    },
+];
 
 
 
