@@ -127,13 +127,13 @@ interface IOnboardingPayload {
 };
 
 const onboardingApi = {
-    submitOnboarding: async(payload: IOnboardingPayload): Promise<boolean> => {
+    submitOnboarding: async (payload: IOnboardingPayload): Promise<boolean> => {
         try {
             const response = new OnBoardingAPI(payload)
-            
+
             const data = await response.json()
-    
-            if(response.ok) {
+
+            if (response.ok) {
                 console.log("successfully sended data to backend", data);
             }
         } catch (error) {
@@ -145,9 +145,30 @@ const onboardingApi = {
 //----------COMPONENTS----------//
 interface IUserTypeButtonsProps {
     type: UserType;
-    icon: string
-}
+    icon: string;
+    title: string;
+    description: string;
+    onClick: () => void;
+};
 
+const UserTypeButton: React.FC<IUserTypeButtonsProps> = (props) => {
+    const bgColors = {
+        student: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+        moderator: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+    };
+
+    return (
+        <button
+            onClick={props.onClick}
+            className={`group relative bg-gradient-to-br ${bgColors[props.type]} text-white rounded-xl p-8 transition-all duration-300 transform hover:scale-105 shadow-lg`}>
+            <div className='text-5xl mb-4'>{props.icon}</div>
+            <p className='text-2xl font-bold mb-2'>{props.title}</p>
+            <p className={props.type === 'student' ? 'text-blue-100' : 'text-purple-100'}>
+                {props.description}
+            </p>
+        </button>
+    )
+}
 
 
 
