@@ -12,7 +12,7 @@ interface Question {
     options: string[];
 };
 
-interface OnboardingState {
+interface IOnboardingState {
     //---STATE---//
     step: Step;
     userType: UserType | '';
@@ -36,7 +36,7 @@ interface OnboardingState {
     goToPreviousQuestion: () => void;
 };
 
-const useOnboardingStore = create<OnboardingState>((set) => {
+const useOnboardingStore = create<IOnboardingState>((set) => {
     step: 'userType';
     userType: '';
     currentQuestionIndex: 0;
@@ -118,6 +118,14 @@ const STUDENT_QUESTIONS: Question[] = [
         options: ["5 year", "3 year", "1 year", "less than 1year"]
     },
 ];
+
+//----------BACKEND API CALLING INTERFACE----------//
+interface IOnboardingPayload {
+    userType: UserType;
+    [key: string]: string;
+};
+
+
 
 
 
