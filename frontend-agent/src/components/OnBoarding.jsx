@@ -12,19 +12,6 @@ import { onboardingApi } from '../utils/api';
 6. 200k response message or error message 
 7. invoking all logics in the react-html 
 */
-const OnBoarding = () => {
-  const [stage, setStage] = useState('useType');
-  const [userType, setUserType] = useState();
-  const [userId, setUserId] = useState();
-  const [answer, setAnswer] = useState({
-    source: '',
-    experience: '',
-    goals: '',
-    interests: '',
-  });
-  const [currentQuestion, setCurrentQuestions] = useState(0);
-  const [error, setError] = useState({});
-  const [loading, setLoading] = useState(false);
 
   //-----------If user is an moderator--------//
   const moderatorQuestions = [
@@ -50,6 +37,7 @@ const OnBoarding = () => {
     },
   ]
 
+  
   //----------Student Qustions--------//
   const studentQuestions = [
     {
@@ -73,6 +61,20 @@ const OnBoarding = () => {
       options: ["5 year", "3 year", "1 year", "less than 1year"]
     },
   ]
+
+const OnBoarding = () => {
+  const [stage, setStage] = useState('useType'); //---screen type? type: qna
+  const [userType, setUserType] = useState('');
+  const [currentQuestionIndex, setUserId] = useState();
+  const [answer, setAnswer] = useState({
+    source: '',
+    experience: '',
+    goals: '',
+    interests: '',
+  });
+  const [currentQuestion, setCurrentQuestions] = useState(0);
+  const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleUserTypeSelection = (type) => {
     setStage(type);
