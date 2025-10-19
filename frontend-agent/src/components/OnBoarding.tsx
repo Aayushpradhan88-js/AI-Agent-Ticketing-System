@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { OnBoardingAPI } from '../utils/api.jsx';
 
 //--------types--------//
 type UserType = 'student' | 'moderator';
@@ -125,9 +126,27 @@ interface IOnboardingPayload {
     [key: string]: string;
 };
 
+const onboardingApi = {
+    submitOnboarding: async(payload: IOnboardingPayload): Promise<boolean> => {
+        try {
+            const response = new OnBoardingAPI(payload)
+            
+            const data = await response.json()
+    
+            if(response.ok) {
+                console.log("successfully sended data to backend", data);
+            }
+        } catch (error) {
+            console.log("Failed ot submit onboarding");
+        }
+    }
+}
 
-
-
+//----------COMPONENTS----------//
+interface IUserTypeButtonsProps {
+    type: UserType;
+    icon: string
+}
 
 
 
