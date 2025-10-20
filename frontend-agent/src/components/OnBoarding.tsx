@@ -171,7 +171,7 @@ const UserTypeButton: React.FC<IUserTypeButtonsProps> = (props) => {
 }
 
 const UserTypeScreen: React.FC = () => {
-    const {setUserType, resetState} = useOnboardingStore();
+    const { setUserType, resetState } = useOnboardingStore();
 
     const handleUserTypeSelect = (type: UserType) => {
         setUserType(type);
@@ -179,7 +179,7 @@ const UserTypeScreen: React.FC = () => {
     };
 
     //--------------DISPLAY UI PART (STUDENT/MODERATOR) OPTION--------------//
-    return(
+    return (
         <div>
             <div>
                 <p>Let's get you started</p>
@@ -192,11 +192,19 @@ const UserTypeScreen: React.FC = () => {
                         description='I am here to learn and grow'
                         onClick={() => handleUserTypeSelect('student')}
                     />
+
+                    <UserTypeButton
+                        type='moderator'
+                        icon='👨‍💼'
+                        title='Moderator'
+                        description='I am here to guide and mentor'
+                        onClick={() => handleUserTypeSelect('moderator')}
+                    />
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 
 
