@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Check, DiffIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, DiffIcon, Divide } from 'lucide-react';
 import { OnBoardingAPI } from '../utils/api.jsx';
 
 //--------types--------//
@@ -209,15 +209,15 @@ const UserTypeScreen: React.FC = () => {
 //------SUCCESS SCREEN------//
 const successScreen: React.FC = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-        <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Check className="w-10 h-10 text-white" />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+                <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-10 h-10 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-4">All Set! 🎉</h1>
+                <p className="text-gray-600 mb-8">Your onboarding is complete</p>
+            </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">All Set! 🎉</h1>
-        <p className="text-gray-600 mb-8">Your onboarding is complete</p>
-      </div>
-    </div>
     )
 }
 
@@ -227,8 +227,26 @@ interface IOptionButtonsProps {
     onClick: () => void;
 }
 
-const OptionButton: React.FC<IOptionButtonsProps> =(props) => {
-    
+const OptionButton: React.FC<IOptionButtonsProps> = (props) => {
+    return (
+        <button
+            onClick={props.onClick}
+            className={`w-full text-left p-4 rounded-lg border-2 ${props.isSelected ?
+                    'border-indigo-600 bg-indigo-50 text-indigo-700' :
+                    'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
+                }`}>
+                    <div className='flex items-center'>
+                        <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center`}>
+                            {props.isSelected && <div className="w-2 h-2 bg-white rounded-full"/>}
+                        </div>
+                        <span className="font-medium">{props.option}</span>
+                    </div>
+        </button>
+    )
+};
+
+interface IQuestionScreenProps {
+    questions: Q
 }
 
 
