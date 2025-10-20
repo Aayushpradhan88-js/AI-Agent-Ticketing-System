@@ -206,11 +206,30 @@ const UserTypeScreen: React.FC = () => {
     );
 };
 
+//------SUCCESS SCREEN------//
+const successScreen: React.FC = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+        <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Check className="w-10 h-10 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">All Set! 🎉</h1>
+        <p className="text-gray-600 mb-8">Your onboarding is complete</p>
+      </div>
+    </div>
+    )
+}
 
+interface IOptionButtonsProps {
+    option: string;
+    isSelected: boolean;
+    onClick: () => void;
+}
 
-
-
-
+const OptionButton: React.FC<IOptionButtonsProps> =(props) => {
+    
+}
 
 
 
