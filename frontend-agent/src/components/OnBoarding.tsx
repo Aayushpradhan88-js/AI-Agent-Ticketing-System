@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, DiffIcon, Divide } from 'lucide-react';
 import { OnBoardingAPI } from '../utils/api.jsx';
 
@@ -209,7 +209,7 @@ const UserTypeScreen: React.FC = () => {
 };
 
 //------SUCCESS SCREEN------//
-const successScreen: React.FC = () => {
+const SuccessScreen: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
@@ -392,10 +392,19 @@ const QuestionScreen: React.FC<IQuestionScreenProps> = (props) => {
     )
 };
 
+function OnboardingFlow(): JSX.Element {
+    const{step, userType} = useOnboardingStore();
 
+    const questions = userType === 'student'? STUDENT_QUESTIONS: MODERATOR_QUESTIONS
+    
+    if(step === 'userType') {
+        return <UserTypeScreen/>
+    }
+    if(step === 'success') {
+        return <SuccessScreen/>
+    }
 
+    return  <QuestionScreen questions={questions}/>
+}
 
-
-
-
-
+export default OnboardingFlow;
