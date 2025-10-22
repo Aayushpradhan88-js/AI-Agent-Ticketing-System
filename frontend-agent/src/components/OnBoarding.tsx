@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check, DiffIcon, Divide } from 'lucide-react';
 import { OnBoardingAPI } from '../utils/api.jsx';
 
+//----------FOUNDATION START----------//
 //--------types--------//
 type UserType = 'student' | 'moderator';
 type Step = 'userType' | 'questions' | 'success';
@@ -36,6 +37,7 @@ interface IOnboardingState {
     goToNextQuestion: () => void;
     goToPreviousQuestion: () => void;
 };
+//----------FEATURE FOUNDATION COMPLETE----------//
 
 const useOnboardingStore = create<IOnboardingState>((set) => {
     step: 'userType';
@@ -232,22 +234,163 @@ const OptionButton: React.FC<IOptionButtonsProps> = (props) => {
         <button
             onClick={props.onClick}
             className={`w-full text-left p-4 rounded-lg border-2 ${props.isSelected ?
-                    'border-indigo-600 bg-indigo-50 text-indigo-700' :
-                    'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
+                'border-indigo-600 bg-indigo-50 text-indigo-700' :
+                'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
                 }`}>
-                    <div className='flex items-center'>
-                        <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center`}>
-                            {props.isSelected && <div className="w-2 h-2 bg-white rounded-full"/>}
-                        </div>
-                        <span className="font-medium">{props.option}</span>
-                    </div>
+            <div className='flex items-center'>
+                <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center`}>
+                    {props.isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
+                </div>
+                <span className="font-medium">{props.option}</span>
+            </div>
         </button>
     )
 };
 
 interface IQuestionScreenProps {
-    questions: Q
-}
+    questions: Question[]
+};
+
+const QuestionScreen: React.FC<IQuestionScreenProps> = (props) => {
+    const {
+        currentQuestionIndex,
+        answers,
+        error,
+        isSubmitting,
+        selectAnswer,
+        goToNextQuestion,
+        goToPreviousQuestion,
+        setStep,
+        setError,
+        setIsSubmitting,
+        userType
+    } = useOnboardingStore()
+
+
+    const currentQuestion = props.questions[currentQuestionIndex];
+    const progress = ((currentQuestionIndex + 1) / props.questions.length) * 100;
+    /*
+    ***  Calculation of progress 
+          currentQuesitonIndex = 0
+          progress = ((0+1)/5)*100 = ((1/5)/5)*100 = 0.2*100 = 20%
+    */
+    const isLastQuestion = currentQuestionIndex === props.questions.length - 1;
+    const hasAnswer = !!answers[currentQuestion.field];
+
+    const handleNext = () => {
+        if (!hasAnswer) {
+            setError('Please select an option before proceeding');
+            return;
+        }
+        goToNextQuestion();
+    };
+
+    const handleSubmit = async () => {
+        if (!hasAnswer) {
+            setError('Please select an option before submitting');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        const payload: IOnboardingPayload = {
+            userType: userType as UserType
+        }
+
+        try {
+            const success = await onboardingApi.submitOnboarding(payload);
+            if (success) {
+                setStep('success')
+            } else {
+                setError('Failed to submit. Please try again')
+            }
+        } catch (error) {
+            setError('An error occured. Please try again');
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-3xl w-full">
+                {/*---------Progress Bar----------*/}
+                <div className="mb-8">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium text-gray-600">
+                            Question {currentQuestionIndex + 1} of {props.questions.length}
+                        </span>
+                        <span className="text-sm font-medium text-indigo-600">
+                            {Math.round(progress)}
+                        </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                </div>
+
+                {/*---------Question---------*/}
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQuestion.question}</h2>
+
+                {/*---------Options---------*/}
+                <div className="space-y-3 mb-6">
+                    {currentQuestion.options.map((option) => (
+                        <OptionButton
+                            key={option}
+                            option={option}
+                            isSelected={answers[currentQuestion.field] === option}
+                            onClick={() => selectAnswer(currentQuestion.field, option)}
+                        />
+                    ))}
+                </div>
+
+                {/*---------Error Message---------*/}
+                {error && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-red-600 text-sm">{error}</p>
+                    </div>
+                )}
+
+                {/*---------Navigation Buttons---------*/}
+                <div className="flex justify-between items-center">
+                    <button
+                        onClick={goToPreviousQuestion}
+                        disabled={currentQuestionIndex === 0}
+                        className={`flex items-center px-6 py-3 rounded-lg font-semibold transition-colors ${currentQuestionIndex === 0
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                    >
+                        <ChevronLeft className="w-5 h-5 mr-1" />
+                        Back
+                    </button>
+
+                    {!isLastQuestion ? (
+                        <button
+                            onClick={handleNext}
+                            className="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+                        >
+                            Next
+                            <ChevronRight className="w-5 h-5 ml-1" />
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            className={`px-8 py-3 rounded-lg font-semibold transition-colors text-white ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                                }`}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit'}
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+};
 
 
 
