@@ -14,7 +14,7 @@ import { onboardingApi } from '../utils/api';
 */
 
   //-----------If user is an moderator--------//
-  const moderatorQuestions = [
+  const ModeratorQuestions = [
     {
       field: 'role',
       question: 'What is youre role?',
@@ -39,7 +39,7 @@ import { onboardingApi } from '../utils/api';
 
   
   //----------Student Qustions--------//
-  const studentQuestions = [
+  const StudentQuestions = [
     {
       field: 'Interest',
       question: 'What is youre interest',
