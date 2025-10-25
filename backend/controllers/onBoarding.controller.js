@@ -1,4 +1,4 @@
-import { User } from "../models/user.models";
+import { User } from "../models/user.models.js";
 
 export const onBoarding = async (req, res, next) => {
     const { userType, experience, interest, goals } = req.body;
@@ -25,7 +25,9 @@ export const onBoarding = async (req, res, next) => {
                 onBoardingData: {
                     experience,
                     goals,
+                    work,
                     interest,
+                    timeSpan
                 }
             }
         );
@@ -33,6 +35,8 @@ export const onBoarding = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        await user.save();
 
         return res
         .status(200)

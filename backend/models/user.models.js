@@ -59,7 +59,9 @@ const userModel = new mongoose.Schema({
         source: String,
         experience: String,
         goals: [String],
-        interests: [String]
+        interests: [String],
+        work: String,
+        timeSpan: String
     }
 },
     {

@@ -9,6 +9,8 @@ import TicketPage from '../pages/TicketPage.jsx'
 import TicketsPage from '../pages/TicketsPage.jsx'
 import ProfilePage from '../pages/ProfilePage.jsx'
 
+import OnBoarding from '../components/OnBoarding.jsx';
+
 import { CheckAuth } from '../components/check-auth.jsx'
 
 const AppRoutes = () => {
@@ -23,11 +25,11 @@ const AppRoutes = () => {
                     <RegisterPage />
                 } />
 
-                {/* <Route path='/onboarding' element={
-                    
+                <Route path='/onboarding' element={
+                    <OnBoarding/>
                 }
                 
-                /> */}
+                />
 
                 <Route path='/login' element={
                     <LoginPage />
