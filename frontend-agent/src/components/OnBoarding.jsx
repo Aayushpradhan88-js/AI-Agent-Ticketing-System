@@ -116,8 +116,8 @@ const OptionButton = ({ option, isSelected, onClick }) => {
     <button
       onClick={onClick}
       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${isSelected
-          ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-          : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
+        ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+        : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
         }`}
     >
       <div className='flex items-center'>
@@ -174,7 +174,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
       userType: userType,
       ...answers
     };
-//----------FETCHING FROM THE BACKEND----------//
+    //----------FETCHING FROM THE BACKEND----------//
     try {
       const response = await OnBoardingAPI(payload);
       //----------FETCHING FROM THE BACKEND----------//
@@ -244,8 +244,8 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
             onClick={goToPreviousQuestion}
             disabled={currentQuestionIndex === 0}
             className={`flex items-center px-6 py-3 rounded-lg font-semibold transition-colors ${currentQuestionIndex === 0
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
@@ -260,19 +260,20 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
               Next
               <ChevronRight className="w-5 h-5 ml-1" />
             </button>
-          ) : 
-          
-          (
-            //----------SUBMIT BUTTON TO SEND BACKEND----------//
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className={`px-8 py-3 rounded-lg font-semibold transition-colors text-white ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
-                }`}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          )}
+          ) :
+
+            (
+              //----------SUBMIT BUTTON TO SEND BACKEND----------//
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`px-8 py-3 rounded-lg font-semibold transition-colors text-white ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                  }`}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
+              //----------SUBMIT BUTTON TO SEND BACKEND----------//
+            )}
         </div>
       </div>
     </div>
