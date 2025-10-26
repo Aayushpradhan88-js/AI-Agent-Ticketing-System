@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import { OnBoardingAPI } from '../utils/api';
+import { onboardingApi } from '../utils/api';
 
 //----------QUESTIONS CONFIGURATION----------//
 const MODERATOR_QUESTIONS = [
@@ -115,7 +115,7 @@ const OptionButton = ({ option, isSelected, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${isSelected
+      className={`w-full text-left text-black p-4 rounded-lg border-2 transition-all ${isSelected
         ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
         : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'
         }`}
@@ -176,7 +176,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
     };
     //----------FETCHING FROM THE BACKEND----------//
     try {
-      const response = await OnBoardingAPI(payload);
+      const response = await onboardingApi.onBoarding(payload);
       //----------FETCHING FROM THE BACKEND----------//
       const data = await response.json();
 
@@ -198,7 +198,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-3xl w-full">
-        {/* Progress Bar */}
+        {/*-----Progress Bar-----*/}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-gray-600">
@@ -216,10 +216,10 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
           </div>
         </div>
 
-        {/* Question */}
-        <h2 className="text-2xl font-bold text-black-800 mb-6">{currentQuestion.question}</h2>
+        {/*-----Question-----*/}
+        <h2 className="text-2xl font-bold text-black mb-6">{currentQuestion.question}</h2>
 
-        {/* Options */}
+        {/*-----Options-----*/}
         <div className="space-y-3 mb-6">
           {currentQuestion.options.map((option) => (
             <OptionButton
@@ -231,15 +231,16 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
           ))}
         </div>
 
-        {/* Error Message */}
+        {/*-----Error Message-----*/}
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Navigation Buttons */}
+        {/*-----Navigation Buttons-----*/}
         <div className="flex justify-between items-center">
+          {/*-----Previous button-----*/}
           <button
             onClick={goToPreviousQuestion}
             disabled={currentQuestionIndex === 0}
@@ -252,6 +253,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
             Back
           </button>
 
+          {/*-----Next button-----*/}
           {!isLastQuestion ? (
             <button
               onClick={goToNextQuestion}
@@ -263,7 +265,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
           ) :
 
             (
-              //----------SUBMIT BUTTON TO SEND BACKEND----------//
+              // ----------SUBMIT BUTTON TO SEND BACKEND----------//
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}

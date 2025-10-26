@@ -106,7 +106,7 @@ class ApiClient {
     return response.json();
   }
 
-  // PATCH request
+  //---------PATCH request---------//
   async patch(endpoint, data = {}) {
     const response = await this.makeRequest(endpoint, {
       method: 'PATCH',
@@ -121,7 +121,7 @@ class ApiClient {
     return response.json();
   }
 
-  // DELETE request
+  //---------DELETE request---------//
   async delete(endpoint) {
     const response = await this.makeRequest(endpoint, { method: 'DELETE' });
 
@@ -133,7 +133,7 @@ class ApiClient {
     return response.json();
   }
 
-  // Upload file
+  //---------Upload file---------//
   async upload(endpoint, file, additionalData = {}) {
     const formData = new FormData();
     formData.append('file', file);
@@ -230,6 +230,8 @@ class UserAPI extends ApiClient {
   }
 }
 
+
+//----------ONBOARDING END-POINTS----------//
 class OnBoardingAPI extends ApiClient {
   async onBoarding(options) {
     return await this.post('/api/v1/auth/onBoarding', options);
