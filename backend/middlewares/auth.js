@@ -9,6 +9,7 @@ AUTHENTICATION ALGORITHM
 
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.utils.js";
+import { User } from "../models/user.models.js";
 
 export const authenticate = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -26,6 +27,16 @@ export const authenticate = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+        const user = await User.findById(req.userId);
+
+        if(!user.onBoardingCompleted){
+            return res
+            .status(200)
+            .json({
+                redirect: "/onboarding",
+                message: "ON BOARDING IS NOT COMPLETED"
+            })
+        }
         next();
     } catch (error) {
         return res
