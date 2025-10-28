@@ -27,16 +27,6 @@ export const authenticate = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
-        const user = await User.findById(req.userId);
-
-        if(!user.onBoardingCompleted){
-            return res
-            .status(200)
-            .json({
-                redirect: "/onboarding",
-                message: "ON BOARDING IS NOT COMPLETED"
-            })
-        }
         next();
     } catch (error) {
         return res
