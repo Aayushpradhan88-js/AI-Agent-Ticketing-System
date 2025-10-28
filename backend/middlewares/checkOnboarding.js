@@ -2,7 +2,7 @@ import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
-const onBoardingMiddleware = async (req, res) => {
+export const onBoardingMiddleware = async (req, res) => {
     try {
         const user = await User.findById(req.user)
 
@@ -48,5 +48,3 @@ const onBoardingMiddleware = async (req, res) => {
             )
     }
 }
-
-export default onBoardingMiddleware;
