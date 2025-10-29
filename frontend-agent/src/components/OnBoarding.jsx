@@ -170,6 +170,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
 
     setIsSubmitting(true);
 
+    //----------BACKEND PAYLOAD DATA (req.body)----------//
     const payload = {
       userType: userType,
       ...answers
@@ -265,7 +266,7 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
           ) :
 
             (
-              // ----------SUBMIT BUTTON TO SEND BACKEND----------//
+              //----------SUBMIT BUTTON TO SEND BACKEND----------//
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
