@@ -1,7 +1,7 @@
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 
-export const onBoardingController = async (req, res,) => {
+export const onBoardingController = async (req, res) => {
 
     /*
     Algorithm
@@ -21,25 +21,25 @@ export const onBoardingController = async (req, res,) => {
     const userId = req.user._id;
     const { userType, answers } = req.body;
 
-    try {
-        let role;
+    if (!userType) {
+        return res.status(400).json(
+            ApiError(
+                400,
+                "userType is required!!!",
+                false
+            )
+        )
+    }
 
-        if (!userType) {
-            return res.status(400).json(
+    try {
+        const validRoles = ['student', 'moderator', 'admin']
+        if (!validRoles.includes(userType)) {
+            return res.status(402).json(
                 ApiError(
-                    400,
-                    "userTyper is required!!!",
-                    false
+                    402,
+                    "invalid usertyper!!"
                 )
             )
-        }
-
-        if (userType === 'student') {
-            role = 'student'
-        } else if (userType === 'moderator') {
-            role = 'moderator'
-        } else if (userType === 'admin') {
-            role = 'admin'
         }
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -47,7 +47,7 @@ export const onBoardingController = async (req, res,) => {
             {
                 role: userType,
                 onBoardingData: answers,
-                onBoardingCompleted: new Date()
+                onBoardingCompletonAt: new Date()
             }, { new: true, runValidators: true }
         ).select('-password')
 
@@ -58,22 +58,22 @@ export const onBoardingController = async (req, res,) => {
                     "User not found"
                 )
             );
-        }
+        };
 
         return res.status(200).json({
-            message: "onboarding completed successfully",
-            user: updatedUser,
             success: true,
-            redirectTo: "/tickets"
-        })
+            user: updatedUser,
+            redirectTo: "/tickets",
+            message: "onboarding completed successfully"
+        });
 
     } catch (error) {
-        console.log(error.message);
+        console.error(error.stack);
         return res.status(500).json(
             ApiError(
                 500,
-                "INTERNAL SERVER ERROR, UNABLE TO UPDATE DATA IN DATABASE",
-                error.message
+                "internal server error, unable to update data in database",
+                console.error(error.stack)
             )
         )
     }
@@ -85,10 +85,12 @@ export const checkOnboardingStatus = (req, res) => {
         const user = req.user;
 
         if (!user) {
-            return res.status(401).json(ApiError(
-                401,
-                "USER IS NOT IN THE REQUEST!!",
-            ))
+            return res.status(401).json(
+
+                ApiError(
+                    401,
+                    "user is not it the request!!!",
+                ))
         }
 
         return res.status(200).json({
@@ -98,11 +100,11 @@ export const checkOnboardingStatus = (req, res) => {
             message: "Onboarding status is successfully completed"
         })
     } catch (error) {
-        console.log(error.message)
+        console.error(error.stack)
         return res.status(500).json(
             ApiError(
                 500,
-                "SERVER ERROR. NOT ABLE TO CHECK ONBOARDING STATUS"
+                "server error, not able to check onboarding status"
             )
         )
     }
