@@ -1,53 +1,64 @@
 import { User } from "../models/user.models.js";
+import { ApiError } from "../utils/ApiError.utils.js";
 
-export const onBoarding = async (req, res, next) => {
-    const { userType, experience, interest, goals } = req.body;
+export const onBoardingController = async (req, res,) => {
+    const userId = req.user._id;
+    const { userType, answers } = req.body;
 
     try {
         let role;
 
+        if(!userType){
+            return res.status(400).json(
+                ApiError(
+                    400,
+                    "userTyper is required!!!",
+                    false
+                )
+            )
+        }
+        
         if (userType === 'student') {
             role = 'student'
-            console.log("student onboarding")
         } else if (userType === 'moderator') {
             role = 'moderator'
-            console.log("moderator onboarding")
         } else if (userType === 'admin') {
             role = 'admin'
-            console.log("admin onboarding");
         }
 
-        const user = await User.findById(
-            req.user._id,
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
             {
-                role,
+                role: userType,
                 onBoardingCompleted: true,
-                onBoardingData: {
-                    experience,
-                    goals,
-                    work,
-                    interest,
-                    timeSpan
-                }
-            }
-        );
+                onBoardingData: answers
+            }, { new: true, runValidators: true }
+        ).select('-password')
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!updatedUser) {
+            return res.status(404).json(
+                ApiError(
+                    404,
+                    "User not found"
+                )
+            );
         }
 
-        await user.save();
-
-        return res
-        .status(200)
-        .json(
-            {
-                message: "onboarding completed successfully",
-                user
-            }
-        )
+        return res.status(200).json({
+            message: "onboarding completed successfully",
+            user: updatedUser,
+            success: true,
+            redirectTo: "/tickets"
+        })
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        return res.status(500).json(
+            ApiError(
+                500,
+                "INTERNAL SERVER ERROR, UNABLE TO UPDATE DATA IN DATABASE",
+                error.message
+            )
+        )
     }
-}
+};
