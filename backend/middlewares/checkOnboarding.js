@@ -2,7 +2,7 @@ import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
-export const onBoardingMiddleware = async (req, res) => {
+const onboardingMiddleware = async (req, res) => {
     try {
         const user = await User.findById(req.user)
 
@@ -37,14 +37,16 @@ export const onBoardingMiddleware = async (req, res) => {
 
         return next();
     } catch (error) {
-        console.log("ERROR MIDDLEWARE", error);
+        console.error(error.stack)
         res
             .status(500)
             .json(
                 ApiError(
                     500,
-                    "SERVER ERROR"
+                    "server error!!"
                 )
             )
     }
 }
+
+export default onboardingMiddleware

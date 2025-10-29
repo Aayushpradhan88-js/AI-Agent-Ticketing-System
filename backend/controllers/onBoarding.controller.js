@@ -1,7 +1,7 @@
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 
-export const onBoardingController = async (req, res) => {
+export const onboardingController = async (req, res) => {
 
     /*
     Algorithm
@@ -80,7 +80,7 @@ export const onBoardingController = async (req, res) => {
 };
 
 //----------CHECK ONBOARDING STATUS----------//
-export const checkOnboardingStatus = (req, res) => {
+export const onboardingStatus = (req, res) => {
     try {
         const user = req.user;
 
