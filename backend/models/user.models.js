@@ -33,8 +33,8 @@ const userModel = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["user", "admin", "moderator"],
-        default: "user"
+        enum: ["student", "admin", "moderator"],
+        default: "student"
     },
     location: {
         type: String,
@@ -48,7 +48,7 @@ const userModel = new mongoose.Schema({
     bio: {
         type: String,
         trim: true,
-        maxlength: [500, "Bio cannot exceed 500 characters"]
+        maxlength: [500, "Bio limit 500 characters"]
     },
     onBoardingCompleted: {
         type: String,
