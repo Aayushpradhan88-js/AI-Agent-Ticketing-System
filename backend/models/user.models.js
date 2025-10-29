@@ -26,6 +26,11 @@ const userModel = new mongoose.Schema({
         type: String,
         sparse: true //-----Allow multiple null values but ensure uniqueness for non-null values-----//
     },
+    bio: {
+        type: String,
+        trim: true,
+        maxlength: [500, "Bio limit 500 characters"]
+    },
     skills: {
         type: [String], //-----Change to array of strings-----//
         default: [],
@@ -45,15 +50,6 @@ const userModel = new mongoose.Schema({
         enum: ["active", "inactive"],
         default: "active"
     },
-    bio: {
-        type: String,
-        trim: true,
-        maxlength: [500, "Bio limit 500 characters"]
-    },
-    onBoardingCompleted: {
-        type: String,
-        boolean: false
-    },
     onBoardingData: {
         userType: String,
         source: String,
@@ -62,7 +58,11 @@ const userModel = new mongoose.Schema({
         interests: [String],
         work: String,
         timeSpan: String
-    }
+    },
+    onBoardingCompleted: {
+        type: String,
+        boolean: false
+    },
 },
     {
         timestamps: true

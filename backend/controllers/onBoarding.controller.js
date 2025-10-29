@@ -17,7 +17,7 @@ export const onBoardingController = async (req, res,) => {
                 )
             )
         }
-        
+
         if (userType === 'student') {
             role = 'student'
         } else if (userType === 'moderator') {
@@ -30,7 +30,7 @@ export const onBoardingController = async (req, res,) => {
             userId,
             {
                 role: userType,
-                onBoardingCompleted: true,
+                onBoardingCompleted: new Date(),
                 onBoardingData: answers
             }, { new: true, runValidators: true }
         ).select('-password')
