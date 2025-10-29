@@ -24,7 +24,7 @@ export const onBoardingController = async (req, res,) => {
     try {
         let role;
 
-        if(!userType){
+        if (!userType) {
             return res.status(400).json(
                 ApiError(
                     400,
@@ -78,3 +78,32 @@ export const onBoardingController = async (req, res,) => {
         )
     }
 };
+
+//----------CHECK ONBOARDING STATUS----------//
+export const checkOnboardingStatus = (req, res) => {
+    try {
+        const user = req.user;
+
+        if (!user) {
+            return res.status(401).json(ApiError(
+                401,
+                "USER IS NOT IN THE REQUEST!!",
+            ))
+        }
+
+        return res.status(200).json({
+            success: true,
+            hasOnboardingCompleted: user.onBoardingCompleted,
+            userType: user.userType,
+            message: "Onboarding status is successfully completed"
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json(
+            ApiError(
+                500,
+                "SERVER ERROR. NOT ABLE TO CHECK ONBOARDING STATUS"
+            )
+        )
+    }
+}
