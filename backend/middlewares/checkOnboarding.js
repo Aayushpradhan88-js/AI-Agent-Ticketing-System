@@ -8,29 +8,25 @@ const onboardingMiddleware = async (req, res) => {
 
         //-----Check is user authenticated-----//
         if (!user) {
-            return res
-                .status(401)
-                .json(
-                    ApiError(
-                        401,
-                        "User is not authenticated",
-                    )
+            return res.status(401).json(
+                ApiError(
+                    401,
+                    "user is not authenticated",
                 )
+            )
         }
 
         //-----Check onBoarding status-----//
         if (!user.onBoardingCompleted) {
-            return res
-                .status(402)
-                .json(
-                    ApiResponse(
-                        false,
-                        "onBoarding not completed",
-                        {
-                            next: "/onBoarding"
-                        }
-                    )
+            return res.status(402).json(
+                ApiResponse(
+                    false,
+                    "failed ot complete onboarding",
+                    {
+                        next: "/onBoarding"
+                    }
                 )
+            )
         }
 
         req.user = user;
@@ -38,15 +34,13 @@ const onboardingMiddleware = async (req, res) => {
         return next();
     } catch (error) {
         console.error(error.stack)
-        res
-            .status(500)
-            .json(
-                ApiError(
-                    500,
-                    "server error!!"
-                )
+        return res.status(500).json(
+            ApiError(
+                500,
+                "server error!!"
             )
+        )
     }
-}
+};
 
-export default onboardingMiddleware
+export default onboardingMiddleware;
