@@ -2,7 +2,7 @@ import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
-const onboardingMiddleware = async (req, res, next) => {
+const onboarding = async (req, res, next) => {
     const user = await User.findById(req.user._id);
 
     try {
@@ -43,4 +43,4 @@ const onboardingMiddleware = async (req, res, next) => {
     }
 };
 
-export default onboardingMiddleware;
+export default onboarding;

@@ -11,7 +11,7 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { User } from "../models/user.models.js";
 
-export const authenticate = async (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         return res
@@ -39,3 +39,5 @@ export const authenticate = async (req, res, next) => {
             )
     }
 }
+
+export default authenticateUser
