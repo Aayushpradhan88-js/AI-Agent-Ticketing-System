@@ -2,10 +2,10 @@ import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
-const onboardingMiddleware = async (req, res) => {
-    try {
-        const user = await User.findById(req.user)
+const onboardingMiddleware = async (req, res, next) => {
+    const user = await User.findById(req.user._id);
 
+    try {
         //-----Check is user authenticated-----//
         if (!user) {
             return res.status(401).json(
@@ -18,10 +18,10 @@ const onboardingMiddleware = async (req, res) => {
 
         //-----Check onBoarding status-----//
         if (!user.onBoardingCompleted) {
-            return res.status(402).json(
+            return res.status(403).json(
                 ApiResponse(
                     false,
-                    "failed ot complete onboarding",
+                    "failed to complete onboarding",
                     {
                         next: "/onBoarding"
                     }
