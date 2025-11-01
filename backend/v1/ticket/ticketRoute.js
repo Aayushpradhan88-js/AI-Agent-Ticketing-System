@@ -8,8 +8,8 @@ import {
     adminDeleteTicket
 } from "./ticketController.js"
 
-import { authenticateUser as checkAuth } from "../middlewares/auth.js";
-import { onboarding as checkOnboarding } from "../middlewares/checkOnboarding.js"
+import { authenticateUser as checkAuth } from "../../middlewares/auth.js";
+import { onboarding as checkOnboarding } from "../../middlewares/checkOnboarding.js"
 
 export const ticketRoute = express.Router();
 
