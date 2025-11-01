@@ -26,9 +26,9 @@ const AppRoutes = () => {
                 } />
 
                 <Route path='/onboarding' element={
-                    <OnBoarding/>
+                    <OnBoarding />
                 }
-                
+
                 />
 
                 <Route path='/login' element={
