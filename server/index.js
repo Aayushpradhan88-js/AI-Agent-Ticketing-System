@@ -6,19 +6,19 @@ import session from "express-session"
 import passport from "passport"
 import { serve } from "inngest/express"
 import connectDB from "./src/config/connectdb.js"
-import { authRoute } from "./user/userRoute.js"
+import { authRoute } from "./src/v1/modules/user/userRoute.js"
 import { ticketRoute } from "./src/v1/modules/ticket/ticketRoute.js"
 import { onboardingRoute } from "./src/v1/modules/onboarding/onboardingRoute.js"
-import { inngest } from "./src/v1/inngest/client.js"
-import { onSigningUp } from "./src/v1/inngest/function/on-signup.js"
-import { onTicketCreated } from "./src/v1/inngest/function/on-ticket-created.js"
-
-import "./src/config/passport.js"
+import { inngest } from "./src/inngest/client.js"
+import { onSigningUp } from "./src/inngest/function/on-signup.js"
+import { onTicketCreated } from "./src/inngest/function/on-ticket-created.js"
+import passport from "./src/config/passport.js"
+import { clientURL, sessionSECRET } from "./src/constants/constant.js"
 
 const app = express()
 app.use(cors(
     {
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        origin: clientURL || "http://localhost:5173",
         credentials: true
     }
 ))
@@ -29,7 +29,7 @@ app.use(express.json());
 // Session configuration
 app.use(session(
     {
-        secret: process.env.SESSION_SECRET,
+        secret: sessionSECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -53,9 +53,7 @@ app.use("/api/inngest", serve({
     functions: [onSigningUp, onTicketCreated]
 }))
 
-console.log("mongodb uri", process.env.MONGO_URI)
-
-const PORT = process.env.PORT
+const PORT = serverPORT
 app.listen(PORT || 3000, () => {
     console.log(`Server is running on PORT: ${PORT}`)
 })

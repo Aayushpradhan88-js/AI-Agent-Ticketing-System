@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import storage from '../../utils/localStorage.js';
 
-
 export const CheckAuth = ({ children, protectedRoute })  => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);

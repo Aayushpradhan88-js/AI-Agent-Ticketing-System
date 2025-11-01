@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleOAUTHButton } from '../../components/googleoauthbutton';
+import { GoogleOAUTHButton } from '../../components/ui/googleoauthbutton.jsx';
 import storage from '../../utils/localStorage.js';
 
 const LoginPage = () => {
@@ -29,7 +29,7 @@ const LoginPage = () => {
     setLoading(true);
     setError('');
 
-    // Validate form data
+    //-----Validate form data-----//
     if (!form.email.trim() || !form.password.trim()) {
       setError('Email and password are required');
       setLoading(false);
@@ -38,8 +38,6 @@ const LoginPage = () => {
 
     try {
       const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
-      console.log('Attempting login with:', { email: form.email }); // Don't log password
-      console.log('Server URL:', serverUrl);
 
       const response = await fetch(`${serverUrl}/api/v1/auth/login`, {
         method: "POST",

@@ -2,16 +2,14 @@ import React from 'react'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 
 import HomePage from '../pages/HomePage.jsx'
-import RegisterPage from '../features/user/auth/RegisterPage.jsx'
-import LoginPage from '../pages/auth/LoginPage.jsx'
 import AdminPage from '../pages/AdminPage.jsx'
-import TicketPage from '../pages/TicketPage.jsx'
-import TicketsPage from '../pages/TicketsPage.jsx'
-import ProfilePage from '../pages/ProfilePage.jsx'
-
-import OnBoarding from '../components/OnBoarding.jsx';
-
-import { CheckAuth } from '../components/check-auth.jsx'
+import RegisterPage from '../features/auth/RegisterPage.jsx'
+import LoginPage from '../features/auth/LoginPage.jsx'
+import TicketPage from '../features/ticket/TicketPage.jsx'
+import TicketsPage from '../features/ticket/TicketsPage.jsx'
+import ProfilePage from '../features/user/Profile.jsx'
+import OnBoarding from '../features/onboarding/Onboarding.jsx';
+import { CheckAuth } from '../features/auth/check-auth.jsx'
 
 const AppRoutes = () => {
     return (
@@ -27,9 +25,7 @@ const AppRoutes = () => {
 
                 <Route path='/onboarding' element={
                     <OnBoarding />
-                }
-
-                />
+                } />
 
                 <Route path='/login' element={
                     <LoginPage />
@@ -57,9 +53,7 @@ const AppRoutes = () => {
                     <CheckAuth protectedRoute={true}>
                         <ProfilePage />
                     </CheckAuth>
-                }
-                />
-
+                } />
             </Routes>
         </BrowserRouter>
     )

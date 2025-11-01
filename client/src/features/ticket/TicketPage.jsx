@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { LogoutBtn } from '../components/LogoutBtn.jsx'
 import { AdminBtn } from '../components/AdminBtn.jsx'
 import { Profile } from './profile-page/Profile.jsx'
-import storage from '../../../utils/localStorage.js'
-import { ticketAPI } from '../../../utils/api.js'
+import storage from '../../utils/localStorage.js'
+import { ticketAPI } from '../../utils/api.js'
 
 const TicketPage = () => {
   const [newTicket, setNewTicket] = useState({

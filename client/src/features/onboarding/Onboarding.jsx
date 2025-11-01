@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import { onboardingApi } from '../../../utils/api';
+import { onboardingApi } from '../../utils/api';
 
 //----------QUESTIONS CONFIGURATION----------//
 const MODERATOR_QUESTIONS = [
