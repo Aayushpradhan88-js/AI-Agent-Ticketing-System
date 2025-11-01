@@ -145,7 +145,7 @@ export const logoutAccount = async (req, res) => {
 
 //---------UPDATING ACCOUNT----------//
 export const updateAccount = async (req, res) => {
-    const { username, email, skills, role, location, bio } = req.body;
+    const { username, password, skills, role, location, bio } = req.body;
 
     try {
         const userId = req.user?._id || req.user?.id;
@@ -170,7 +170,7 @@ export const updateAccount = async (req, res) => {
         // Prepare update object - only update provided fields
         const updateData = {};
         if (username) updateData.username = username;
-        if (email) updateData.email = email;
+        if (password) updateData.password = password;
         if (skills) updateData.skills = skills;
         if (location) updateData.location = location;
         if (bio) updateData.bio = bio;
