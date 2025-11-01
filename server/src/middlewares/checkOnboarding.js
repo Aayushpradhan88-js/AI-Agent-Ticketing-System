@@ -1,4 +1,4 @@
-import { User } from "../models/user.models.js";
+import { User } from "../v1/modules/user/userModel.js"
 import { ApiError } from "../utils/apierrorUtils.js";
 import { ApiResponse } from "../utils/apiresponseUtils.js";
 

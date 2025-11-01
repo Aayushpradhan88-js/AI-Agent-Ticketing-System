@@ -3,7 +3,7 @@
 import { User } from "./userModel.js"
 import { ApiResponse } from "../../../utils/apiresponseUtils.js";
 import { ApiError } from "../../../utils/apierrorUtils.js";
-import { inngest } from "../inngest/client.js"
+import { inngest } from "../../../inngest/client.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

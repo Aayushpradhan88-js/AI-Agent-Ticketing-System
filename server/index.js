@@ -12,7 +12,7 @@ import { onboardingRoute } from "./src/v1/modules/onboarding/onboardingRoute.js"
 import { inngest } from "./src/inngest/client.js"
 import { onSigningUp } from "./src/inngest/function/on-signup.js"
 import { onTicketCreated } from "./src/inngest/function/on-ticket-created.js"
-import passport from "./src/config/passport.js"
+// import passport from "./src/config/passport.js"
 import { clientURL, sessionSECRET } from "./src/constants/constant.js"
 
 const app = express()

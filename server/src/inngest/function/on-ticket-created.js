@@ -10,13 +10,12 @@ ALGORITHM
 
 */
 
-import { inngest } from '../client.js'
-import { Ticket } from '../../models/ticket.models.js'
-// import { ApiError } from '../../utils/ApiError.utils.js';
 import { NonRetriableError } from 'inngest';
-import { analyzeTicket } from '../../../utils/AnalyzeTicket.utils.js';
-import { User } from '../../models/user.models.js';
-import { sendMail } from '../../../utils/Node-mailer.utils.js';
+import { inngest } from '../client.js'
+import { User } from '../../v1/modules/user/userModel.js';
+import { Ticket } from '../../v1/modules/ticket/ticketModel.js'
+import { analyzeTicket } from '../../utils/analyzeticketUtils.js';
+import { sendMail } from '../../utils/emailsendUtils.js';
 
 export const onTicketCreated = inngest.createFunction(
     {

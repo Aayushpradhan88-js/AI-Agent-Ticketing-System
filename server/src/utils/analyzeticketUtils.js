@@ -1,5 +1,5 @@
 import { createAgent, gemini} from "@inngest/agent-kit";
-import { ApiError } from "./ApiError.utils.js";
+import { ApiError } from "./apierrorUtils.js";
 
 export const analyzeTicket = async (ticket) => {
     const supportAgent = createAgent({

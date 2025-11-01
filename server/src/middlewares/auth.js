@@ -9,7 +9,7 @@ AUTHENTICATION ALGORITHM
 
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/apierrorUtils.js";
-import { User } from "../models/user.models.js";
+import { User } from "../v1/modules/user/userModel.js"
 
 const authenticateUser = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -38,6 +38,12 @@ const authenticateUser = async (req, res, next) => {
                 )
             )
     }
+}
+
+const RBACMiddleware = async (req, res, next) => {
+    const userId = await req.user_id
+    const user = await User.role(userId)
+
 }
 
 export default authenticateUser

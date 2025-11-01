@@ -10,7 +10,7 @@ import { Ticket } from "./ticketModel.js"
 import { User } from "../user/userModel.js"
 import { ApiError } from "../../../utils/apierrorUtils.js"
 import { ApiResponse } from "../../../utils/apiresponseUtils.js"
-import { inngest } from "../inngest/client.js"
+import { inngest } from "../../../inngest/client.js"
 
 
 //-----CREATING TICKET-----//
