@@ -14,9 +14,9 @@ import { inngest } from '../client.js'
 import { Ticket } from '../../models/ticket.models.js'
 // import { ApiError } from '../../utils/ApiError.utils.js';
 import { NonRetriableError } from 'inngest';
-import { analyzeTicket } from '../../utils/AnalyzeTicket.utils.js';
+import { analyzeTicket } from '../../../utils/AnalyzeTicket.utils.js';
 import { User } from '../../models/user.models.js';
-import { sendMail } from '../../utils/Node-mailer.utils.js';
+import { sendMail } from '../../../utils/Node-mailer.utils.js';
 
 export const onTicketCreated = inngest.createFunction(
     {

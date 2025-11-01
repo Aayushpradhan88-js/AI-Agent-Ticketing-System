@@ -8,8 +8,8 @@ ALGORITHM FOR CREATING TICKET
 */
 import { Ticket } from "./ticketModel.js"
 import { User } from "../user/userModel.js"
-import { ApiError } from "../utils/ApiError.utils.js"
-import { ApiResponse } from "../utils/ApiResponse.utils.js"
+import { ApiError } from "../../../utils/ApiError.utils.js"
+import { ApiResponse } from "../../../utils/ApiResponse.utils.js"
 import { inngest } from "../inngest/client.js"
 
 

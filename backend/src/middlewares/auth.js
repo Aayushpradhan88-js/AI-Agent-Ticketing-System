@@ -8,7 +8,7 @@ AUTHENTICATION ALGORITHM
 */
 
 import jwt from "jsonwebtoken";
-import { ApiError } from "../v1/utils/ApiError.utils.js";
+import { ApiError } from "../utils/ApiError.utils.js";
 import { User } from "../models/user.models.js";
 
 const authenticateUser = async (req, res, next) => {

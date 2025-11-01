@@ -3,8 +3,8 @@ import {
     onboardingController,
     onboardingStatus
 } from './onboardingController.js';
-import onboarding from '../../middlewares/checkOnboarding.js';
-import authenticateUser from '../../middlewares/auth.js';
+import onboarding from '../../../middlewares/checkOnboarding.js';
+import authenticateUser from '../../../middlewares/auth.js';
 
 export const onboardingRoute = express.Router();
 

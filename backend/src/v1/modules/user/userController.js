@@ -1,15 +1,15 @@
 // import dotenv from "dotenv"
 // dotenv.config()
-import {User} from "./userModel.js"
-import { ApiResponse } from "../utils/ApiResponse.utils.js";
-import { ApiError } from "../utils/ApiError.utils.js";
+import { User } from "./userModel.js"
+import { ApiResponse } from "../../../utils/ApiResponse.utils.js";
+import { ApiError } from "../../../utils/ApiError.utils.js";
 import { inngest } from "../inngest/client.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 //---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
-    const { username, email, password, skills} = req.body;
+    const { username, email, password, skills } = req.body;
 
     try {
         if (!username || !email || !password) {
@@ -81,7 +81,7 @@ export const loginAccount = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ error: "User not found" });
-        
+
         const isMatch = bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -104,7 +104,7 @@ export const loginAccount = async (req, res) => {
                         id: user._id,
                         userOnBoardingCompleted: user.onBoardingCompleted
                     }
-                    
+
                 }
             );
     } catch (error) {

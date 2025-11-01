@@ -13,7 +13,7 @@ import {
     adminToggleUserStatus
 } from "./userController.js";
 
-import { authenticate } from "../middlewares/auth.js";
+import { authenticate } from "../../../middlewares/auth.js";
 
 export const authRoute = express.Router();
 

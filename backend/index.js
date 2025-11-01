@@ -5,15 +5,15 @@ import express from "express"
 import session from "express-session"
 import passport from "passport"
 import { serve } from "inngest/express"
-import connectDB from "./db/connectdb.js"
+import connectDB from "./src/db/connectdb.js"
 import { authRoute } from "./user/userRoute.js"
-import { ticketRoute } from "./v1/ticket/ticketRoute.js"
-import { onboardingRoute } from "./v1/onboarding/onboardingRoute.js"
-import { inngest } from "./v1/inngest/client.js"
-import { onSigningUp } from "./v1/inngest/function/on-signup.js"
-import { onTicketCreated } from "./v1/inngest/function/on-ticket-created.js"
+import { ticketRoute } from "./src/v1/modules/ticket/ticketRoute.js"
+import { onboardingRoute } from "./src/v1/modules/onboarding/onboardingRoute.js"
+import { inngest } from "./src/v1/inngest/client.js"
+import { onSigningUp } from "./src/v1/inngest/function/on-signup.js"
+import { onTicketCreated } from "./src/v1/inngest/function/on-ticket-created.js"
 
-import "./config/passport.js"
+import "./src/config/passport.js"
 
 const app = express()
 app.use(cors(
