@@ -11,7 +11,7 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/apierrorUtils.js";
 import { User } from "../v1/modules/user/userModel.js"
 
-const authenticateUser = async (req, res, next) => {
+export const authenticateUser = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         return res
@@ -45,5 +45,3 @@ const RBACMiddleware = async (req, res, next) => {
     const user = await User.role(userId)
 
 }
-
-export default authenticateUser

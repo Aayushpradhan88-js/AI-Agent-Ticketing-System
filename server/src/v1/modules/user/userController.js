@@ -415,18 +415,14 @@ export const adminToggleUserStatus = async (req, res) => {
 
         const targetUser = await User.findById(userId);
         if (!targetUser) {
-            return res
-                .status(404)
-                .json(
-                    new ApiError(404, "User not found")
-                );
+            return res.status(404).json(
+                new ApiError(404, "User not found")
+            );
         }
 
         // Prevent admin from deactivating themselves
         if (targetUser._id.toString() === req.user._id.toString()) {
-            return res
-                .status(403)
-                .json(
+            return res.status(403).json(
                     new ApiError(403, "Cannot change your own status")
                 );
         }

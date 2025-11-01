@@ -2,7 +2,7 @@ import { User } from "../v1/modules/user/userModel.js"
 import { ApiError } from "../utils/apierrorUtils.js";
 import { ApiResponse } from "../utils/apiresponseUtils.js";
 
-const onboarding = async (req, res, next) => {
+export const onboarding = async (req, res, next) => {
     const user = await User.findById(req.user._id);
 
     try {
@@ -42,5 +42,3 @@ const onboarding = async (req, res, next) => {
         )
     }
 };
-
-export default onboarding;

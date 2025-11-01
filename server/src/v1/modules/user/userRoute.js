@@ -11,15 +11,15 @@ import {
     adminUpdateUser,
     adminDeleteUser,
     adminToggleUserStatus,
-    studentAccount,
-    studentUpdateAccount,
-    studentDeleteTicket,
-    moderatorAccount,
-    moderatorUpdateAccount,
-    moderatorDeleteTicket,
+    // studentAccount,
+    // studentUpdateAccount,
+    // studentDeleteTicket,
+    // moderatorAccount,
+    // moderatorUpdateAccount,
+    // moderatorDeleteTicket,
 } from "./userController.js";
 
-import { authenticate as verifyingUser } from "../../../middlewares/auth.js";
+import { authenticateUser as verifyingUser } from "../../../middlewares/auth.js";
 
 export const authRoute = express.Router();
 
@@ -35,14 +35,14 @@ authRoute.delete("/admin/user/:userId", verifyingUser, adminDeleteUser);
 authRoute.get("/admin/user/:userId/status", verifyingUser, adminToggleUserStatus);
 
 //----------Moderator routes----------//
-authRoute.get("/moderator",verifyingUser, moderatorAccount );
-authRoute.patch("/moderator/:id/update-account", verifyingUser, moderatorUpdateAccount);
-authRoute.delete("/moderator/:id/delete-ticket", verifyingUser, moderatorDeleteTicket);
+// authRoute.get("/moderator",verifyingUser, moderatorAccount );
+// authRoute.patch("/moderator/:id/update-account", verifyingUser, moderatorUpdateAccount);
+// authRoute.delete("/moderator/:id/delete-ticket", verifyingUser, moderatorDeleteTicket);
 
-//----------Student routes----------//
-authRoute.get("/student",verifyingUser, studentAccount );
-authRoute.patch("/student/:id/update-account", verifyingUser, studentUpdateAccount);
-authRoute.delete("/student/:id/delete-ticket", verifyingUser, studentDeleteTicket);
+// //----------Student routes----------//
+// authRoute.get("/student",verifyingUser, studentAccount );
+// authRoute.patch("/student/:id/update-account", verifyingUser, studentUpdateAccount);
+// authRoute.delete("/student/:id/delete-ticket", verifyingUser, studentDeleteTicket);
 
 //----------Google OAuth routes----------//
 authRoute.get("/google",

@@ -1,4 +1,4 @@
-import User from "../user/userModel.js"
+import {User} from "../user/userModel.js"
 import { ApiError } from "../../../utils/apierrorUtils.js";
 
 export const onboardingController = async (req, res) => {
