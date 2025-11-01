@@ -1,9 +1,9 @@
 // import dotenv from "dotenv"
 // dotenv.config()
-import { User } from "../models/user.models.js";
+import {User} from "./userModel.js"
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
-import { inngest } from "../inngest/client.js";
+import { inngest } from "../inngest/client.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

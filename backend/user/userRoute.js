@@ -11,10 +11,9 @@ import {
     adminUpdateUser,
     adminDeleteUser,
     adminToggleUserStatus
-} from "../controllers/user.controller.js";
+} from "./userController.js";
 
 import { authenticate } from "../middlewares/auth.js";
-import { onBoardingMiddleware as checkOnboarding } from "../controllers/onBoarding.controller.js";
 
 export const authRoute = express.Router();
 
@@ -32,9 +31,6 @@ authRoute.patch("/admin/user/:userId/status", authenticate, adminToggleUserStatu
 //----------Moderator-only routes----------//
 authRoute.put("/moderator/:id", authenticate)
 authRoute.delete("/moderator/:id", authenticate)
-
-// ----------Onboarding route--------//
-authRoute.post("/onBoarding", checkOnboarding, onBoarding)
 
 //----------Google OAuth routes----------//
 authRoute.get("/google",

@@ -6,17 +6,17 @@ import {
     adminAssignTicket,
     adminUpdateTicketStatus,
     adminDeleteTicket
-} from "../controllers/ticket.controller.js";
+} from "./ticketController.js"
 
-import { checkAuth as checkAuth } from "../middlewares/auth.js";
-import { onBoardingMiddleware as checkOnboarding } from "../controllers/onBoarding.controller.js";
+import { authenticateUser as checkAuth } from "../middlewares/auth.js";
+import { onboarding as checkOnboarding } from "../middlewares/checkOnboarding.js"
 
 export const ticketRoute = express.Router();
 
 // Regular ticket routes
 ticketRoute.post("/create-ticket", checkAuth, createTicket);
-ticketRoute.get("/get-all-tickets", checkAuth, checkOnboarding,getAllTickets);
-ticketRoute.get("/get-ticket/:id", checkAuth, checkOnboarding,getTicketById);
+ticketRoute.get("/get-all-tickets", checkAuth, checkOnboarding, getAllTickets);
+ticketRoute.get("/get-ticket/:id", checkAuth, checkOnboarding, getTicketById);
 
 // Admin-only ticket management routes
 ticketRoute.post("/admin/assign/:ticketId", checkAuth, adminAssignTicket);

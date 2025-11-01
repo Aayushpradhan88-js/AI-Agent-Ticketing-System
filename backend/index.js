@@ -6,8 +6,9 @@ import session from "express-session"
 import passport from "passport"
 import { serve } from "inngest/express"
 import connectDB from "./db/connectdb.js"
-import { authRoute } from "./routes/auth.routes.js"
-import { ticketRoute } from "./routes/tickets.routes.js"
+import { authRoute } from "./user/userRoute.js"
+import { ticketRoute } from "./ticket/ticketRoute.js"
+import { onboardingRoute } from "./onboarding/onboardingRoute.js"
 import { inngest } from "./inngest/client.js"
 import { onSigningUp } from "./inngest/function/on-signup.js"
 import { onTicketCreated } from "./inngest/function/on-ticket-created.js"
@@ -46,6 +47,7 @@ connectDB();
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/tickets", ticketRoute);
+app.use("/api/v1/onboarding", onboardingRoute);
 app.use("/api/inngest", serve({
     client: inngest,
     functions: [onSigningUp, onTicketCreated]

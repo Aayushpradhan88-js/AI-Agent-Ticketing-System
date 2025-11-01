@@ -6,9 +6,7 @@ import {
 import onboarding from '../middlewares/checkOnboarding.js';
 import authenticateUser from '../middlewares/auth.js';
 
-const onboardingRoute = express.Router();
+export const onboardingRoute = express.Router();
 
 onboardingRoute.post("/check", authenticateUser, onboarding, onboardingController );
 onboardingRoute.get("/status", onboarding, onboardingStatus );
-
-export default onboardingRoute;

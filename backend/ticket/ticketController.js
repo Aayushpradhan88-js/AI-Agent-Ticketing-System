@@ -6,8 +6,8 @@ ALGORITHM FOR CREATING TICKET
 4. using inngesT
 
 */
-import { Ticket } from "../models/ticket.models.js";
-import { User } from "../models/user.models.js";
+import { Ticket } from "./ticketModel.js"
+import { User } from "../user/userModel.js"
 import { ApiError } from "../utils/ApiError.utils.js"
 import { ApiResponse } from "../utils/ApiResponse.utils.js"
 import { inngest } from "../inngest/client.js"
@@ -35,7 +35,6 @@ export const createTicket = async (req, res) => {
                 createdBy: req.user._id.toString()
             }
         );
-        console.log(newTicket)
 
         await inngest.send(
             {
@@ -61,7 +60,7 @@ export const createTicket = async (req, res) => {
             )
     }
     catch (error) {
-        console.error("Error creating ticket:", error);
+        console.error("Error creating ticket:", error.stack);
         res
             .status(500)
             .json(
