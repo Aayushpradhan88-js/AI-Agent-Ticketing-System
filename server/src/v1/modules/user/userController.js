@@ -94,19 +94,16 @@ export const loginAccount = async (req, res) => {
             { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE || '24h' }
         );
 
-        res
-            .status(200)
-            .json(
-                {
-                    message: "User LoggedIn Successfully",
-                    token,
-                    user: {
-                        id: user._id,
-                        userOnBoardingCompleted: user.onBoardingCompleted
-                    }
-
+        return res.status(200).json({
+                message: "User LoggedIn Successfully",
+                token,
+                user: {
+                    id: user._id,
+                    userOnBoardingCompleted: user.onBoardingCompleted
                 }
-            );
+
+            }
+        );
     } catch (error) {
         res.status(500).json({ error: "Login failed", details: error.message });
     }
@@ -423,8 +420,8 @@ export const adminToggleUserStatus = async (req, res) => {
         // Prevent admin from deactivating themselves
         if (targetUser._id.toString() === req.user._id.toString()) {
             return res.status(403).json(
-                    new ApiError(403, "Cannot change your own status")
-                );
+                new ApiError(403, "Cannot change your own status")
+            );
         }
 
         // Prevent deactivating other admins

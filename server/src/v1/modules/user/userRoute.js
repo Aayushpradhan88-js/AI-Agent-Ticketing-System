@@ -24,7 +24,7 @@ import { authenticateUser as verifyingUser } from "../../../middlewares/auth.js"
 export const authRoute = express.Router();
 
 authRoute.post("/register", registerAccount);
-authRoute.post("/login", loginAccount);
+authRoute.post("/login", verifyingUser ,loginAccount);
 authRoute.post("/logout", logoutAccount);
 authRoute.post("/update-account", verifyingUser, updateAccount);
 

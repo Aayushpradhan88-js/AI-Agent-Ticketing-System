@@ -99,7 +99,7 @@ export const getAllTickets = async (req, res) => {
         )
     }
     catch (error) {
-        console.error("Error fetching tickets:", error.stack    );
+        console.error("Error fetching tickets:", error.stack);
         return res
             .status(500)
             .json(
