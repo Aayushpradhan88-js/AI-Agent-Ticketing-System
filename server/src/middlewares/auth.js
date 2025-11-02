@@ -10,33 +10,27 @@ AUTHENTICATION ALGORITHM
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/apierrorUtils.js";
 import { User } from "../v1/modules/user/userModel.js"
+import { tokenSECRET } from "../constants/constant.js";
 
 export const authenticateUser = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-        return res
-            .status(401)
-            .json(
-                new ApiError(
-                    401,
-                    "Unauthorized, Token is missing"
-                )
-            )
+        return res.status(401).json(
+            new ApiError(401, "Unauthorized, Token is missing")
+        )
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, tokenSECRET);
         req.user = decoded;
         next();
     } catch (error) {
-        return res
-            .status(401)
-            .json(
-                new ApiError(
-                    401,
-                    "Unauthorized, Invalid Token"
-                )
+        return res.status(401).json(
+            new ApiError(
+                401,
+                "Unauthorized, Invalid Token"
             )
+        )
     }
 }
 

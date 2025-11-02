@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { Plus, User, LogOut, Filter, Clock, AlertCircle, CheckCircle, Calendar, Tag, MessageSquare, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-import { LogoutBtn } from '../components/LogoutBtn.jsx'
-import { AdminBtn } from '../components/AdminBtn.jsx'
-import { Profile } from './profile-page/Profile.jsx'
-import storage from '../../utils/localStorage.js'
+import { LogoutBtn } from '../../components/ui/LogoutBtn.jsx'
+import { AdminBtn } from '../../components/ui/AdminBtn.jsx'
+import { Profile } from '../user/Profile.jsx'
 import { ticketAPI } from '../../utils/api.js'
+import storage from '../../utils/localStorage.js'
 
 const TicketPage = () => {
   const [newTicket, setNewTicket] = useState({

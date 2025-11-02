@@ -77,9 +77,7 @@ export const createTicket = async (req, res) => {
 export const getAllTickets = async (req, res) => {
     try {
         const user = req.user;
-        // console.log(user);
         let tickets;
-
         if (user.role !== 'user') {
             tickets = await Ticket
                 .find({})
@@ -92,19 +90,16 @@ export const getAllTickets = async (req, res) => {
                 .select("title description status createdAt")
                 .sort({ createdAt: -1 })
         }
-        console.log(tickets);
-        return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    tickets,
-                    "Tickets fetched successfully",
-                )
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                tickets,
+                "Tickets fetched successfully",
             )
+        )
     }
     catch (error) {
-        console.error("Error fetching tickets:", error);
+        console.error("Error fetching tickets:", error.stack    );
         return res
             .status(500)
             .json(

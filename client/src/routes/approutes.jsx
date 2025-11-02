@@ -3,11 +3,11 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom'
 
 import HomePage from '../pages/HomePage.jsx'
 import AdminPage from '../pages/AdminPage.jsx'
+import ProfilePage from '../pages/ProfilePage.jsx'
 import RegisterPage from '../features/auth/RegisterPage.jsx'
 import LoginPage from '../features/auth/LoginPage.jsx'
 import TicketPage from '../features/ticket/TicketPage.jsx'
 import TicketsPage from '../features/ticket/TicketsPage.jsx'
-import ProfilePage from '../features/user/Profile.jsx'
 import OnBoarding from '../features/onboarding/Onboarding.jsx';
 import { CheckAuth } from '../features/auth/check-auth.jsx'
 

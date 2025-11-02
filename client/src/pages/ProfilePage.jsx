@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react';
-import { BackBtn } from '../components/BackBtn.jsx';
+import { BackBtn } from '../components/ui/BackBtn.jsx';
 import storage from '../utils/localStorage.js';
 import { userAPI } from '../utils/api.js';
 

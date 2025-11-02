@@ -3,13 +3,20 @@ import { ApiError } from "../utils/apierrorUtils.js";
 import { ApiResponse } from "../utils/apiresponseUtils.js";
 
 export const onboarding = async (req, res, next) => {
-    const user = await User.findById(req.user._id);
-
+    
     try {
+        if(!req.user || !req.user._id){
+            return res.status(403).json(
+                new ApiError(403, "You're not authorized")
+            )
+        }
+
+        const user = await User.findById(req.user._id).select("-password");
+        console.log("user", user._id)
         //-----Check is user authenticated-----//
         if (!user) {
             return res.status(401).json(
-                ApiError(
+                new ApiError(
                     401,
                     "user is not authenticated",
                 )
@@ -19,11 +26,11 @@ export const onboarding = async (req, res, next) => {
         //-----Check onBoarding status-----//
         if (!user.onBoardingCompleted) {
             return res.status(403).json(
-                ApiResponse(
+                new ApiResponse(
                     false,
                     "failed to complete onboarding",
                     {
-                        next: "/onBoarding"
+                        next: "/onboarding"
                     }
                 )
             )
@@ -33,9 +40,9 @@ export const onboarding = async (req, res, next) => {
 
         return next();
     } catch (error) {
-        console.error(error.stack)
+        console.error("onboarding middleware",error.stack)
         return res.status(500).json(
-            ApiError(
+            new ApiError(
                 500,
                 "server error!!"
             )

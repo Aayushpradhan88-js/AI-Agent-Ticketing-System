@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {useNavigate } from 'react-router-dom'
 import storage from '../../utils/localStorage.js'
 
-export const Profile = ({ children }) => {
+ export const Profile = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -33,3 +33,5 @@ export const Profile = ({ children }) => {
     </div>
   )
 }
+
+export default Profile

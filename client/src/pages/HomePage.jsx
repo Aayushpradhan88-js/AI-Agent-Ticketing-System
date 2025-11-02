@@ -9,14 +9,17 @@ function HomePage() {
       <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
       
       {/* Header */}
-      <header className="flex justify-between items-center p-6 border-b border-gray-800">
+      <header className="flex justify-between  items-center p-6 border-b border-gray-800">
         <div className="text-3xl font-bold text-white">superagent</div>
-        <button  className="px-4 py-2 cursor-pointer border-1 text-white rounded-lg text-lg transition-colors">
+
+        <div className='flex gap-5'>
+        <button  className="px-4 py-2  cursor-pointer border-1 text-white rounded-lg text-lg transition-colors">
           <Link to="/login">login</Link>
         </button>
         <button className="px-4 py-2 bg-blue-600 text-white cursor-pointer rounded-lg text-lg hover:bg-blue-700 transition-colors">
           <Link to="/register-form">Create account</Link>
         </button>
+        </div>
       </header>
 
       {/* Main Content */}

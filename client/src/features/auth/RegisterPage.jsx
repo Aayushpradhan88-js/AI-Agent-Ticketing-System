@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleOAUTHButton } from '../../components/googleoauthbutton';
-import storage from '../../../utils/localStorage';
+import { GoogleOAUTHButton } from '../../components/ui/googleoauthbutton';
+import storage from '../../utils/localStorage.js';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
