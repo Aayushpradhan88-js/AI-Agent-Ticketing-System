@@ -53,10 +53,6 @@ app.use("/api/inngest", serve({
     functions: [onSigningUp, onTicketCreated]
 }))
 
-app.get("/", () => {
-    console.log("hello world")
-})
-
 const PORT = serverPORT
 app.listen(PORT || 3000, () => {
     console.log(`Server is running on PORT: ${PORT}`)

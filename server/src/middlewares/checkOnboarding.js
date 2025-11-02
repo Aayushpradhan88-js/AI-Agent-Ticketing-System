@@ -5,13 +5,13 @@ import { ApiResponse } from "../utils/apiresponseUtils.js";
 export const onboarding = async (req, res, next) => {
     
     try {
-        if(!req.user || !req.user._id){
+        if(!req.user || !req.user.id){
             return res.status(403).json(
                 new ApiError(403, "You're not authorized")
             )
         }
 
-        const user = await User.findById(req.user._id).select("-password");
+        const user = await User.findById(req.user.id).select("-password");
         console.log("user", user._id)
         //-----Check is user authenticated-----//
         if (!user) {

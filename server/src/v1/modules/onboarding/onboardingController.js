@@ -1,4 +1,4 @@
-import {User} from "../user/userModel.js"
+import { User } from "../user/userModel.js"
 import { ApiError } from "../../../utils/apierrorUtils.js";
 
 export const onboardingController = async (req, res) => {
@@ -47,8 +47,10 @@ export const onboardingController = async (req, res) => {
             {
                 role: userType,
                 onBoardingData: answers,
-                onBoardingCompletonAt: new Date()
-            }, { new: true, runValidators: true }
+                onBoardingCompleted: true,  // ✅ Set to true
+                onBoardingCompletedAt: new Date()  // ✅ Fixed typo
+            },
+            { new: true, runValidators: true }
         ).select('-password')
 
         if (!updatedUser) {
@@ -94,10 +96,15 @@ export const onboardingStatus = (req, res) => {
         }
 
         return res.status(200).json({
-            success: true,
-            hasOnboardingCompleted: user.onBoardingCompleted,
-            userType: user.userType,
-            message: "Onboarding status is successfully completed"
+            // success: true,
+            // hasOnboardingCompleted: user.onBoardingCompleted,
+            // userType: user.userType,
+            // message: "Onboarding status is successfully completed"
+           
+                success: true,
+                hasOnboardingCompleted: user.onBoardingCompleted,  // ✅ Correct field name
+                userType: user.role,  // ✅ Changed from user.userType to user.role
+                message: "Onboarding status retrieved successfully"
         })
     } catch (error) {
         console.error(error.stack)

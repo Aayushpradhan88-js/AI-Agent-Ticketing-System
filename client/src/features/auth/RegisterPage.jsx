@@ -29,7 +29,7 @@ const RegisterPage = () => {
     try {
       //----------FETCHING FROM THE BACKEND----------//
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`,
-        // console.log(response),
+        
         {
           method: "POST",
           headers: {
@@ -37,7 +37,11 @@ const RegisterPage = () => {
           },
           body: JSON.stringify(form)
         }
+
+        
       )
+
+      console.log(response)
       //----------FETCHING FROM THE BACKEND----------//
 
       const data = await response.json();

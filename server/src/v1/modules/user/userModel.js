@@ -60,9 +60,13 @@ const userModel = new mongoose.Schema({
         timeSpan: String
     },
     onBoardingCompleted: {
-        type: String,
-        boolean: false
+        type: Boolean,  // ✅ Changed from String to Boolean
+        default: false  // ✅ Correct syntax
     },
+    onBoardingCompletedAt: {  // ✅ Add this new field for timestamp
+        type: Date,
+        default: null
+    }
 },
     {
         timestamps: true
