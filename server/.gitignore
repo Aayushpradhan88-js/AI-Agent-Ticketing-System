@@ -5,4 +5,4 @@ node_modules
 .env
 
 #drawing
-project.excalidraw
+./docs/backend infrastructure design.excalidraw
