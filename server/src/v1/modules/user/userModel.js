@@ -51,6 +51,8 @@ const userModel = new mongoose.Schema({
         default: "active"
     },
     onboardingData: {
+        // type: mongoose.Schema.Types.Mixed,
+        // default: {},
         profession: String,
         source: String,
         experience: String,
