@@ -19,9 +19,9 @@ export const onboardingController = async (req, res) => {
 
     */
     const userId = req.user._id;
-    const { userType, answers } = req.body;
+    const { role , answers } = req.body;
 
-    if (!userType) {
+    if (!role) {
         return res.status(400).json(
             ApiError(
                 400,
@@ -33,7 +33,7 @@ export const onboardingController = async (req, res) => {
 
     try {
         const validRoles = ['student', 'moderator', 'admin']
-        if (!validRoles.includes(userType)) {
+        if (!validRoles.includes(role)) {
             return res.status(402).json(
                 ApiError(
                     402,
@@ -45,10 +45,10 @@ export const onboardingController = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             {
-                role: userType,
-                onBoardingData: answers,
-                onBoardingCompleted: true,  // ✅ Set to true
-                onBoardingCompletedAt: new Date()  // ✅ Fixed typo
+                role: role,
+                onboardingData: answers,
+                onboardingCompleted: true,
+                onboardingCompletedAt: new Date() 
             },
             { new: true, runValidators: true }
         ).select('-password')
@@ -65,7 +65,6 @@ export const onboardingController = async (req, res) => {
         return res.status(200).json({
             success: true,
             user: updatedUser,
-            redirectTo: "/tickets",
             message: "onboarding completed successfully"
         });
 

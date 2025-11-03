@@ -8,5 +8,5 @@ import {authenticateUser} from '../../../middlewares/auth.js';
 
 export const onboardingRoute = express.Router();
 
-onboardingRoute.post("/check", authenticateUser, onboarding, onboardingController);
-onboardingRoute.get("/status", onboarding, onboardingStatus);
+onboardingRoute.post("/submit", authenticateUser, onboardingController);
+onboardingRoute.get("/check", onboarding, onboardingStatus);

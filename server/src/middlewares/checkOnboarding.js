@@ -11,7 +11,7 @@ export const onboarding = async (req, res, next) => {
             )
         }
 
-        const user = await User.findById(req.user.id).select("-password");
+        const user = await User.findById(req.user._id).select("-password");
         console.log("user", user._id)
         //-----Check is user authenticated-----//
         if (!user) {
@@ -24,7 +24,7 @@ export const onboarding = async (req, res, next) => {
         }
 
         //-----Check onBoarding status-----//
-        if (!user.onBoardingCompleted) {
+        if (!user.onboardingCompleted) {
             return res.status(403).json(
                 new ApiResponse(
                     false,

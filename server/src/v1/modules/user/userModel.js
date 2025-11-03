@@ -57,7 +57,6 @@ const userModel = new mongoose.Schema({
         goals: [String],
         interests: [String],
         work: String,
-        timeSpan: String
     },
     onboardingCompleted: {
         type: Boolean,  
