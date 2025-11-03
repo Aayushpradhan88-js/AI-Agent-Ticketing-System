@@ -50,8 +50,8 @@ const userModel = new mongoose.Schema({
         enum: ["active", "inactive"],
         default: "active"
     },
-    onBoardingData: {
-        userType: String,
+    onboardingData: {
+        profession: String,
         source: String,
         experience: String,
         goals: [String],
@@ -59,11 +59,11 @@ const userModel = new mongoose.Schema({
         work: String,
         timeSpan: String
     },
-    onBoardingCompleted: {
+    onboardingCompleted: {
         type: Boolean,  
         default: false 
     },
-    onBoardingCompletedAt: { 
+    onboardingCompletedAt: { 
         type: Date,
         default: null
     }

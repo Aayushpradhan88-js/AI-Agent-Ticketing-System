@@ -13,12 +13,12 @@ import { inngest } from "./src/inngest/client.js"
 import { onSigningUp } from "./src/inngest/function/on-signup.js"
 import { onTicketCreated } from "./src/inngest/function/on-ticket-created.js"
 // import passport from "./src/config/passport.js"
-import { serverPORT,clientURL, sessionSECRET } from "./src/config/env.js"
+import { SERVER_PORT ,CLIENT_URL, SESSION_SECRET } from "./src/config/env.js"
 
 const app = express()
 app.use(cors(
     {
-        origin: clientURL || "http://localhost:5173",
+        origin: CLIENT_URL || "http://localhost:5173",
         credentials: true
     }
 ))
@@ -29,7 +29,7 @@ app.use(express.json());
 // Session configuration
 app.use(session(
     {
-        secret: sessionSECRET,
+        secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -53,7 +53,7 @@ app.use("/api/inngest", serve({
     functions: [onSigningUp, onTicketCreated]
 }))
 
-const PORT = serverPORT
-app.listen(PORT || 3000, () => {
-    console.log(`Server is running on PORT: ${PORT}`)
+const SERVERPORT = SERVER_PORT
+app.listen(SERVERPORT || 3000, () => {
+    console.log(`Server is running on PORT: ${SERVERPORT}`)
 })

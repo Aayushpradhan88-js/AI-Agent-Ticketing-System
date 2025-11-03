@@ -10,7 +10,7 @@ import jwt from "jsonwebtoken";
 
 //---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
-    const { username, email, password, skills, onBoardingData } = req.body;
+    const { username, email, password, skills, role, onboardingData } = req.body;
 
     try {
         if (!username || !email || !password) {
@@ -28,13 +28,20 @@ export const registerAccount = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // let user; 
         const user = new User({
             username,
             email,
             password: hashedPassword,
             skills,
-            onBoardingData
+            role,
+            onboardingData
         });
+
+        if(user.onboardingData){
+            user.onboardingCompleted = true;
+            user.onboardingCompletedAt = Date.now()
+        }
 
         await user.save();
 
@@ -57,15 +64,15 @@ export const registerAccount = async (req, res) => {
             new ApiResponse(
                 201,
                 'User registered successfully',
-                token,
-                {
-                    id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    role: user.role,
-                    skills: user.skills,
-                    userOnBoardingCompleted: user.onBoardingCompleted
-                }
+                token
+                // {
+                //     id: user._id,
+                //     username: user.username,
+                //     email: user.email,
+                //     role: user.role,
+                //     skills: user.skills,
+                //     userOnBoardingCompleted: user.onBoardingCompleted
+                // }
             )
         );
 
@@ -123,7 +130,7 @@ export const logoutAccount = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized - No token provided" });
         }
 
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const decodedToken = jwt.verify(token, JWT_SECRET);
         const user = await User.findById(decodedToken?._id).select("-password");
 
         if (!user) {
@@ -132,17 +139,20 @@ export const logoutAccount = async (req, res) => {
 
         // For JWT-based logout, we just send success response
         // Client should remove token from storage
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Logged out successfully"
         });
 
     } catch (error) {
-        console.error('Logout Error:', error);
-        res.status(500).json({
-            success: false,
-            message: "Server error during logout"
-        });
+        console.error('Logout Error:', error.stack);
+        return res.status(500).json(
+            new ApiError(
+                500,
+                false,
+                "Server error during logout"
+            )
+        );
     }
 }
 
@@ -207,14 +217,12 @@ export const updateAccount = async (req, res) => {
     catch (error) {
         console.error("Failed to update user:", error);
 
-        res
-            .status(500)
-            .json(
-                new ApiError(
-                    500,
-                    "INTERNAL SERVER ERROR, FAILED TO UPDATE USER"
-                )
-            );
+        res.status(500).json(
+            new ApiError(
+                500,
+                "INTERNAL SERVER ERROR, FAILED TO UPDATE USER"
+            )
+        );
     };
 };
 

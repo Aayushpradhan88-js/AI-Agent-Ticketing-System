@@ -9,8 +9,8 @@ AUTHENTICATION ALGORITHM
 
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/apierrorUtils.js";
-import { User } from "../v1/modules/user/userModel.js"
-import { tokenSECRET } from "../constants/constant.js";
+import { User } from "../v1/modules/user/userModel.js";
+import { JWT_SECRET } from "../config/env.js";
 
 export const authenticateUser = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -21,7 +21,7 @@ export const authenticateUser = async (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, tokenSECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded;
         next();
     } catch (error) {
