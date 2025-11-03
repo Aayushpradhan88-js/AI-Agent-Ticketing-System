@@ -13,7 +13,7 @@ import { inngest } from "./src/inngest/client.js"
 import { onSigningUp } from "./src/inngest/function/on-signup.js"
 import { onTicketCreated } from "./src/inngest/function/on-ticket-created.js"
 // import passport from "./src/config/passport.js"
-import { serverPORT,clientURL, sessionSECRET } from "./src/constants/constant.js"
+import { serverPORT,clientURL, sessionSECRET } from "./src/config/env.js"
 
 const app = express()
 app.use(cors(

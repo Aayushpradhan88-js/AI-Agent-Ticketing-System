@@ -4,6 +4,7 @@ import { User } from "./userModel.js"
 import { ApiResponse } from "../../../utils/apiresponseUtils.js";
 import { ApiError } from "../../../utils/apierrorUtils.js";
 import { inngest } from "../../../inngest/client.js"
+import { JWT_SECRET, JWT_TOKEN_EXPIRY_DATE } from "../../../config/env.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -49,17 +50,15 @@ export const registerAccount = async (req, res) => {
 
         const token = jwt.sign(
             { _id: user._id, role: user.role, user: user.username },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE }
+            JWT_SECRET,
+            { expiresIn: JWT_TOKEN_EXPIRY_DATE }
         );
-        console.log(process.env.JWT_SECRET);
-        console.log(user)
-        res
-            .status(201)
-            .json({
-                message: 'User registered successfully',
+        return res.status(201).json(
+            new ApiResponse(
+                201,
+                'User registered successfully',
                 token,
-                user: {
+                {
                     id: user._id,
                     username: user.username,
                     email: user.email,
@@ -67,11 +66,17 @@ export const registerAccount = async (req, res) => {
                     skills: user.skills,
                     userOnBoardingCompleted: user.onBoardingCompleted
                 }
-            });
+            )
+        );
 
     } catch (error) {
-        console.error('Register Error:', error);
-        res.status(500).json({ message: 'Server error. Please try again later.' });
+        console.error('Register Error:', error.stack);
+        return res.status(500).json(
+            new ApiError(
+                500,
+                'server error. failed to register user'
+            )
+        );
     }
 }
 
@@ -90,20 +95,20 @@ export const loginAccount = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { _id: user._id, role: user.role, user: user.username },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_TOKEN_EXPIRY_DATE || '24h' }
+            { id: user._id, role: user.role, user: user.username },
+            JWT_SECRET,
+            { expiresIn: JWT_TOKEN_EXPIRY_DATE }
         );
 
         return res.status(200).json({
-                message: "User LoggedIn Successfully",
-                token,
-                user: {
-                    id: user._id,
-                    userOnBoardingCompleted: user.onBoardingCompleted
-                }
-
+            message: `${user.username} logged in successfully`,
+            token,
+            user: {
+                id: user._id,
+                userOnBoardingCompleted: user.onBoardingCompleted
             }
+
+        }
         );
     } catch (error) {
         res.status(500).json({ error: "Login failed", details: error.message });
