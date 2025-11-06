@@ -110,7 +110,7 @@ export const loginAccount = async (req, res) => {
             token,
             user: {
                 id: user._id,
-                userOnBoardingCompleted: user.onBoardingCompleted
+                userOnboardingCompleted: user.onboardingCompleted
             }
 
         }
