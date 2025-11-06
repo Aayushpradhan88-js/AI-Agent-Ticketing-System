@@ -2119,14 +2119,6 @@
       "isDeleted": false,
       "boundElements": [
         {
-          "id": "nkGRHdNLCqG7ovtLeKyv0",
-          "type": "arrow"
-        },
-        {
-          "id": "-aEWXm3um_NwTAZHj_eIz",
-          "type": "arrow"
-        },
-        {
           "id": "sJKwUP-riQs9QSx0l1eVi",
           "type": "arrow"
         }
@@ -2158,12 +2150,7 @@
       "version": 774,
       "versionNonce": 1060873750,
       "isDeleted": false,
-      "boundElements": [
-        {
-          "id": "-aEWXm3um_NwTAZHj_eIz",
-          "type": "arrow"
-        }
-      ],
+      "boundElements": [],
       "updated": 1762160845107,
       "link": null,
       "locked": false,
@@ -2204,10 +2191,6 @@
       "isDeleted": false,
       "boundElements": [
         {
-          "id": "-aEWXm3um_NwTAZHj_eIz",
-          "type": "arrow"
-        },
-        {
           "id": "8PLOTxHPFaWeDxDfinl62",
           "type": "arrow"
         },
@@ -2246,10 +2229,6 @@
       "boundElements": [
         {
           "id": "DdTb_ua7Ibt0-NQd6716h",
-          "type": "arrow"
-        },
-        {
-          "id": "-aEWXm3um_NwTAZHj_eIz",
           "type": "arrow"
         },
         {
@@ -2301,10 +2280,6 @@
       "isDeleted": false,
       "boundElements": [
         {
-          "id": "nkGRHdNLCqG7ovtLeKyv0",
-          "type": "arrow"
-        },
-        {
           "id": "7ExxzzuLXlrH4SI_ncJ3s",
           "type": "arrow"
         },
@@ -2345,10 +2320,6 @@
       "versionNonce": 591065098,
       "isDeleted": false,
       "boundElements": [
-        {
-          "id": "nkGRHdNLCqG7ovtLeKyv0",
-          "type": "arrow"
-        },
         {
           "id": "7ExxzzuLXlrH4SI_ncJ3s",
           "type": "arrow"
@@ -16460,7 +16431,7 @@
       "version": 87,
       "versionNonce": 1764846858,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1762161013744,
       "link": null,
       "locked": false,
@@ -16529,7 +16500,7 @@
       "version": 123,
       "versionNonce": 1934293514,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1762160991676,
       "link": null,
       "locked": false,
@@ -16661,6 +16632,43 @@
       "originalText": "MONGODB",
       "autoResize": true,
       "lineHeight": 1.35
+    },
+    {
+      "id": "i00w4ho8OMetU1ecvBbS8",
+      "type": "text",
+      "x": 498.76579037212105,
+      "y": 497.8493994182837,
+      "width": 710.0343942434446,
+      "height": 60.1814914482792,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b86",
+      "roundness": null,
+      "seed": 1636230810,
+      "version": 240,
+      "versionNonce": 691171654,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1762424182279,
+      "link": null,
+      "locked": false,
+      "text": "login validation error check",
+      "fontSize": 48.14519315862334,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "login validation error check",
+      "autoResize": false,
+      "lineHeight": 1.25
     }
   ],
   "appState": {
