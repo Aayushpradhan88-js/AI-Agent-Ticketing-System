@@ -12,6 +12,7 @@ export const onboarding = async (req, res, next) => {
         }
 
         const user = await User.findById(req.user._id).select("-password");
+        // const onboarding = aw
         console.log("user", user._id)
         //-----Check is user authenticated-----//
         if (!user) {
