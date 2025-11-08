@@ -34,6 +34,7 @@ class ApiClient {
       ...options,
     };
 
+    //-----FETCHING TO BACKEND-----//
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), config.timeout);
@@ -234,7 +235,7 @@ class UserAPI extends ApiClient {
 //----------ONBOARDING END-POINTS----------//
 class OnBoardingAPI extends ApiClient {
   async onBoarding(options) {
-    return await this.post('/api/v1/auth/onBoarding', options);
+    return await this.post('/api/v1/onboarding/submit', options);
   }
 }
 

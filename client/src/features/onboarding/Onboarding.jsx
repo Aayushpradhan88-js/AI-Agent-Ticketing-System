@@ -6,8 +6,8 @@ import { onboardingApi } from '../../utils/api';
 //----------QUESTIONS CONFIGURATION----------//
 const MODERATOR_QUESTIONS = [
   {
-    field: 'role',
-    question: 'What is your role?',
+    field: 'interest',
+    question: 'What is your interest?',
     options: ["Frontend Developer", "Backend Developer", "Fullstack Developer", "Python Engineer", "Java Engineer", "Software Engineer", "QA Tester"]
   },
   {
@@ -16,14 +16,14 @@ const MODERATOR_QUESTIONS = [
     options: ["Beginner", "Intermediate", "Advance", "Expert"]
   },
   {
+    field: 'source',
+    question: 'How did you hear about us?',
+    options: ["Youtube", "Instagram", "Ads", "AI Bots suggestions", "Google Suggestions", "Friends"]
+  },
+  {
     field: 'work',
     question: 'Currently where are you working?',
     options: ["Product Based Companies/Startups", "Service Based Companies/Startups", "Working in MNCs", "AI startups", "Self-Worker", "Other"]
-  },
-  {
-    field: 'timeSpan',
-    question: 'How long have you been coding?',
-    options: ["5 years", "3 years", "1 year", "Less than 1 year"]
   },
 ];
 
@@ -44,14 +44,14 @@ const STUDENT_QUESTIONS = [
     options: ["Youtube", "Instagram", "Ads", "AI Bots suggestions", "Google Suggestions", "Friends"]
   },
   {
-    field: 'timeSpan',
-    question: 'How long have you been coding?',
-    options: ["5 years", "3 years", "1 year", "Less than 1 year"]
+    field: 'work',
+    question: 'Currently where are you working?',
+    options: ["Product Based Companies/Startups", "Service Based Companies/Startups", "Working in MNCs", "AI startups", "Self-Worker", "Other"]
   },
 ];
 
 //----------COMPONENTS----------//
-const UserTypeButton = ({ type, icon, title, description, onClick }) => {
+const RoleButton = ({ type, icon, title, description, onClick }) => {
   const bgColors = {
     student: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
     moderator: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
@@ -71,20 +71,20 @@ const UserTypeButton = ({ type, icon, title, description, onClick }) => {
   );
 };
 
-const UserTypeScreen = ({ onSelectType }) => {
+const RoleScreen = ({ onSelectType }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-4xl w-full">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Let's get you started</h1>
         <div className="grid md:grid-cols-2 gap-6">
-          <UserTypeButton
+          <RoleButton
             type='student'
             icon='🎓'
             title='Student'
             description='I am here to learn and grow'
             onClick={() => onSelectType('student')}
           />
-          <UserTypeButton
+          <RoleButton
             type='moderator'
             icon='👨‍💼'
             title='Moderator'
@@ -131,7 +131,7 @@ const OptionButton = ({ option, isSelected, onClick }) => {
   );
 };
 
-const QuestionScreen = ({ questions, userType, onComplete }) => {
+const QuestionScreen = ({ questions, role, onComplete }) => {
   const navigate = useNavigate();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -172,9 +172,10 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
 
     //----------BACKEND PAYLOAD DATA (req.body)----------//
     const payload = {
-      userType: userType,
+      role: role,
       ...answers
     };
+
     //----------FETCHING FROM THE BACKEND----------//
     try {
       const response = await onboardingApi.onBoarding(payload);
@@ -284,12 +285,12 @@ const QuestionScreen = ({ questions, userType, onComplete }) => {
 };
 
 //----------MAIN COMPONENT----------//
-const OnBoarding = () => {
-  const [step, setStep] = useState('userType'); // 'userType', 'questions', 'success'
-  const [userType, setUserType] = useState('');
+const OnBoarding = () => { //---userType to role
+  const [step, setStep] = useState('role'); // 'userType', 'questions', 'success'
+  const [role, setRole] = useState('');
 
-  const handleUserTypeSelection = (type) => {
-    setUserType(type);
+  const handleRoleSelection = (type) => {
+    setRole(type);
     setStep('questions');
   };
 
@@ -298,8 +299,8 @@ const OnBoarding = () => {
   };
 
   // Render appropriate screen based on step
-  if (step === 'userType') {
-    return <UserTypeScreen onSelectType={handleUserTypeSelection} />;
+  if (step === 'role') {
+    return <RoleScreen onSelectType={handleRoleSelection} />;
   }
 
   if (step === 'success') {
@@ -307,11 +308,11 @@ const OnBoarding = () => {
   }
 
   // Questions screen
-  const questions = userType === 'student' ? STUDENT_QUESTIONS : MODERATOR_QUESTIONS;
+  const questions = role === 'student' ? STUDENT_QUESTIONS : MODERATOR_QUESTIONS;
   return (
     <QuestionScreen
       questions={questions}
-      userType={userType}
+      role={role}
       onComplete={handleComplete}
     />
   );
