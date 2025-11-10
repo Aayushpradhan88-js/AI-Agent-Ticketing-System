@@ -80,8 +80,10 @@ class ApiClient {
   //----------POST request--------//
   async post(endpoint, data = {}) {
     const response = await this.makeRequest(endpoint, {
+
       method: 'POST',
       body: JSON.stringify(data),
+
     });
 
     if (!response.ok) {
