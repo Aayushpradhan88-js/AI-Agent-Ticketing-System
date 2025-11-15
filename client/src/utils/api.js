@@ -11,6 +11,9 @@ class ApiClient {
   getAuthHeaders() {
     const token = storage.getToken()
     const headers = {
+      /*
+      @header backend response - token & dataformat(JSON)
+      */
       'Content-Type': 'application/json',
     };
 
@@ -36,19 +39,29 @@ class ApiClient {
 
     //-----FETCHING TO BACKEND-----//
     try {
-      const controller = new AbortController();
+      const controller = new AbortController(); //for multiple webrequest 
       const timeoutId = setTimeout(() => controller.abort(), config.timeout);
 
-      const response = await fetch(url, {
-        ...config,
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        url, //@url- /api/v1/{route} 
+        {
+          ...config,
+          /*
+          @config data
+             - method: POST
+             - body: paylod(data)
+             - token: Bearer (token)
+             - content-type: application/json
+          */
+          signal: controller.signal
+        });
 
       clearTimeout(timeoutId);
 
       // Check if token is expired based on response
       if (response.status === 401) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorData = await response.json()
+        .catch(() => ({}));
         if (errorData.message?.includes('token') || errorData.message?.includes('Unauthorized')) {
           storage.clearUserData();
           window.location.href = '/login';
@@ -80,10 +93,8 @@ class ApiClient {
   //----------POST request--------//
   async post(endpoint, data = {}) {
     const response = await this.makeRequest(endpoint, {
-
       method: 'POST',
       body: JSON.stringify(data),
-
     });
 
     if (!response.ok) {

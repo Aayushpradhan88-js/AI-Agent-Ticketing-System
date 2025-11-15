@@ -10,7 +10,7 @@ import jwt from "jsonwebtoken";
 
 //---------REGISTER ACCOUNT----------//
 export const registerAccount = async (req, res) => {
-    const { username, email, password, skills} = req.body;
+    const { username, email, password, skills } = req.body;
 
     try {
         if (!username || !email || !password) {
@@ -36,7 +36,7 @@ export const registerAccount = async (req, res) => {
             skills,
         });
 
-        if(user.onboardingData){
+        if (user.onboardingData) {
             user.onboardingCompleted = true;
             user.onboardingCompletedAt = Date.now()
         }

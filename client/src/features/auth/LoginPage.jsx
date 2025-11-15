@@ -58,7 +58,13 @@ const LoginPage = () => {
         storage.setToken(data.token);
         storage.setUser(data.user);
         console.log('Login successful, redirecting...');
-        navigate("/tickets");
+        
+        // Check onboarding status and redirect accordingly /*
+        if (data.user && data.user.onboardingCompleted) {
+          navigate("/tickets");
+        } else {
+          navigate("/onboarding");
+        } //warp code analyze   */ 
       } else {
         // Handle specific error responses
         const errorMessage = data.error || data.message || 'Login failed. Please try again.';

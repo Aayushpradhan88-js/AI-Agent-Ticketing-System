@@ -173,21 +173,32 @@ const QuestionScreen = ({ questions, role, onComplete }) => {
     //----------BACKEND PAYLOAD DATA (req.body)----------//
     const payload = {
       role: role,
-      ...answers
+      answers: answers
     };
 
     //----------FETCHING FROM THE BACKEND----------//
     try {
-      const response = await onboardingApi.onBoarding(payload);
-      //----------FETCHING FROM THE BACKEND----------//
-      const data = await response.json();
+      // onboardingApi.post() already returns parsed JSON, not a Response object
+      const data = await onboardingApi.onBoarding(payload);
 
-      if (response.ok) {
+      if (data.success) {
         console.log("Successfully sent data to backend", data);
+        
+        // Update user data in localStorage with onboarding completion status
+        const storage = (await import('../../utils/localStorage.js')).default;
+        const currentUser = storage.getUser();
+        if (currentUser) {
+          storage.setUser({
+            ...currentUser,
+            onboardingCompleted: true,
+            role: role
+          });
+        }
+        
         onComplete();
         navigate("/tickets");
       } else {
-        setError('Failed to submit. Please try again');
+        setError(data.message || 'Failed to submit. Please try again');
       }
     } catch (error) {
       console.error("Failed to submit onboarding", error);
