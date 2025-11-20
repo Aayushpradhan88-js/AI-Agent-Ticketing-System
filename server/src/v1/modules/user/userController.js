@@ -62,18 +62,19 @@ export const registerAccount = async (req, res) => {
             new ApiResponse(
                 201,
                 'User registered successfully',
-                token
-                // {
-                //     id: user._id,
-                //     username: user.username,
-                //     email: user.email,
-                //     role: user.role,
-                //     skills: user.skills,
-                //     userOnBoardingCompleted: user.onBoardingCompleted
-                // }
+                {
+                    token,
+                    user: {
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role,
+                        skills: user.skills,
+                        userOnboardingCompleted: user.onboardingCompleted
+                    }
+                }
             )
         );
-
     } catch (error) {
         console.error('Register Error:', error.stack);
         return res.status(500).json(
@@ -100,7 +101,7 @@ export const loginAccount = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, role: user.role, user: user.username },
+            { _id: user._id, role: user.role, user: user.username },
             JWT_SECRET,
             { expiresIn: JWT_TOKEN_EXPIRY_DATE }
         );

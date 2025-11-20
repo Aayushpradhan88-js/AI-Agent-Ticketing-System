@@ -69,7 +69,7 @@ export const onTicketCreated = inngest.createFunction(
                         skills: {
                             $elemMatch: {
                                 $regex: relatedSkills.join("|"),
-                                $elemMatch: "i"
+                                $options: "i"
                             }
                         }
                     }

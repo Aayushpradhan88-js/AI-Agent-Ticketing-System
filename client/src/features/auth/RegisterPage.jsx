@@ -29,7 +29,6 @@ const RegisterPage = () => {
     try {
       //----------FETCHING FROM THE BACKEND----------//
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`,
-        
         {
           method: "POST",
           headers: {
@@ -67,13 +66,13 @@ const RegisterPage = () => {
         <p className="text-center text-gray-600 mb-8"></p>
 
         {/*----------Google Sign-up Button----------*/}
-        <GoogleOAUTHButton text="Sign up with Google" disabled={loading} />
+        {/* <GoogleOAUTHButton text="Sign up with Google" disabled={loading} />
 
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
           <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+        </div> */}
 
         {/*---------- Registration Form ----------*/}
         <form onSubmit={handleRegister} className="space-y-6">

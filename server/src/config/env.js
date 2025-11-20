@@ -18,10 +18,10 @@ const INNGEST_EVENT_KEY = process.env.INNGEST_EVENT_KEY;
 const INNGEST_SIGNING_KEY = process.env.INNGEST_SIGNING_KEY;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
-    throw new Error(`secret length must be at least ${JWT_SECRET.length}`);
+    throw new Error("JWT_SECRET length must be at least 32 characters");
 }
 
-if (!CLIENT_URL.startsWith('http')) {
+if (!CLIENT_URL || !CLIENT_URL.startsWith('http')) {
     throw new Error(`invalid client URL: ${CLIENT_URL}`);
 }
 

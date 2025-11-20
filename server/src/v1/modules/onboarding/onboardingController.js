@@ -23,7 +23,7 @@ export const onboardingController = async (req, res) => {
 
     if (!role) {
         return res.status(400).json(
-            ApiError(
+            new ApiError(
                 400,
                 "userType is required!!!",
                 false
@@ -35,7 +35,7 @@ export const onboardingController = async (req, res) => {
         const validRoles = ['student', 'moderator', 'admin']
         if (!validRoles.includes(role)) {
             return res.status(402).json(
-                ApiError(
+                new ApiError(
                     402,
                     "invalid usertyper!!"
                 )
@@ -55,7 +55,7 @@ export const onboardingController = async (req, res) => {
 
         if (!updatedUser) {
             return res.status(404).json(
-                ApiError(
+                new ApiError(
                     404,
                     "User not found"
                 )
@@ -71,14 +71,15 @@ export const onboardingController = async (req, res) => {
     } catch (error) {
         console.error(error.stack);
         return res.status(500).json(
-            ApiError(
+            new ApiError(
                 500,
                 "internal server error, unable to update data in database",
-                console.error(error.stack)
+                [],
+                error.stack
             )
         )
     }
-};
+}
 
 //----------CHECK ONBOARDING STATUS----------//
 export const onboardingStatus = (req, res) => {
@@ -87,28 +88,23 @@ export const onboardingStatus = (req, res) => {
 
         if (!user) {
             return res.status(401).json(
-
-                ApiError(
+                new ApiError(
                     401,
                     "user is not it the request!!!",
-                ))
+                )
+            )
         }
 
         return res.status(200).json({
-            // success: true,
-            // hasOnboardingCompleted: user.onBoardingCompleted,
-            // userType: user.userType,
-            // message: "Onboarding status is successfully completed"
-           
-                success: true,
-                hasOnboardingCompleted: user.onBoardingCompleted,  // ✅ Correct field name
-                userType: user.role,  // ✅ Changed from user.userType to user.role
-                message: "Onboarding status retrieved successfully"
+            success: true,
+            hasOnboardingCompleted: user.onboardingCompleted,
+            userType: user.role,
+            message: "Onboarding status retrieved successfully"
         })
     } catch (error) {
         console.error(error.stack)
         return res.status(500).json(
-            ApiError(
+            new ApiError(
                 500,
                 "server error, not able to check onboarding status"
             )
