@@ -15,16 +15,9 @@ const userModel = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: function () {
-            return !this.googleId; //--password not required if Google OAuth user
-        },
         lowercase: true,
         minlength: [5, "minimum 5 letter is required"],
         trim: true
-    },
-    googleId: {
-        type: String,
-        sparse: true //-----Allow multiple null values but ensure uniqueness for non-null values-----//
     },
     bio: {
         type: String,

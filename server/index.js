@@ -2,9 +2,6 @@ import dotenv from "dotenv"
 dotenv.config()
 import cors from "cors"
 import express from "express"
-import session from "express-session"
-import passport from "passport"
-import "./src/config/passport.js"
 import { serve } from "inngest/express"
 import connectDB from "./src/config/connectdb.js"
 import { authRoute } from "./src/v1/modules/user/userRoute.js"
@@ -13,7 +10,7 @@ import { onboardingRoute } from "./src/v1/modules/onboarding/onboardingRoute.js"
 import { inngest } from "./src/inngest/client.js"
 import { onSigningUp } from "./src/inngest/function/on-signup.js"
 import { onTicketCreated } from "./src/inngest/function/on-ticket-created.js"
-import { SERVER_PORT ,CLIENT_URL, SESSION_SECRET } from "./src/config/env.js"
+import { SERVER_PORT ,CLIENT_URL } from "./src/config/env.js"
 
 const app = express()
 app.use(cors(
@@ -26,22 +23,7 @@ app.use(cors(
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
-// Session configuration
-app.use(session(
-    {
-        secret: SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            // secure: process.env.NODE_ENV === 'production', //--HOLD---//
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000 // 24 hours
-        }
-    }));
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 connectDB();
 

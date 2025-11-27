@@ -1,7 +1,7 @@
 AI Agent Ticketing System – Backend
 
 # Backend for an AI-assisted ticketing system with:
-•  JWT auth + Google OAuth
+•  JWT auth
 •  Onboarding flow (student / moderator / admin)
 •  Ticket creation and management
 •  AI-powered ticket analysis (priority, notes, skills)
@@ -9,13 +9,13 @@ AI Agent Ticketing System – Backend
 •  Admin tools for users and tickets
 
 # Tech Stack
-•  Runtime: Node.js, Express
+•  Runtime & framework: Node.js, Express.js
 •  Database: MongoDB (Mongoose)
-•  Auth: JWT + Passport Google OAuth
+•  Auth: JWT Auth
 •  Background jobs: Inngest
 •  AI: Gemini (via custom analyzeTicket utility)
-•  Email: Nodemailer + Mailtrap
-•  Dev tools: Nodemon, ESLint, Prettier
+•  Email: Nodemailer + Mailtrap + Resend
+•  Dev tools: Nodemon, ESLint, Prettier, Postman
 
 Getting Started
 
@@ -30,7 +30,6 @@ CLIENT_URL=http://localhost:5173
 
 JWT_SECRET=your-very-long-secret-at-least-32-chars
 JWT_TOKEN_EXPIRY_DATE=7D
-SESSION_SECRET=some-session-secret
 
 MAILTRAP_SMTP_HOST=...
 MAILTRAP_SMTP_PORT=...
@@ -38,10 +37,6 @@ MAILTRAP_SMTP_USER=...
 MAILTRAP_SMTP_PASS=...
 
 GEMINI_API_KEY=...
-
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-APP_URL=http://localhost:3000
 
 INNGEST_EVENT_KEY=...
 INNGEST_SIGNING_KEY=...
@@ -59,10 +54,6 @@ Core Features
 •  Login
 •  Logout (JWT)
 •  Get current user (/me)
-
-Google OAuth (optional)
-•  GET /api/v1/auth/google
-•  GET /api/v1/auth/google/callback
 
 # Admin User Management
 •  Get all users
@@ -131,7 +122,6 @@ Auth – /auth
 •  POST /register – Create account + return JWT
 •  POST /login – Login + return JWT
 •  POST /logout – Logout (JWT)
-•  POST /logout/session – Logout for Google OAuth session
 •  GET /me – Current user (JWT or session)
 
 Admin only:
