@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { Diamond, ArrowRight, CheckCircle, Users, Settings, FileText, MessageSquare } from 'lucide-react';
 
 function HomePage() {
-
   return (
-    <div className="min-h-screen bg-black text-white" style={{ fontFamily: "'Lilita One', cursive" }}>
+    <div className="min-h-screen bg-black text-white" style={{ fontFamily: "cursive" }}>
       <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
       
       {/* Header */}
