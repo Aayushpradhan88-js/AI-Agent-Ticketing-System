@@ -1,82 +1,50 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-import { GoogleOAUTHButton } from '../../components/ui/googleoauthbutton';
-import storage from '../../utils/localStorage.js';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RegisterPage = () => {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    skills: []
-  });
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const[username, setUserName] = useState('');
+  const[email, setEmail] = useState('');
+  const[password, setPassword] = useState('');
+  const[loading, setLoading] = useState(false);
+  const[error, setError] = useState(null);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async(e) => {
+    e.prevent.default
     setLoading(true);
+    setError('');
 
-    try {
-      //----------FETCHING FROM THE BACKEND----------//
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(form)
-        }
+    const response = await axios.post('http://localhost:3000/api/v1/register', {
+      username,
+      email,
+      password
+    });
 
-        
-      )
+    const userData = {
+      id: response.data.user.id,
+      username: response.data.user.username,
+      email: response.data.user.email
+    }
 
-      console.log(response)
-      //----------FETCHING FROM THE BACKEND----------//
-
-      const data = await response.json();
-
-      if (response.ok) {
-        storage.setToken(data.token);
-        storage.setUser(JSON.stringify(data.user));
-        navigate("/onboarding");
-      } else {
-        alert(data.message, "Failed to signup, Please try again");
-      }
-    } catch (error) {
-      alert("SomeThing went wrong");
-      console.log(error);
-    } finally { 
-      setLoading(false);
+    const navigate = useNavigate();
+    if(response.status === 200){
+      localStorage.setItem("registed Token", response.data.token);
+      localStorage.ssetItem("register user", userData);
+      navigate("/onboarding");
     }
   }
+
+
+};
+
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-inter">
       <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Create an Account</h1>
         <p className="text-center text-gray-600 mb-8"></p>
 
-        {/*----------Google Sign-up Button----------*/}
-        {/* <GoogleOAUTHButton text="Sign up with Google" disabled={loading} />
-
-        <div className="flex items-center my-6">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div> */}
-
         {/*---------- Registration Form ----------*/}
         <form onSubmit={handleRegister} className="space-y-6">
-
           {/*--- username ---*/}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
@@ -96,7 +64,6 @@ const RegisterPage = () => {
                 value={form.email}
                 onChange={handleChange}
               />
-
             </div>
           </div>
 

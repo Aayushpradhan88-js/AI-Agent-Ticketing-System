@@ -24,8 +24,8 @@ const AppRoutes = () => {
                 } />
 
                 <Route path='/onboarding' element={
-                    <CheckAuth protectedRoute={true}>  
-                         {/* //warp code analyze */}
+                    <CheckAuth protectedRoute={true}> 
+                    <OnBoarding/> 
                     </CheckAuth>  
                 } />
 

@@ -83,8 +83,8 @@ export const registerAccount = async (req, res) => {
                 'server error. failed to register user'
             )
         );
-    }
-}
+    };
+};
 
 //---------LOGIN ACCOUNT----------//
 export const loginAccount = async (req, res) => {
